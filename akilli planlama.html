@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yapay Zeka Destekli Planlayıcı - KodFabrik</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #8A2BE2;
+            --primary-dark: #6A0DAD;
+            --secondary: #FF3CAC;
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF;
+            --accent-dark: #00E5E5;
+            --dark: #0F0524;
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --glow-color: rgba(138, 43, 226, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 15px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.08) 0px, rgba(138, 43, 226, 0.08) 2px, transparent 2px, transparent 15px),
+                radial-gradient(rgba(138, 43, 226, 0.15) 2px, transparent 2px),
+                radial-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(135deg, #0A031A 0%, #240047 25%, #410063 75%, #0F0524 100%);
+            background-size: 25px 25px, 25px 25px, 40px 40px, 60px 60px, 100% 100%;
+            background-position: 0 0, 0 0, 0 0, 20px 20px, 0 0;
+            animation: backgroundShift 20s ease-in-out infinite;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { background-position: 0 0, 0 0, 0 0, 20px 20px, 0 0; }
+            50% { background-position: 25px 25px, -25px -25px, 40px 40px, 0 0, 0 0; }
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: rgba(15, 5, 36, 0.85) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--primary), var(--accent), var(--primary)) 1;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            font-family: 'Bruno Ace SC', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary) !important;
+            text-decoration: none;
+            text-shadow: 0 0 20px var(--glow-color);
+        }
+        
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--highlight) !important;
+            text-shadow: 0 0 10px var(--highlight);
+            background-color: rgba(138, 43, 226, 0.2);
+        }
+        
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-family: 'Bruno Ace SC', sans-serif;
+            background: linear-gradient(45deg, var(--primary), var(--accent), var(--secondary), var(--primary));
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 4s ease-in-out infinite;
+        }
+        
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .page-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+        
+        /* Language Selection */
+        .language-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .language-card {
+            background: rgba(15, 5, 36, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .language-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .language-card:hover::before {
+            left: 100%;
+        }
+        
+        .language-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        .language-card.selected {
+            border-color: var(--primary);
+            background: rgba(138, 43, 226, 0.2);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+        }
+        
+        .language-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        .language-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Level Selection */
+        .level-selection {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .level-btn {
+            padding: 1rem 2rem;
+            border: 2px solid var(--accent);
+            background: rgba(15, 5, 36, 0.6);
+            color: var(--text-light);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .level-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .level-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+        
+        /* Plan Display */
+        .plan-container {
+            background: rgba(15, 5, 36, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .plan-container.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .plan-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .plan-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .plan-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        
+        .weeks-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .week-card {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .week-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .week-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .week-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .week-topics {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .week-topics li {
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 3px solid var(--accent);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .week-topics li:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .week-topics li::before {
+            content: '▸';
+            color: var(--accent);
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+        
+        /* Progress Tracker */
+        .progress-tracker {
+            background: rgba(15, 5, 36, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            display: none;
+        }
+        
+        .progress-tracker.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        .progress-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .progress-bar-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            height: 30px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            color: var(--text-muted);
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--text-light);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.5);
+            z-index: 2000;
+            display: none;
+            animation: slideInRight 0.5s ease;
+            max-width: 400px;
+        }
+        
+        .notification.active {
+            display: block;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .notification-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .notification-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .notification-message {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        /* AI Badge */
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--text-light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(138, 43, 226, 0.8);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4);
+        }
+        
+        .back-button:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.6);
+            color: var(--text-light);
+        }
+        
+        @media (max-width: 768px) {
+            .language-selection {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">DİJİTALGNÇ</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Ana Sayfa</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <h1 class="page-title">
+            Yapay Zeka Destekli Planlayıcı
+            <span class="ai-badge">🤖 AI</span>
+        </h1>
+        <p class="page-subtitle">
+            Programlama dilinizi seçin, yapay zeka size özel haftalık öğrenme planı oluştursun!
+        </p>
+
+        <!-- Language Selection -->
+        <div class="language-selection" id="languageSelection">
+            <div class="language-card" data-language="python">
+                <div class="language-icon"><i class="fab fa-python"></i></div>
+                <div class="language-name">Python</div>
+            </div>
+            <div class="language-card" data-language="javascript">
+                <div class="language-icon"><i class="fab fa-js"></i></div>
+                <div class="language-name">JavaScript</div>
+            </div>
+            <div class="language-card" data-language="java">
+                <div class="language-icon"><i class="fab fa-java"></i></div>
+                <div class="language-name">Java</div>
+            </div>
+            <div class="language-card" data-language="cpp">
+                <div class="language-icon"><i class="fas fa-code"></i></div>
+                <div class="language-name">C++</div>
+            </div>
+            <div class="language-card" data-language="csharp">
+                <div class="language-icon"><i class="fab fa-microsoft"></i></div>
+                <div class="language-name">C#</div>
+            </div>
+            <div class="language-card" data-language="php">
+                <div class="language-icon"><i class="fab fa-php"></i></div>
+                <div class="language-name">PHP</div>
+            </div>
+        </div>
+
+        <!-- Level Selection -->
+        <div class="level-selection" id="levelSelection" style="display: none;">
+            <button class="level-btn" data-level="beginner">Temel Seviye</button>
+            <button class="level-btn" data-level="intermediate">Orta Seviye</button>
+            <button class="level-btn" data-level="advanced">İleri Seviye</button>
+        </div>
+
+        <!-- Plan Display -->
+        <div class="plan-container" id="planContainer">
+            <div class="plan-header">
+                <h2 class="plan-title" id="planTitle"></h2>
+                <p class="plan-subtitle" id="planSubtitle"></p>
+            </div>
+            <div class="weeks-container" id="weeksContainer"></div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-tracker" id="progressTracker">
+            <div class="progress-header">
+                <h3 class="progress-title">İlerleme Takibi</h3>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%">
+                    <span id="progressText">0%</span>
+                </div>
+            </div>
+            <div class="progress-info">
+                <span id="currentWeek">Hafta 0</span>
+                <span id="totalWeeks">Toplam 0 Hafta</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">🎉</div>
+        <div class="notification-title" id="notificationTitle"></div>
+        <div class="notification-message" id="notificationMessage"></div>
+    </div>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Ana Sayfaya Dön
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        (function() {
+            'use strict';
+
+            // Yapay Zeka Planlama Motoru (Basit AI - TensorFlow.js olmadan)
+            class AIPlanningEngine {
+                constructor() {
+                    this.selectedLanguage = null;
+                    this.selectedLevel = null;
+                    this.currentWeek = 0;
+                    this.totalWeeks = 0;
+                    this.learningData = {};
+                    this.userPreferences = this.loadPreferences();
+                    
+                    // Programlama dilleri için öğrenme planları
+                    this.curriculumDatabase = this.initializeCurriculum();
+                    
+                    this.setupEventListeners();
+                    this.loadProgress();
+                }
+
+                initializeCurriculum() {
+                    return {
+                        python: {
+                            beginner: {
+                                name: 'Python Temel Seviye',
+                                description: '8 haftalık temel Python öğrenme planı',
+                                weeks: 8,
+                                topics: [
+                                    ['Python Kurulumu', 'Değişkenler ve Veri Tipleri', 'Temel Operatörler'],
+                                    ['String İşlemleri', 'Listeler ve Tuple', 'Dictionary Kullanımı'],
+                                    ['Koşullu İfadeler (if/else)', 'Döngüler (for/while)', 'Fonksiyonlar'],
+                                    ['Modüller ve Paketler', 'Dosya İşlemleri', 'Hata Yönetimi (try/except)'],
+                                    ['Nesne Yönelimli Programlama Temelleri', 'Sınıflar ve Nesneler', 'Kalıtım'],
+                                    ['Kütüphane Kullanımı (NumPy, Pandas)', 'Veri Analizi Temelleri', 'CSV/JSON İşlemleri'],
+                                    ['Web Scraping Temelleri', 'API Kullanımı', 'Veritabanı Bağlantısı'],
+                                    ['Proje: Basit Web Uygulaması', 'Proje: Veri Analizi', 'Portföy Oluşturma']
+                                ]
+                            },
+                            intermediate: {
+                                name: 'Python Orta Seviye',
+                                description: '12 haftalık orta seviye Python öğrenme planı',
+                                weeks: 12,
+                                topics: [
+                                    ['İleri Seviye OOP', 'Decorator ve Generator', 'Context Manager'],
+                                    ['Asenkron Programlama (async/await)', 'Threading ve Multiprocessing', 'Concurrency Patterns'],
+                                    ['Django Framework Temelleri', 'Model-View-Template', 'ORM Kullanımı'],
+                                    ['Flask Framework', 'RESTful API Geliştirme', 'Authentication ve Authorization'],
+                                    ['Veritabanı Tasarımı', 'SQLAlchemy ORM', 'MongoDB ile NoSQL'],
+                                    ['Test Yazma (unittest, pytest)', 'TDD Yaklaşımı', 'Code Coverage'],
+                                    ['Docker ve Containerization', 'CI/CD Pipeline', 'Deployment Stratejileri'],
+                                    ['Machine Learning Temelleri', 'Scikit-learn Kullanımı', 'Model Eğitimi'],
+                                    ['Deep Learning (TensorFlow/Keras)', 'Neural Network', 'Image Classification'],
+                                    ['Data Science Projeleri', 'Veri Görselleştirme', 'İstatistiksel Analiz'],
+                                    ['Web Scraping (BeautifulSoup, Scrapy)', 'API Geliştirme', 'Microservices'],
+                                    ['Proje: Full-Stack Uygulama', 'Proje: ML Model Deployment', 'Portföy Geliştirme']
+                                ]
+                            },
+                            advanced: {
+                                name: 'Python İleri Seviye',
+                                description: '16 haftalık ileri seviye Python öğrenme planı',
+                                weeks: 16,
+                                topics: [
+                                    ['Metaclass ve Descriptor', 'Metaprogramming', 'Reflection'],
+                                    ['C Extension Yazma', 'Cython Kullanımı', 'Performance Optimization'],
+                                    ['Distributed Systems', 'Message Queues (RabbitMQ, Kafka)', 'Event-Driven Architecture'],
+                                    ['Microservices Architecture', 'Service Mesh', 'API Gateway'],
+                                    ['Advanced Django', 'Django Channels (WebSocket)', 'Real-time Applications'],
+                                    ['FastAPI Framework', 'High-Performance APIs', 'GraphQL'],
+                                    ['Advanced ML/DL', 'Transfer Learning', 'Model Optimization'],
+                                    ['MLOps ve Model Deployment', 'Kubernetes', 'AutoML'],
+                                    ['Big Data (Spark, Hadoop)', 'Stream Processing', 'Data Pipeline'],
+                                    ['Blockchain Development', 'Smart Contracts', 'Cryptocurrency'],
+                                    ['Game Development (Pygame)', 'Computer Graphics', 'Physics Simulation'],
+                                    ['Cybersecurity', 'Penetration Testing', 'Secure Coding'],
+                                    ['DevOps Mastery', 'Infrastructure as Code', 'Monitoring ve Logging'],
+                                    ['System Design', 'Scalability Patterns', 'Performance Tuning'],
+                                    ['Open Source Contribution', 'Code Review', 'Technical Leadership'],
+                                    ['Proje: Enterprise Application', 'Proje: AI/ML Platform', 'Expert Portfolio']
+                                ]
+                            }
+                        },
+                        javascript: {
+                            beginner: {
+                                name: 'JavaScript Temel Seviye',
+                                description: '8 haftalık temel JavaScript öğrenme planı',
+                                weeks: 8,
+                                topics: [
+                                    ['JavaScript Temelleri', 'Değişkenler (let, const, var)', 'Veri Tipleri'],
+                                    ['Operatörler', 'Koşullu İfadeler', 'Döngüler'],
+                                    ['Fonksiyonlar', 'Arrow Functions', 'Scope ve Hoisting'],
+                                    ['Arrays ve Array Methods', 'Objects', 'Destructuring'],
+                                    ['DOM Manipülasyonu', 'Event Handling', 'Form İşlemleri'],
+                                    ['ES6+ Özellikleri', 'Template Literals', 'Spread Operator'],
+                                    ['Asenkron JavaScript', 'Promises', 'Async/Await'],
+                                    ['Proje: Todo App', 'Proje: Weather App', 'Portföy Oluşturma']
+                                ]
+                            },
+                            intermediate: {
+                                name: 'JavaScript Orta Seviye',
+                                description: '12 haftalık orta seviye JavaScript öğrenme planı',
+                                weeks: 12,
+                                topics: [
+                                    ['Advanced ES6+', 'Modules (import/export)', 'Classes ve Inheritance'],
+                                    ['Closures ve Higher-Order Functions', 'Functional Programming', 'Currying'],
+                                    ['React Framework Temelleri', 'Components ve Props', 'State Management'],
+                                    ['React Hooks', 'Context API', 'Custom Hooks'],
+                                    ['React Router', 'Form Handling', 'API Integration'],
+                                    ['Node.js Temelleri', 'Express.js Framework', 'RESTful API'],
+                                    ['MongoDB ve Mongoose', 'Authentication (JWT)', 'File Upload'],
+                                    ['Testing (Jest, React Testing Library)', 'TDD', 'E2E Testing'],
+                                    ['State Management (Redux)', 'Middleware', 'Async Actions'],
+                                    ['Next.js Framework', 'Server-Side Rendering', 'Static Site Generation'],
+                                    ['TypeScript', 'Type System', 'Advanced Types'],
+                                    ['Proje: Full-Stack Application', 'Proje: E-commerce Site', 'Deployment']
+                                ]
+                            },
+                            advanced: {
+                                name: 'JavaScript İleri Seviye',
+                                description: '16 haftalık ileri seviye JavaScript öğrenme planı',
+                                weeks: 16,
+                                topics: [
+                                    ['Advanced React Patterns', 'Performance Optimization', 'Code Splitting'],
+                                    ['GraphQL (Apollo Client)', 'Real-time Subscriptions', 'Schema Design'],
+                                    ['Microservices Architecture', 'Service Communication', 'API Gateway'],
+                                    ['Advanced Node.js', 'Stream Processing', 'Cluster ve Worker Threads'],
+                                    ['WebSocket ve Real-time', 'Socket.io', 'Server-Sent Events'],
+                                    ['Progressive Web Apps', 'Service Workers', 'Offline Support'],
+                                    ['WebAssembly', 'Performance Critical Code', 'Rust/Go Integration'],
+                                    ['Advanced Testing', 'Visual Regression', 'Performance Testing'],
+                                    ['DevOps for JS', 'Docker', 'Kubernetes'],
+                                    ['Serverless Architecture', 'AWS Lambda', 'Edge Functions'],
+                                    ['Blockchain (Web3.js, Ethers.js)', 'Smart Contracts', 'DApp Development'],
+                                    ['Machine Learning (TensorFlow.js)', 'Neural Networks', 'Browser ML'],
+                                    ['Game Development', 'Canvas API', 'WebGL'],
+                                    ['Security Best Practices', 'OWASP Top 10', 'Secure Coding'],
+                                    ['System Design', 'Scalability', 'Performance Monitoring'],
+                                    ['Proje: Enterprise Platform', 'Proje: AI/ML Application', 'Expert Portfolio']
+                                ]
+                            }
+                        },
+                        java: {
+                            beginner: {
+                                name: 'Java Temel Seviye',
+                                description: '8 haftalık temel Java öğrenme planı',
+                                weeks: 8,
+                                topics: [
+                                    ['Java Kurulumu ve IDE', 'Temel Syntax', 'Değişkenler ve Veri Tipleri'],
+                                    ['Operatörler', 'Koşullu İfadeler', 'Döngüler'],
+                                    ['Metodlar', 'Method Overloading', 'Recursion'],
+                                    ['Arrays ve Collections', 'ArrayList', 'HashMap'],
+                                    ['Nesne Yönelimli Programlama', 'Classes ve Objects', 'Encapsulation'],
+                                    ['Inheritance', 'Polymorphism', 'Abstraction'],
+                                    ['Exception Handling', 'File I/O', 'String İşlemleri'],
+                                    ['Proje: Console Application', 'Proje: Library Management', 'Portföy']
+                                ]
+                            },
+                            intermediate: {
+                                name: 'Java Orta Seviye',
+                                description: '12 haftalık orta seviye Java öğrenme planı',
+                                weeks: 12,
+                                topics: [
+                                    ['Advanced OOP', 'Interfaces', 'Abstract Classes'],
+                                    ['Generics', 'Collections Framework', 'Stream API'],
+                                    ['Lambda Expressions', 'Functional Interfaces', 'Method References'],
+                                    ['Multithreading', 'Concurrency', 'Synchronization'],
+                                    ['Spring Framework', 'Dependency Injection', 'IoC Container'],
+                                    ['Spring Boot', 'RESTful API', 'Database Integration'],
+                                    ['JPA/Hibernate', 'ORM Concepts', 'Entity Relationships'],
+                                    ['Spring Security', 'Authentication', 'Authorization'],
+                                    ['Testing (JUnit, Mockito)', 'TDD', 'Integration Testing'],
+                                    ['Maven/Gradle', 'Build Tools', 'Dependency Management'],
+                                    ['Microservices', 'Spring Cloud', 'Service Discovery'],
+                                    ['Proje: Enterprise Application', 'Proje: REST API', 'Deployment']
+                                ]
+                            },
+                            advanced: {
+                                name: 'Java İleri Seviye',
+                                description: '16 haftalık ileri seviye Java öğrenme planı',
+                                weeks: 16,
+                                topics: [
+                                    ['Advanced Concurrency', 'Fork/Join Framework', 'CompletableFuture'],
+                                    ['JVM Internals', 'Memory Management', 'Garbage Collection'],
+                                    ['Performance Tuning', 'Profiling', 'Optimization'],
+                                    ['Design Patterns', 'Creational Patterns', 'Structural Patterns'],
+                                    ['Behavioral Patterns', 'Architectural Patterns', 'Anti-patterns'],
+                                    ['Reactive Programming', 'Reactor', 'RxJava'],
+                                    ['Advanced Spring', 'AOP', 'Transaction Management'],
+                                    ['Distributed Systems', 'Message Queues', 'Event Sourcing'],
+                                    ['Kubernetes', 'Docker', 'Container Orchestration'],
+                                    ['Big Data (Hadoop, Spark)', 'Data Processing', 'Streaming'],
+                                    ['Blockchain Development', 'Smart Contracts', 'Hyperledger'],
+                                    ['Machine Learning (DL4J)', 'Neural Networks', 'Model Training'],
+                                    ['Security', 'Penetration Testing', 'Secure Coding'],
+                                    ['System Design', 'Scalability', 'High Availability'],
+                                    ['DevOps', 'CI/CD', 'Infrastructure as Code'],
+                                    ['Proje: Enterprise Platform', 'Proje: Distributed System', 'Expert Portfolio']
+                                ]
+                            }
+                        },
+                        cpp: {
+                            beginner: {
+                                name: 'C++ Temel Seviye',
+                                description: '8 haftalık temel C++ öğrenme planı',
+                                weeks: 8,
+                                topics: [
+                                    ['C++ Kurulumu', 'Temel Syntax', 'Değişkenler ve Veri Tipleri'],
+                                    ['Operatörler', 'Koşullu İfadeler', 'Döngüler'],
+                                    ['Fonksiyonlar', 'Function Overloading', 'Default Parameters'],
+                                    ['Arrays ve Pointers', 'Memory Management', 'References'],
+                                    ['OOP Temelleri', 'Classes', 'Objects'],
+                                    ['Constructors/Destructors', 'Inheritance', 'Polymorphism'],
+                                    ['STL (Standard Template Library)', 'Vectors', 'Maps'],
+                                    ['Proje: Console Game', 'Proje: Calculator', 'Portföy']
+                                ]
+                            },
+                            intermediate: {
+                                name: 'C++ Orta Seviye',
+                                description: '12 haftalık orta seviye C++ öğrenme planı',
+                                weeks: 12,
+                                topics: [
+                                    ['Advanced OOP', 'Virtual Functions', 'Abstract Classes'],
+                                    ['Templates', 'Template Specialization', 'STL Algorithms'],
+                                    ['Smart Pointers', 'RAII', 'Memory Safety'],
+                                    ['Exception Handling', 'Error Handling', 'Best Practices'],
+                                    ['STL Containers', 'Iterators', 'Function Objects'],
+                                    ['Lambda Expressions', 'Function Objects', 'Functors'],
+                                    ['Multithreading', 'Thread Management', 'Synchronization'],
+                                    ['File I/O', 'Streams', 'Serialization'],
+                                    ['Design Patterns', 'Common Patterns', 'Implementation'],
+                                    ['CMake', 'Build Systems', 'Dependency Management'],
+                                    ['Qt Framework', 'GUI Development', 'Event Handling'],
+                                    ['Proje: Desktop Application', 'Proje: Game Engine', 'Deployment']
+                                ]
+                            },
+                            advanced: {
+                                name: 'C++ İleri Seviye',
+                                description: '16 haftalık ileri seviye C++ öğrenme planı',
+                                weeks: 16,
+                                topics: [
+                                    ['C++17/20 Features', 'Modern C++', 'New Standards'],
+                                    ['Metaprogramming', 'Templates Advanced', 'SFINAE'],
+                                    ['Concurrency Advanced', 'Atomic Operations', 'Lock-free Programming'],
+                                    ['Performance Optimization', 'Profiling', 'Cache Optimization'],
+                                    ['Embedded Systems', 'Real-time Programming', 'Hardware Interaction'],
+                                    ['Game Development', 'Graphics Programming', 'Physics Engines'],
+                                    ['System Programming', 'OS APIs', 'Low-level Programming'],
+                                    ['Network Programming', 'Sockets', 'Protocols'],
+                                    ['GPU Programming (CUDA)', 'Parallel Computing', 'High Performance'],
+                                    ['Compiler Design', 'LLVM', 'Code Generation'],
+                                    ['Reverse Engineering', 'Assembly', 'Debugging'],
+                                    ['Security', 'Memory Safety', 'Secure Coding'],
+                                    ['System Design', 'Architecture', 'Scalability'],
+                                    ['Advanced Algorithms', 'Data Structures', 'Optimization'],
+                                    ['Open Source Contribution', 'Code Review', 'Technical Leadership'],
+                                    ['Proje: System Software', 'Proje: High-Performance App', 'Expert Portfolio']
+                                ]
+                            }
+                        },
+                        csharp: {
+                            beginner: {
+                                name: 'C# Temel Seviye',
+                                description: '8 haftalık temel C# öğrenme planı',
+                                weeks: 8,
+                                topics: [
+                                    ['C# Kurulumu ve .NET', 'Temel Syntax', 'Değişkenler'],
+                                    ['Operatörler', 'Koşullu İfadeler', 'Döngüler'],
+                                    ['Metodlar', 'Parameters', 'Return Types'],
+                                    ['Arrays ve Collections', 'List', 'Dictionary'],
+                                    ['OOP Temelleri', 'Classes', 'Objects'],
+                                    ['Inheritance', 'Polymorphism', 'Interfaces'],
+                                    ['Exception Handling', 'File I/O', 'LINQ Temelleri'],
+                                    ['Proje: Console App', 'Proje: Windows Forms', 'Portföy']
+                                ]
+                            },
+                            intermediate: {
+                                name: 'C# Orta Seviye',
+                                description: '12 haftalık orta seviye C# öğrenme planı',
+                                weeks: 12,
+                                topics: [
+                                    ['Advanced OOP', 'Generics', 'Delegates ve Events'],
+                                    ['LINQ Advanced', 'Lambda Expressions', 'Extension Methods'],
+                                    ['Async/Await', 'Asynchronous Programming', 'Tasks'],
+                                    ['Entity Framework', 'ORM', 'Database First/Code First'],
+                                    ['ASP.NET Core', 'MVC Pattern', 'Razor Pages'],
+                                    ['RESTful API', 'Web API', 'HTTP Methods'],
+                                    ['Authentication', 'JWT', 'Identity'],
+                                    ['Dependency Injection', 'IoC Container', 'Service Lifetime'],
+                                    ['Testing (xUnit, NUnit)', 'Mocking', 'Integration Testing'],
+                                    ['SignalR', 'Real-time Communication', 'WebSockets'],
+                                    ['Blazor', 'WebAssembly', 'Component Development'],
+                                    ['Proje: Web Application', 'Proje: API', 'Deployment']
+                                ]
+                            },
+                            advanced: {
+                                name: 'C# İleri Seviye',
+                                description: '16 haftalık ileri seviye C# öğrenme planı',
+                                weeks: 16,
+                                topics: [
+                                    ['Advanced C# Features', 'Pattern Matching', 'Records'],
+                                    ['Performance Optimization', 'Profiling', 'Memory Management'],
+                                    ['Microservices', 'Service Communication', 'API Gateway'],
+                                    ['Distributed Systems', 'Message Queues', 'Event Sourcing'],
+                                    ['Advanced Entity Framework', 'Performance', 'Complex Queries'],
+                                    ['Docker', 'Containerization', 'Kubernetes'],
+                                    ['Azure Services', 'Cloud Development', 'Serverless'],
+                                    ['Machine Learning (ML.NET)', 'Model Training', 'Inference'],
+                                    ['Game Development (Unity)', 'C# Scripting', 'Game Mechanics'],
+                                    ['Security', 'OWASP', 'Secure Coding'],
+                                    ['System Design', 'Architecture Patterns', 'Scalability'],
+                                    ['Advanced Testing', 'Load Testing', 'Performance Testing'],
+                                    ['DevOps', 'CI/CD', 'Infrastructure as Code'],
+                                    ['Blockchain', 'Smart Contracts', 'Cryptocurrency'],
+                                    ['Open Source', 'Contributions', 'Technical Leadership'],
+                                    ['Proje: Enterprise Platform', 'Proje: AI/ML App', 'Expert Portfolio']
+                                ]
+                            }
+                        },
+                        php: {
+                            beginner: {
+                                name: 'PHP Temel Seviye',
+                                description: '8 haftalık temel PHP öğrenme planı',
+                                weeks: 8,
+                                topics: [
+                                    ['PHP Kurulumu', 'Temel Syntax', 'Değişkenler'],
+                                    ['Operatörler', 'Koşullu İfadeler', 'Döngüler'],
+                                    ['Fonksiyonlar', 'Built-in Functions', 'User-defined Functions'],
+                                    ['Arrays', 'Array Functions', 'Associative Arrays'],
+                                    ['Form Handling', 'GET/POST', 'Validation'],
+                                    ['Sessions ve Cookies', 'State Management', 'Security'],
+                                    ['Database Connection', 'MySQL', 'CRUD Operations'],
+                                    ['Proje: Contact Form', 'Proje: Blog System', 'Portföy']
+                                ]
+                            },
+                            intermediate: {
+                                name: 'PHP Orta Seviye',
+                                description: '12 haftalık orta seviye PHP öğrenme planı',
+                                weeks: 12,
+                                topics: [
+                                    ['OOP in PHP', 'Classes', 'Objects'],
+                                    ['Inheritance', 'Polymorphism', 'Interfaces'],
+                                    ['Namespaces', 'Autoloading', 'Composer'],
+                                    ['Laravel Framework', 'MVC Pattern', 'Routing'],
+                                    ['Eloquent ORM', 'Database Migrations', 'Relationships'],
+                                    ['Authentication', 'Middleware', 'Authorization'],
+                                    ['RESTful API', 'API Development', 'JSON'],
+                                    ['Testing (PHPUnit)', 'TDD', 'Mocking'],
+                                    ['Vue.js Integration', 'SPA Development', 'API Consumption'],
+                                    ['File Upload', 'Image Processing', 'Storage'],
+                                    ['Caching', 'Redis', 'Performance'],
+                                    ['Proje: E-commerce', 'Proje: CMS', 'Deployment']
+                                ]
+                            },
+                            advanced: {
+                                name: 'PHP İleri Seviye',
+                                description: '16 haftalık ileri seviye PHP öğrenme planı',
+                                weeks: 16,
+                                topics: [
+                                    ['Advanced Laravel', 'Service Container', 'Service Providers'],
+                                    ['Event System', 'Queues', 'Jobs'],
+                                    ['Microservices', 'API Gateway', 'Service Communication'],
+                                    ['Performance Optimization', 'Caching Strategies', 'Database Optimization'],
+                                    ['Security Advanced', 'OWASP', 'Penetration Testing'],
+                                    ['Docker', 'Containerization', 'Kubernetes'],
+                                    ['CI/CD', 'Automated Testing', 'Deployment'],
+                                    ['Real-time Applications', 'WebSockets', 'Pusher'],
+                                    ['GraphQL', 'API Design', 'Schema'],
+                                    ['Advanced Testing', 'Load Testing', 'Performance'],
+                                    ['System Design', 'Scalability', 'High Availability'],
+                                    ['DevOps', 'Infrastructure', 'Monitoring'],
+                                    ['Blockchain Integration', 'Cryptocurrency', 'Smart Contracts'],
+                                    ['Machine Learning', 'PHP-ML', 'Data Analysis'],
+                                    ['Open Source', 'Contributions', 'Technical Leadership'],
+                                    ['Proje: Enterprise Platform', 'Proje: SaaS Application', 'Expert Portfolio']
+                                ]
+                            }
+                        }
+                    };
+                }
+
+                setupEventListeners() {
+                    // Language selection
+                    document.querySelectorAll('.language-card').forEach(card => {
+                        card.addEventListener('click', (e) => {
+                            document.querySelectorAll('.language-card').forEach(c => c.classList.remove('selected'));
+                            card.classList.add('selected');
+                            this.selectedLanguage = card.dataset.language;
+                            document.getElementById('levelSelection').style.display = 'flex';
+                            document.getElementById('planContainer').classList.remove('active');
+                        });
+                    });
+
+                    // Level selection
+                    document.querySelectorAll('.level-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                            btn.classList.add('active');
+                            this.selectedLevel = btn.dataset.level;
+                            this.generatePlan();
+                        });
+                    });
+                }
+
+                generatePlan() {
+                    if (!this.selectedLanguage || !this.selectedLevel) return;
+
+                    const curriculum = this.curriculumDatabase[this.selectedLanguage][this.selectedLevel];
+                    this.totalWeeks = curriculum.weeks;
+                    this.currentWeek = this.getCurrentWeek();
+
+                    // AI ile plan oluştur (basit pattern matching ve öğrenme)
+                    const plan = this.aiGeneratePlan(curriculum);
+
+                    this.displayPlan(plan);
+                    this.updateProgress();
+                    this.saveProgress();
+                    
+                    // Bildirim göster
+                    if (this.currentWeek === 0) {
+                        this.showNotification(
+                            'Plan Oluşturuldu! 🎯',
+                            `${curriculum.name} için ${curriculum.weeks} haftalık öğrenme planınız hazır. İyi çalışmalar!`
+                        );
+                    }
+                }
+
+                // Basit AI Planlama Algoritması (Pattern Matching + Learning)
+                aiGeneratePlan(curriculum) {
+                    // Kullanıcı tercihlerini analiz et
+                    const userProfile = this.analyzeUserProfile();
+                    
+                    // Öğrenme hızını hesapla (basit AI)
+                    const learningSpeed = this.calculateLearningSpeed(userProfile);
+                    
+                    // Planı özelleştir
+                    const personalizedPlan = this.personalizePlan(curriculum, learningSpeed, userProfile);
+                    
+                    return personalizedPlan;
+                }
+
+                analyzeUserProfile() {
+                    // Kullanıcı geçmiş verilerini analiz et
+                    const history = this.userPreferences.history || [];
+                    const completedWeeks = history.filter(h => h.completed).length;
+                    const averageCompletionTime = this.calculateAverageTime(history);
+                    
+                    return {
+                        experience: completedWeeks > 5 ? 'experienced' : 'beginner',
+                        speed: averageCompletionTime < 7 ? 'fast' : averageCompletionTime > 10 ? 'slow' : 'normal',
+                        consistency: this.calculateConsistency(history)
+                    };
+                }
+
+                calculateLearningSpeed(profile) {
+                    // Basit AI karar ağacı
+                    let speed = 1.0; // Normal hız
+                    
+                    if (profile.experience === 'experienced') speed *= 0.9; // Daha hızlı
+                    if (profile.speed === 'fast') speed *= 0.85;
+                    if (profile.speed === 'slow') speed *= 1.15;
+                    if (profile.consistency > 0.8) speed *= 0.95; // Tutarlı öğrenme
+                    
+                    return speed;
+                }
+
+                personalizePlan(curriculum, speed, profile) {
+                    // Planı kullanıcı profiline göre özelleştir
+                    const plan = {
+                        name: curriculum.name,
+                        description: curriculum.description,
+                        weeks: curriculum.weeks,
+                        topics: [...curriculum.topics]
+                    };
+
+                    // Eğer kullanıcı deneyimliyse, bazı temel konuları atla
+                    if (profile.experience === 'experienced' && this.selectedLevel === 'intermediate') {
+                        // İlk haftanın bazı konularını birleştir
+                        if (plan.topics.length > 0) {
+                            plan.topics[0] = [...plan.topics[0], ...plan.topics[1].slice(0, 1)];
+                        }
+                    }
+
+                    return plan;
+                }
+
+                calculateAverageTime(history) {
+                    if (history.length === 0) return 7; // Varsayılan 7 gün
+                    const total = history.reduce((sum, h) => sum + (h.completionTime || 7), 0);
+                    return total / history.length;
+                }
+
+                calculateConsistency(history) {
+                    if (history.length < 2) return 0.5;
+                    // Haftalar arası tutarlılık hesapla
+                    let consistent = 0;
+                    for (let i = 1; i < history.length; i++) {
+                        const diff = Math.abs((history[i].completionTime || 7) - (history[i-1].completionTime || 7));
+                        if (diff <= 2) consistent++;
+                    }
+                    return consistent / (history.length - 1);
+                }
+
+                displayPlan(plan) {
+                    document.getElementById('planTitle').textContent = plan.name;
+                    document.getElementById('planSubtitle').textContent = plan.description;
+                    
+                    const weeksContainer = document.getElementById('weeksContainer');
+                    weeksContainer.innerHTML = '';
+
+                    plan.topics.forEach((weekTopics, index) => {
+                        const weekCard = document.createElement('div');
+                        weekCard.className = 'week-card';
+                        weekCard.innerHTML = `
+                            <div class="week-header">
+                                <div class="week-number">Hafta ${index + 1}</div>
+                                ${index < this.currentWeek ? '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Tamamlandı</span>' : ''}
+                            </div>
+                            <ul class="week-topics">
+                                ${weekTopics.map(topic => `<li>${topic}</li>`).join('')}
+                            </ul>
+                        `;
+                        weeksContainer.appendChild(weekCard);
+                    });
+
+                    document.getElementById('planContainer').classList.add('active');
+                    document.getElementById('progressTracker').classList.add('active');
+                }
+
+                updateProgress() {
+                    const progress = (this.currentWeek / this.totalWeeks) * 100;
+                    document.getElementById('progressBar').style.width = `${progress}%`;
+                    document.getElementById('progressText').textContent = `${Math.round(progress)}%`;
+                    document.getElementById('currentWeek').textContent = `Hafta ${this.currentWeek}`;
+                    document.getElementById('totalWeeks').textContent = `Toplam ${this.totalWeeks} Hafta`;
+
+                    // Bildirimler
+                    if (this.currentWeek >= 8 && this.selectedLevel === 'beginner') {
+                        this.showNotification(
+                            'Tebrikler! 🎉',
+                            '8 haftalık temel seviye planını tamamladınız! Artık orta seviyeye geçebilirsiniz.'
+                        );
+                    } else if (this.currentWeek >= 12 && this.selectedLevel === 'intermediate') {
+                        this.showNotification(
+                            'Harika! 🚀',
+                            '12 haftalık orta seviye planını tamamladınız! İleri seviyeye hazırsınız.'
+                        );
+                    } else if (this.currentWeek >= 16 && this.selectedLevel === 'advanced') {
+                        this.showNotification(
+                            'Mükemmel! 🌟',
+                            '16 haftalık ileri seviye planını tamamladınız! Artık uzman seviyesindesiniz!'
+                        );
+                    }
+                }
+
+                getCurrentWeek() {
+                    const progress = this.loadProgress();
+                    if (progress.language === this.selectedLanguage && progress.level === this.selectedLevel) {
+                        return progress.currentWeek || 0;
+                    }
+                    return 0;
+                }
+
+                loadProgress() {
+                    try {
+                        const saved = localStorage.getItem('learningProgress');
+                        if (saved) {
+                            const progress = JSON.parse(saved);
+                            if (progress.language === this.selectedLanguage && progress.level === this.selectedLevel) {
+                                this.currentWeek = progress.currentWeek || 0;
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Progress yükleme hatası:', e);
+                    }
+                }
+
+                saveProgress() {
+                    try {
+                        const progress = {
+                            language: this.selectedLanguage,
+                            level: this.selectedLevel,
+                            currentWeek: this.currentWeek,
+                            lastUpdate: new Date().toISOString()
+                        };
+                        localStorage.setItem('learningProgress', JSON.stringify(progress));
+                    } catch (e) {
+                        console.error('Progress kaydetme hatası:', e);
+                    }
+                }
+
+                loadPreferences() {
+                    try {
+                        const saved = localStorage.getItem('userPreferences');
+                        return saved ? JSON.parse(saved) : { history: [] };
+                    } catch (e) {
+                        return { history: [] };
+                    }
+                }
+
+                showNotification(title, message) {
+                    const notification = document.getElementById('notification');
+                    document.getElementById('notificationTitle').textContent = title;
+                    document.getElementById('notificationMessage').textContent = message;
+                    notification.classList.add('active');
+
+                    setTimeout(() => {
+                        notification.classList.remove('active');
+                    }, 5000);
+                }
+            }
+
+            // Sayfa yüklendiğinde başlat
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    new AIPlanningEngine();
+                });
+            } else {
+                new AIPlanningEngine();
+            }
+        })();
+    </script>
+</body>
+</html>
+

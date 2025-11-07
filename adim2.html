@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adım 2: Görev Zamanı! Algoritma Bloklarını Test Et - DijitalGNÇ</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* [ADIM 1'DEN KOPYALANAN TEMEL CSS STİLLERİ] */
+        :root {
+            --primary: #8A2BE2;
+            --secondary: #FF3CAC;
+            --accent: #00FFFF;
+            --dark: #0F0524;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+        }
+
+        /* Temel CSS */
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            /* Arka plan animasyonları buraya kopyalanmalı */
+        }
+        
+        .content-section {
+            padding: 120px 0 50px;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        .step-content-card {
+            background: rgba(15, 5, 36, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 4rem;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 50px rgba(138, 43, 226, 0.5);
+        }
+
+        .step-heading {
+            font-family: 'Bruno Ace SC', sans-serif;
+            color: var(--accent);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .step-description p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+        
+        /* --- PEMBE FOSFORLU KALEM EFEKTİ (Birebir Aynı) --- */
+        .highlight-text {
+            background-color: rgba(255, 60, 172, 0.4); 
+            color: var(--text-light); 
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold; 
+            display: inline;
+            box-shadow: 0 0 5px rgba(255, 60, 172, 0.5); 
+        }
+        
+        /* Liste ve Link Stilleri (Adım 1'den Kopyalandı) */
+        .card-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .card-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .text-col {
+            flex: 1 1 50%;
+            min-width: 300px;
+        }
+        .visual-col {
+            flex: 1 1 40%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+        /* ... Diğer liste ve buton stilleri ... */
+        
+        /* --- YENİ ADIM 2 ÖZEL CSS VE ANİMASYONLAR --- */
+
+        .mission-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        .mission-title {
+            color: var(--accent);
+            font-family: 'Bruno Ace SC', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .mission-step {
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 10px;
+            background: rgba(138, 43, 226, 0.1);
+            padding: 8px 15px;
+            border-radius: 5px;
+            border-left: 3px solid var(--primary);
+        }
+        
+        /* Yeni Animasyonlu Görseller için CSS */
+        
+        /* 1. Sıralı Blok (Robot Kolu Animasyonu) */
+        .visual-card.sequence {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+            border-radius: 10px; /* Karemsi görünüm */
+            position: relative;
+        }
+        .visual-card.sequence .arm-part {
+            position: absolute;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .visual-card.sequence .part-1 {
+            width: 80px; height: 10px; top: 50px; left: 50px;
+            animation: move-right 3s ease-in-out infinite alternate;
+        }
+        .visual-card.sequence .part-2 {
+            width: 10px; height: 80px; top: 50px; left: 130px;
+            animation: move-down 3s ease-in-out infinite alternate;
+        }
+        @keyframes move-right { 0% { transform: translateX(0); } 100% { transform: translateX(20px); } }
+        @keyframes move-down { 0% { transform: translateY(0); } 100% { transform: translateY(20px); } }
+
+
+        /* 2. Karar Bloğu (Anahtar ve Kilit Animasyonu) */
+        .visual-card.decision {
+            border-color: var(--secondary);
+            box-shadow: 0 0 20px var(--secondary);
+        }
+        .visual-card.decision .lock-icon {
+            font-size: 4rem;
+            color: var(--secondary);
+            animation: shake 0.5s infinite alternate;
+        }
+        .visual-card.decision .key-icon {
+            font-size: 2rem;
+            color: var(--text-light);
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            animation: unlock 4s linear infinite;
+        }
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+            100% { transform: rotate(-5deg); }
+        }
+        @keyframes unlock {
+            0% { transform: translate(0, 0); opacity: 1; }
+            40% { transform: translate(40px, 40px) rotate(90deg); opacity: 1; }
+            50% { opacity: 0; }
+            100% { transform: translate(0, 0); opacity: 1; }
+        }
+
+
+        /* 3. Döngü Bloğu (Sonsuz Dönen Halka Animasyonu) */
+        .visual-card.loop {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+        }
+        .visual-card.loop .ring {
+            width: 100px;
+            height: 100px;
+            border: 5px dashed var(--accent);
+            border-radius: 50%;
+            position: absolute;
+            animation: rotate-slow 10s linear infinite;
+        }
+        .visual-card.loop .ring:nth-child(2) {
+            width: 140px;
+            height: 140px;
+            animation: rotate-fast 6s linear infinite reverse;
+        }
+        @keyframes rotate-slow {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes rotate-fast {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Navigasyon ve diğer genel stiller (Adım 1'den kopyalanmalı) */
+        .next-step-link {
+            /* ... stiller kopyalandı ... */
+        }
+        
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">DİJİTALGNÇ</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html#ana-sayfa">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#ne-sunuyoruz">Neler Sunuyoruz</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#adimlar">Adımlar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#kod-kartlari">Kod Kartları</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#kariyer">Kariyer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#kaynaklar">Kaynaklar</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="adim-2-icerik" class="content-section">
+        <div class="container">
+            <h1 class="section-title text-center mb-5">ADIM 2: GÖREV ZAMANI! ALGORİTMA BLOKLARINI TEST ET</h1>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-11">
+                    <div class="step-content-card">
+                        
+                        <h2 class="step-heading"><i class="fas fa-hammer me-3"></i> Gİrİş: Kodlama Kasını İnşa Et!</h2>
+                        <div class="step-description">
+                            <p>Tebrikler, Ajan! Artık üç sihirli blokun ne olduğunu biliyorsun: Sıra, Karar ve Döngü. Ama bir süper kahraman, sadece kostüm giyerek süper kahraman olmaz, <span class="highlight-text">güçlerini kullanarak pratik yapmalıdır!</span></p>
+                            <p>Bu bölümde, öğrendiğimiz blokları kullanarak <span class="highlight-text">üç farklı görevde</span> Algoritma kasımızı geliştireceğiz. Hazır mısın? Bilgisayarın senden talimat bekliyor!</p>
+                        </div>
+                        
+                        <h2 class="step-heading mt-5"><i class="fas fa-robot me-3"></i> Görev 1: Kod Robotunun Adımları (Sıralı Blok)</h2>
+                        <div class="card-row">
+                            <div class="text-col">
+                                <div class="step-description">
+                                    <p>Sıralı blok, <span class="highlight-text">her şeyin adım adım, düz bir çizgide</span> ilerlediği en temel mantıktır. Robotuna basit bir görev vereceksin: **Küp Şeklinde Bir Pasta Yapmak!** Robotun asla karar veremez veya bir şeyi tekrar edemez. Sadece sırayı takip eder.</p>
+                                    <div class="mission-box">
+                                        <div class="mission-title">GÖREV: Pastanın Yapılış Algorİtması</div>
+                                        <div class="mission-step"><i class="fas fa-arrow-right me-2"></i> 1. Adım: Tüm Malzemeleri Masaya Koy.</div>
+                                        <div class="mission-step"><i class="fas fa-arrow-right me-2"></i> 2. Adım: Kuru Malzemeleri Karıştır.</div>
+                                        <div class="mission-step"><i class="fas fa-arrow-right me-2"></i> 3. Adım: Yumurta ve Sütü Ekle.</div>
+                                        <div class="mission-step"><i class="fas fa-arrow-right me-2"></i> 4. Adım: Karışımı Kare Kalıba Dök.</div>
+                                        <div class="mission-step"><i class="fas fa-arrow-right me-2"></i> 5. Adım: 30 Dakika Fırında Pişir.</div>
+                                    </div>
+                                    <p class="mt-3">Gördüğün gibi, hiçbir adımı değiştiremezsin. <span class="highlight-text">Sırayı bozarsan</span> (mesela fırına koymadan pişirirsen), görev başarısız olur! Kodlama da böyledir: Sıra önemlidir!</p>
+                                </div>
+                            </div>
+                            <div class="visual-col">
+                                <div class="visual-card sequence">
+                                    <div class="arm-part part-1"></div>
+                                    <div class="arm-part part-2"></div>
+                                    <i class="fas fa-cubes" style="font-size: 5rem; color: var(--primary); margin-top: 20px;"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="step-heading mt-5"><i class="fas fa-lightbulb me-3"></i> Görev 2: Süpermarket Dedektİfİ (Karar Bloğu)</h2>
+                        <div class="card-row">
+                            <div class="text-col">
+                                <div class="step-description">
+                                    <p>Karar Bloğu, <span class="highlight-text">"EĞER bir koşul DOĞRU ise, şunu YAP; DEĞİLSE, başka bir şey YAP"</span> demenin kodlama yolu. Bu görevde, markette bir dedektifsin. Görevin: Sadece **kampanyalı ürünleri** sepete eklemek.</p>
+                                    <div class="mission-box">
+                                        <div class="mission-title">MANTIĞIN İŞLEYİŞİ (Sözde Kod)</div>
+                                        <div class="mission-step"><i class="fas fa-search me-2"></i> 1. Adım: Bir Ürüne Bak.</div>
+                                        <div class="mission-step"><i class="fas fa-check-circle me-2"></i> **EĞER** (Üründe Kırmızı Kampanya Etiketi Varsa) **O ZAMAN**: Sepete Ekle.</div>
+                                        <div class="mission-step"><i class="fas fa-times-circle me-2"></i> **DEĞİLSE**: Rafta Bırak ve Sonraki Ürüne Geç.</div>
+                                        <div class="mission-step"><i class="fas fa-flag-checkered me-2"></i> **BİTİR**.</div>
+                                    </div>
+                                    <p class="mt-3">Bu blok, <span class="highlight-text">bilgisayarın akıllıca seçim yapmasını</span> sağlar. Oyunlarda karakterinin bir duvara çarpıp çarpmadığına karar vermesi veya şifrenin doğru olup olmadığını kontrol etmesi bu blok sayesindedir!</p>
+                                </div>
+                            </div>
+                            <div class="visual-col">
+                                <div class="visual-card decision">
+                                    <i class="fas fa-lock lock-icon"></i>
+                                    <i class="fas fa-key key-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="step-heading mt-5"><i class="fas fa-sync-alt me-3"></i> Görev 3: Gezegenlerİ Sayma Yarışı (Döngü Bloğu)</h2>
+                        <div class="card-row">
+                            <div class="text-col">
+                                <div class="step-description">
+                                    <p>Döngü Bloğu, bilgisayarın <span class="highlight-text">aynı talimatı yüzlerce kez yorulmadan</span> tekrarlamasını sağlar. Gezegeni keşfetme görevi aldın ve 100 tane yeni gezegen bulman gerekiyor. Bunu 100 kere yazmak yerine, bilgisayara **"TEKRARLA"** dersin!</p>
+                                    <p>İki tür döngü yaygındır:</p>
+                                    <ul>
+                                        <li><i class="fas fa-redo me-2"></i> **Sayılı Döngü:** Kaç kez tekrarlayacağını bildiğinde kullanılır. (Örn: 10 kere zıpla).</li>
+                                        <li><i class="fas fa-infinity me-2"></i> **Koşullu Döngü:** Bir durum değişene kadar devam eder. (Örn: Işık yeşil olana kadar bekle).</li>
+                                    </ul>
+                                    <div class="mission-box">
+                                        <div class="mission-title">TEKRARLA! (Sözde Kod)</div>
+                                        <div class="mission-step"><i class="fas fa-calculator me-2"></i> Sayacı 1'den Başlat.</div>
+                                        <div class="mission-step"><i class="fas fa-redo-alt me-2"></i> <span class="highlight-text">SAYAÇ 100'e ULAŞANA KADAR TEKRARLA</span>:</div>
+                                        <div class="mission-step ps-4"><i class="fas fa-satellite-dish me-2"></i> Yeni Gezegen Bul.</div>
+                                        <div class="mission-step ps-4"><i class="fas fa-plus me-2"></i> Sayacı 1 Artır.</div>
+                                        <div class="mission-step"><i class="fas fa-flag-checkered me-2"></i> BİTİR.</div>
+                                    </div>
+                                    <p class="mt-3">Döngüler sayesinde, <span class="highlight-text">uzun ve sıkıcı işleri saniyeler içinde</span> halledebiliriz. Bu, programlamanın en büyük gücüdür!</p>
+                                </div>
+                            </div>
+                            <div class="visual-col">
+                                <div class="visual-card loop">
+                                    <div class="ring"></div>
+                                    <div class="ring"></div>
+                                    <i class="fas fa-globe-americas" style="font-size: 5rem; color: var(--accent);"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="step-heading mt-5"><i class="fas fa-trophy me-3"></i> Tebrİkler! Görev Tamamlandı!</h2>
+                        <div class="step-description">
+                            <p>Artık sadece algoritma nedir bilmiyorsun, aynı zamanda <span class="highlight-text">üç ana blokun ne zaman ve nasıl kullanılacağını</span> da biliyorsun! Sıra, Karar ve Döngü. Bu üç silahşör, tüm kodlama maceralarında seninle olacak.</p>
+                            <p>Sıradaki Adım 3'te, bu bilgileri gerçek bir kodlama diline (Sözde Kod'dan gerçek koda) nasıl çevireceğimizi öğrenecek ve <span class="highlight-text">Usta Kodlayıcı</span> olmaya bir adım daha yaklaşacaksın. Başarılı bir görevdi, Ajan!</p>
+                        </div>
+                        
+                        <a href="adim3.html" class="next-step-link">
+                            <i class="fas fa-star me-2"></i> ADIM 3'E GEÇ: USTALAŞMA ZAMANI!
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

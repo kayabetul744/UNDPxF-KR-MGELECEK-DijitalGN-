@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kod Editörü ile Siber Algoritma Avı</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CYBERPUNK DEĞİŞKENLERİ */
+        :root {
+            --primary: #8A2BE2; /* Mor */
+            --primary-dark: #6A0DAD; 
+            --secondary: #FF3CAC; /* Pembe */
+            --accent: #00FFFF; /* Camgöbeği (Neon Glow) */
+            --dark: #0F0524; /* Çok Koyu Mor */
+            --text-light: #f5f5ff;
+            --ghost-color: #FF5757; /* Hayalet Kırmızı */
+            --pacman-color: #00FF99; /* Pacman Neon Yeşil */
+            --pellet-color: var(--accent); /* Camgöbeği Noktalar */
+        }
+        
+        body {
+            /* Mor/Neon Arkaplan */
+            background: linear-gradient(to right, var(--dark), #240047, var(--dark));
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+        
+        .container {
+            /* Glassmorphism Ana Kapsayıcı */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(15, 5, 36, 0.7);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px var(--primary);
+            backdrop-filter: blur(10px);
+            max-width: 900px;
+            margin: 20px auto;
+            border: 1px solid var(--accent);
+        }
+        
+        .editor-section {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            border: 2px solid var(--primary-dark);
+            border-radius: 8px;
+            background-color: var(--dark);
+            color: var(--success-color); /* Kod Yazısı Neon Yeşil */
+            font-family: 'Quantico', monospace;
+            font-size: 14px;
+            resize: vertical;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        button {
+            /* Neon Çalıştır Butonu */
+            padding: 12px 20px;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            color: var(--dark);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 0 15px var(--accent);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Bruno Ace SC', sans-serif;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px var(--accent);
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+        }
+        
+        .output {
+            /* Oyun Çıktı Çerçevesi */
+            width: 100%;
+            border: 3px solid var(--secondary);
+            border-radius: 10px;
+            background-color: #000;
+            padding: 5px;
+            color: var(--text-light);
+            box-shadow: 0 0 20px var(--secondary);
+            min-height: 400px; /* Oyunun daha iyi görünmesi için */
+        }
+
+        /* --- OYUN ÖNİZLEMESİ İÇİN TEMEL STİLLER --- */
+        
+        .game-container {
+            /* HTML içindeki oyun kapsayıcısına özel boyutlar */
+            width: 100%; 
+            height: auto; 
+            background-color: var(--dark);
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            margin: 0;
+        }
+
+        .maze {
+            border: 2px solid var(--primary); /* Labirent Çerçevesi Mor */
+            background-color: #000;
+        }
+
+        .pacman {
+            /* Pac-Man (Algoritma Robotu) */
+            background-color: var(--pacman-color);
+            box-shadow: 0 0 10px var(--pacman-color);
+        }
+
+        .ghost {
+            /* Hayalet (Virüs/Bug) */
+            background-color: var(--ghost-color);
+            box-shadow: 0 0 10px var(--ghost-color);
+        }
+
+        .pellet {
+            /* Noktalar (Veri/Puan) */
+            background-color: var(--pellet-color);
+            box-shadow: 0 0 5px var(--pellet-color);
+        }
+
+        .score {
+            /* Puan Görüntüsü */
+            color: var(--secondary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            text-shadow: 0 0 5px var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color:var(--secondary); font-family: 'Bruno Ace SC', sans-serif; font-size: 1.8rem;">KOD LABORATUVARI: PAC-MAN</h1>
+        
+        <div class="editor-section">
+            <p style="color:var(--text-muted); margin-bottom: 10px; font-size: 1rem;">Kodunuzu düzenleyin ve alttaki kutuda çalışmasını izleyin.</p>
+            <textarea id="html-code" placeholder="HTML Kodunuzu Yazın"></textarea>
+            <textarea id="css-code" placeholder="CSS Kodunuzu Yazın"></textarea>
+            <textarea id="js-code" placeholder="JavaScript Kodunuzu Yazın"></textarea>
+            <button onclick="runCode()">ÇALIŞTIR</button>
+        </div>
+        
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        function runCode() {
+            const html = document.getElementById('html-code').value;
+            const css = "<style>" + document.getElementById('css-code').value + "</style>";
+            const jsCode = document.getElementById('js-code').value;
+            const output = document.getElementById('output');
+            
+            // Önceki scriptleri temizle (tekrar çalıştırmayı önlemek için)
+            output.innerHTML = ''; 
+            
+            // Output'u temizle ve yeni HTML/CSS'i ekle
+            output.innerHTML = html + css;
+            
+            const script = document.createElement("script");
+            // Güvenlik: JS kodunu ayrı bir fonksiyon içinde çalıştırarak global scope'u kirletmemeye çalışırız.
+            script.textContent = jsCode;
+            output.appendChild(script);
+        }
+
+        // Örnek HTML, CSS ve JS kodları (Orijinal yapısı korunmuştur)
+        document.getElementById('html-code').value = `
+<div class="game-container">
+  <div class="maze">
+    <div id="pacman" class="pacman"></div>
+    <div id="ghost" class="ghost"></div>
+    <div class="pellet" style="top: 50px; left: 50px;"></div>
+    <div class="pellet" style="top: 50px; left: 550px;"></div>
+    <div class="pellet" style="top: 550px; left: 50px;"></div>
+    <div class="pellet" style="top: 550px; left: 550px;"></div>
+  </div>
+  <div class="score">Puan: <span id="score">0</span></div>
+</div>
+        `;
+
+        document.getElementById('css-code').value = `
+/* Temayı korumak için, oyun içindeki renkleri buraya yeniden tanımlayın */
+.game-container {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  background-color: #000;
+  border: 4px solid var(--primary); /* Mor Çerçeve */
+  box-shadow: 0 0 15px var(--accent);
+}
+
+.maze {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.pacman {
+  /* ALGORTİMA AVATARI */
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background-color: var(--pacman-color); /* Neon Yeşil */
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--pacman-color);
+}
+
+.ghost {
+  /* VİRÜS/BUG TEMSİLCİSİ */
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50% 50% 0 0;
+  background-color: var(--ghost-color); /* Kırmızı */
+  box-shadow: 0 0 10px var(--ghost-color);
+}
+
+.pellet {
+  /* VERİ NOKTALARI */
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background-color: var(--pellet-color); /* Camgöbeği */
+  border-radius: 50%;
+  box-shadow: 0 0 5px var(--pellet-color);
+}
+
+.score {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 24px;
+  color: var(--secondary); /* Pembe Puan */
+  font-family: 'Orbitron', sans-serif;
+  text-shadow: 0 0 5px var(--secondary);
+}
+        `;
+
+        document.getElementById('js-code').value = `
+// Pac-Man'in başlangıç pozisyonu
+let pacman = document.getElementById('pacman');
+let pacmanX = 290;
+let pacmanY = 290;
+
+// Hayalet
+let ghost = document.getElementById('ghost');
+let ghostX = 100;
+let ghostY = 100;
+
+// Puan
+let score = 0;
+const scoreElement = document.getElementById('score');
+
+// Pac-Man'i hareket ettirme
+document.addEventListener('keydown', (event) => {
+  // NOT: Oyun, klavye olaylarını sadece ana pencerede dinler.
+  // Çıktı (output) iframe olmadığı için, kod bu editörün içinde çalışacaktır.
+  
+  // Sadece ok tuşlarını kontrol et
+  if (event.key.startsWith('Arrow')) {
+    event.preventDefault(); // Sayfanın kaymasını engelle
+  }
+
+  switch (event.key) {
+    case 'ArrowUp':
+      pacmanY -= 10;
+      break;
+    case 'ArrowDown':
+      pacmanY += 10;
+      break;
+    case 'ArrowLeft':
+      pacmanX -= 10;
+      break;
+    case 'ArrowRight':
+      pacmanX += 10;
+      break;
+  }
+  pacman.style.top = pacmanY + 'px';
+  pacman.style.left = pacmanX + 'px';
+  checkCollision();
+});
+
+// Çarpışma kontrolü
+function checkCollision() {
+  const pellets = document.querySelectorAll('.pellet');
+  pellets.forEach(pellet => {
+    // getBoundingClientRect, gerçek ekrandaki konumu hesaplar
+    const pelletRect = pellet.getBoundingClientRect();
+    const pacmanRect = pacman.getBoundingClientRect();
+    
+    // Basit kutu çarpışması (AABB)
+    if (
+      pacmanRect.left < pelletRect.right &&
+      pacmanRect.right > pelletRect.left &&
+      pacmanRect.top < pelletRect.bottom &&
+      pacmanRect.bottom > pelletRect.top &&
+      pellet.style.visibility !== 'hidden' // Görünürse çarpışmayı kontrol et
+    ) {
+      pellet.style.visibility = 'hidden'; // Noktayı silmek yerine gizle
+      score += 10;
+      scoreElement.textContent = score;
+    }
+  });
+
+  // Hayalet ile çarpışma kontrolü
+  const ghostRect = ghost.getBoundingClientRect();
+  const pacmanRect = pacman.getBoundingClientRect();
+  if (
+    pacmanRect.left < ghostRect.right &&
+    pacmanRect.right > ghostRect.left &&
+    pacmanRect.top < ghostRect.bottom &&
+    pacmanRect.bottom > ghostRect.top
+  ) {
+    alert("Oyun Bitti! Puanınız: " + score);
+    // Tekrar başlatma işlemi için JS kodunu resetlemek gerekir, bu yüzden yeniden yükleme mantığını kullanıyoruz.
+    location.reload(); 
+  }
+}
+
+// Hayalet hareketi (Pac-Man'i takip etme)
+function moveGhost() {
+  // getBoundingClientRect burada hatalı sonuç verebilir çünkü pozisyonlar bağıl
+  // Ancak orijinal koda dokunmadığımız için, bağıl pozisyonları kullanmaya devam edelim:
+  const ghostRect = {left: parseInt(ghost.style.left), top: parseInt(ghost.style.top)};
+  const pacmanRect = {left: pacmanX, top: pacmanY};
+
+  if (ghostRect.left < pacmanRect.left) {
+    ghostX += 2;
+  } else if (ghostRect.left > pacmanRect.left) {
+    ghostX -= 2;
+  }
+
+  if (ghostRect.top < pacmanRect.top) {
+    ghostY += 2;
+  } else if (ghostRect.top > pacmanRect.top) {
+    ghostY -= 2;
+  }
+
+  ghost.style.left = ghostX + 'px';
+  ghost.style.top = ghostY + 'px';
+  checkCollision(); // Hayalet çarpışmasını sürekli kontrol et
+}
+
+// Hayaleti hareket ettiren döngü
+setInterval(moveGhost, 50);
+        `;
+    </script>
+</body>
+</html>

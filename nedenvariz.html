@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KodFabrik - Kodlamanın Eğlenceli Hali</title>
+    
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #8A2BE2;
+            --primary-dark: #6A0DAD;
+            --secondary: #FF3CAC;
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF;
+            --accent-dark: #00E5E5;
+            --dark: #0F0524;
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --glow-color: rgba(138, 43, 226, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 15px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.08) 0px, rgba(138, 43, 226, 0.08) 2px, transparent 2px, transparent 15px),
+                radial-gradient(rgba(138, 43, 226, 0.15) 2px, transparent 2px),
+                radial-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(135deg, #0A031A 0%, #240047 25%, #410063 75%, #0F0524 100%);
+            background-size: 25px 25px, 25px 25px, 40px 40px, 60px 60px, 100% 100%;
+            background-position: 0 0, 0 0, 0 0, 20px 20px, 0 0;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { background-position: 0 0, 0 0, 0 0, 20px 20px, 0 0; }
+            50% { background-position: 25px 25px, -25px -25px, 40px 40px, 0 0, 0 0; }
+        }
+        
+        /* Glow particles animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(3px 3px at 100px 150px, rgba(138, 43, 226, 0.6), transparent),
+                radial-gradient(2px 2px at 200px 300px, rgba(0, 255, 255, 0.4), transparent),
+                radial-gradient(4px 4px at 350px 100px, rgba(255, 60, 172, 0.5), transparent),
+                radial-gradient(1px 1px at 450px 250px, rgba(138, 43, 226, 0.7), transparent),
+                radial-gradient(2px 2px at 600px 180px, rgba(0, 255, 255, 0.3), transparent);
+            background-repeat: repeat;
+            background-size: 700px 400px;
+            animation: particleFloat 25s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Navigation with glassmorphism effect */
+        .navbar {
+            background: rgba(15, 5, 36, 0.85) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--primary), var(--accent), var(--primary)) 1;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand {
+            font-family: 'Bruno Ace SC', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary) !important;
+            text-decoration: none;
+            text-shadow: 0 0 20px var(--glow-color);
+            position: relative;
+        }
+        
+        .navbar-brand::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(138, 43, 226, 0.1), transparent);
+            animation: brandGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes brandGlow {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .nav-link:hover {
+            color: var(--highlight) !important;
+            text-shadow: 0 0 10px var(--highlight);
+            background-color: rgba(138, 43, 226, 0.2);
+        }
+        
+        /* Section transitions with border animations */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+            border-top: 1px solid transparent;
+            border-image: linear-gradient(90deg, transparent, var(--primary), var(--accent), var(--primary), transparent) 1;
+        }
+        
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--accent), var(--primary), transparent);
+            animation: borderFlow 4s ease-in-out infinite;
+        }
+        
+        @keyframes borderFlow {
+            0%, 100% { transform: translateX(-100%); opacity: 0; }
+            50% { transform: translateX(0%); opacity: 1; }
+        }
+        
+        .section-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            text-align: center;
+            font-family: 'Bruno Ace SC', sans-serif;
+            position: relative;
+            background: linear-gradient(45deg, var(--primary), var(--accent), var(--secondary), var(--primary));
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 4s ease-in-out infinite;
+        }
+        
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+            animation: titleUnderline 2s ease-in-out infinite;
+        }
+        
+        @keyframes titleUnderline {
+            0%, 100% { width: 50px; }
+            50% { width: 150px; }
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+        
+        /* Hero Section with parallax effect */
+        .hero-section {
+            min-height: 10vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 120px 0 50px;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            font-family: 'Bruno Ace SC', sans-serif;
+            background: linear-gradient(45deg, var(--primary), var(--accent), var(--secondary), var(--primary));
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: heroGradient 3s ease-in-out infinite;
+            text-shadow: 0 0 40px rgba(138, 43, 226, 0.5);
+            position: relative;
+        }
+        
+        @keyframes heroGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            color: var(--text-muted);
+            font-family: 'Quantico', sans-serif;
+            letter-spacing: 1px;
+            animation: subtitleGlow 4s ease-in-out infinite;
+        }
+        
+        @keyframes subtitleGlow {
+            0%, 100% { text-shadow: none; }
+            50% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+        }
+        
+        .hero-buttons {
+            margin-top: 2rem;
+        }
+        
+        .hero-buttons .btn {
+            margin-right: 15px;
+            margin-bottom: 15px;
+            padding: 15px 35px;
+            border-radius: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--text-light);
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .hero-buttons .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+        
+        .hero-buttons .btn:hover::before {
+            left: 100%;
+        }
+        
+        .hero-buttons .btn:hover {
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--glow-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Cyber grid background for hero */
+        .cyber-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(138, 43, 226, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(138, 43, 226, 0.1) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px, 50px 50px, 20px 20px, 20px 20px;
+            background-position: 0 0, 0 0, 0 0, 0 0;
+            animation: gridMove 10s linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+       
+        
+       
+        
+        
+        
+        
+        
+        
+        
+      
+    </style>
+</head>
+<body>
+
+
+  <!-- Hero Section -->
+<section id="ana-sayfa" class="hero-section">
+  <div class="cyber-grid"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="hero-content text-center">
+          <h1 class="hero-title">🌟 Neden Varız?</h1>
+
+          <p class="hero-description mb-4" style="font-size: 1.2rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; text-align: justify; line-height: 1.8;">
+            💻 <strong>DijitalGNÇ</strong>, dijital dünyayı sadece kullanan değil, onu <em>üreten</em> bir genç nesil yetiştirmek için kuruldu.  
+            Günümüz gençleri teknolojiyle iç içe büyüyor, ama çoğu zaman bu teknolojinin nasıl çalıştığını, nasıl geliştirilebileceğini öğrenemiyor.  
+            Biz, bu farkı ortadan kaldırmak için yola çıktık 🚀  
+            <br><br>
+
+            🔍 <strong>Neden?</strong>  
+            Çünkü biliyoruz ki bir genç, kodlama sayesinde düşünmeyi, planlamayı ve üretmeyi öğrenir.  
+            Kod yazmak yalnızca teknik bir beceri değil; aynı zamanda yaratıcılığın, sabrın ve problem çözme gücünün bir ifadesidir.  
+            Biz bu gücü her gencin keşfetmesini istiyoruz 🌱  
+            <br><br>
+
+            🎯 <strong>Misyonumuz:</strong>  
+            DijitalGNÇ olarak, her öğrencinin kendi hızında öğrenebileceği, hata yapmaktan korkmadan ilerleyebileceği bir öğrenme alanı oluşturduk.  
+            Renkli arayüzler, etkileşimli örnekler ve oyunlaştırılmış görevlerle öğrenme süreci artık sıkıcı değil — tam tersine, heyecan verici! ⚡  
+            <br><br>
+
+            🌍 <strong>Eşit Fırsat, Erişilebilir Eğitim:</strong>  
+            Her öğrencinin teknolojiye ulaşma şansı eşit değil.  
+            Bu nedenle DijitalGNÇ tamamen ücretsiz, sade dilli ve kolay anlaşılır bir yapıya sahip.  
+            Herkesin dijital beceriler kazanabileceği, herkesin potansiyelini gösterebileceği bir alan oluşturduk 💪  
+            <br><br>
+
+            🧠 <strong>Öğren, Dene, Üret:</strong>  
+            Platformumuzda öğrenciler yalnızca bilgi almıyor; aynı zamanda üretiyorlar.  
+            Kendi oyunlarını, web sitelerini veya algoritmalarını geliştiriyor, hatalarından öğreniyor ve “ben bunu yapabiliyorum!” demenin gururunu yaşıyorlar 😎  
+            <br><br>
+
+            🤝 <strong>Birlikte Güçlüyüz:</strong>  
+            DijitalGNÇ sadece öğrenciler için değil, aynı zamanda öğretmenler ve veliler için de bir rehber.  
+            Çünkü öğrenme, yalnızca bireysel değil; birlikte güçlenerek gerçekleşir.  
+            Eğitim materyallerimiz, öğretmenlere rehberlik ederken; veliler için de çocuklarının dijital yolculuğuna destek olacak araçlar sunuyor.  
+            <br><br>
+
+            💫 <strong>Vizyonumuz:</strong>  
+            Gelecekte, dijital dünyada yalnızca teknolojiye ayak uyduran değil, onu şekillendiren gençler görmek istiyoruz.  
+            Kodlama öğrenen her öğrenci, aslında kendi geleceğini inşa ediyor.  
+            Biz de onların bu yolculuğunda yanlarında olmak istiyoruz — çünkü her genç bir potansiyel taşıyor 🌠  
+            <br><br>
+
+            ❤️ <strong>Son Söz:</strong>  
+            DijitalGNÇ bir platformdan öte, bir <em>hareket</em>.  
+            Belki bugün bir buton tıklamasıyla başlayan bu macera, yarın bir yapay zekâ projesine, bir mobil uygulamaya, belki de yeni bir girişime dönüşecek.  
+            Ve biz, o satırların arasında yer almak istiyoruz…  
+            <br><br>
+
+            💬 <em>“Dijital geleceğin kapısı, gençlerin ellerinde açılacak.”</em> ✨  
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Video container functionality
+ 
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(15, 5, 36, 0.98)';
+                navbar.style.backdropFilter = 'blur(25px)';
+            } else {
+                navbar.style.background = 'rgba(15, 5, 36, 0.85)';
+                navbar.style.backdropFilter = 'blur(20px)';
+            }
+        });
+
+        // Parallax effect for cyber grid
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const cyberGrid = document.querySelector('.cyber-grid');
+            if (cyberGrid) {
+                cyberGrid.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Add intersection observer for section animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(50px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            sectionObserver.observe(section);
+        });
+
+        // Hero section is always visible
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) {
+            heroSection.style.opacity = '1';
+            heroSection.style.transform = 'translateY(0)';
+        }
+    </script>
+</body>
+</html>

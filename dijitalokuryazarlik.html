@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijital Okuryazarlık Testi 🧠</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* YENİ KOYU TEMA DEĞİŞKENLERİ (Ana Proje Teması) */
+        :root {
+            --primary: #8A2BE2; /* Mor (Ana Vurgu) */
+            --primary-hover: #6A0DAD; /* Koyu Mor */
+            --secondary: #FF3CAC; /* Pembe */
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF; /* Camgöbeği (Neon Glow) */
+            --dark: #0F0524; /* Koyu Arka Plan */
+            --darker: #0A031A;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --card-bg: rgba(15, 5, 36, 0.9); /* Glassmorphism Koyu */
+            --success-color: #00FF99; /* Neon Yeşil */
+            --error-color: #FF5757; /* Kırmızı Hata */
+            --info-color: #3DB4F2; /* Mavi Bilgi */
+            --glow-color: rgba(138, 43, 226, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* BODY VE ARKA PLAN */
+        body {
+            background-color: var(--dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 10px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.08) 0px, rgba(138, 43, 226, 0.08) 2px, transparent 2px, transparent 10px),
+                linear-gradient(135deg, var(--darker) 0%, #240047 25%, #410063 75%, var(--dark) 100%);
+            line-height: 1.6;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.6); /* Mor Glow */
+            max-width: 90%;
+            width: 650px;
+            animation: fadeIn 0.5s ease-in-out;
+            border: 1px solid var(--primary);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px var(--accent);
+            letter-spacing: 1px;
+            font-family: 'Bruno Ace SC', sans-serif;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        #password-challenge {
+            background-color: rgba(0, 0, 0, 0.4); 
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--primary);
+            position: relative;
+        }
+
+        #question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.8rem;
+            color: var(--text-light);
+            text-align: left;
+        }
+
+        .password-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .password-option {
+            background-color: rgba(138, 43, 226, 0.1); /* Mor Ton */
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .password-option:hover {
+            background-color: rgba(138, 43, 226, 0.3);
+            border-color: var(--accent);
+            transform: translateX(5px);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .password-option.selected {
+            background-color: rgba(138, 43, 226, 0.5);
+            border-color: var(--accent);
+        }
+
+        #tip-container {
+            background-color: rgba(0, 0, 0, 0.4);
+            border-left: 4px solid var(--info-color);
+            color: var(--info-color);
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1.05rem;
+        }
+
+        #notification {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .success {
+            background-color: rgba(0, 255, 153, 0.15);
+            border-left: 4px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .error {
+            background-color: rgba(255, 87, 87, 0.15);
+            border-left: 4px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .game-stats {
+            margin-top: 1rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, var(--secondary), var(--primary)); 
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .continue-btn:hover {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+        }
+
+        /* İkon Stilleri */
+        .feedback-icon {
+            margin-left: 10px;
+            font-size: 1.3rem;
+        }
+        .icon-success { color: var(--success-color); }
+        .icon-error { color: var(--error-color); }
+        
+        @media (max-width: 600px) {
+            .container { padding: 1.5rem; width: 95%; }
+            h1 { font-size: 1.8rem; }
+            .password-option { font-size: 0.95rem; padding: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dijital Okuryazarlık Testi 🧠</h1>
+        <p class="subtitle">Çevrimiçi dünyada doğru bilgi ve sorumlu davranışı seçin.</p>
+        
+        <div id="password-challenge">
+            <p id="question-text">Loading...</p>
+            <div class="password-options" id="password-options">
+                </div>
+            <div id="notification" class="hidden"></div>
+            <div id="tip-container" class="hidden"></div>
+            <button id="continue-btn" class="continue-btn hidden">Devam Et</button>
+        </div>
+        
+        <div class="game-stats">
+            <p id="score">Doğruluk Puanı: 0</p>
+            <p id="progress">İlerleme: 0/10</p>
+        </div>
+    </div>
+
+    <script>
+        // Sorular ve seçenekler (Dijital Okuryazarlık)
+        const passwordChallenges = [
+            {
+                question: "Sosyal medyada duygusal tepki uyandıran (çok şaşırtıcı, öfkelendirici) bir haber gördüğünüzde ilk kontrol etmeniz gereken nedir?",
+                options: [
+                    "Hemen duygusal tepki verip paylaşmak.",
+                    "Haberin hangi resmi kaynaktan (gazete, TV, ajans) geldiğini doğrulamak.",
+                    "Yorumları okuyup insanların ne düşündüğüne bakmak.",
+                    "Konunun ne kadar popüler olduğunu kontrol etmek."
+                ],
+                correctIndex: 1,
+                tip: "Duygusal tepki uyandıran içerikler genellikle yanlış bilgi yaymak için tasarlanmıştır. Her zaman 'teyit' kurumlarından veya resmi kaynaklardan doğrulatın."
+            },
+            {
+                question: "Tanımadığınız birinden 'Acil hesap bilgisi güncellemesi' konulu bir e-posta aldınız. E-postanın güvenli olup olmadığını nasıl anlarsınız?",
+                options: [
+                    "E-postadaki bağlantıya tıklayıp banka adının doğru yazılıp yazılmadığına bakarım.",
+                    "Gönderici adresinin sonuna bakarım; eğer banka adresi değilse dikkate almam (Örn: '@gmail.com').",
+                    "Şifremi hemen değiştirip e-postayı görmezden gelirim.",
+                    "Cevap vererek kim olduklarını sorarım."
+                ],
+                correctIndex: 1,
+                tip: "Resmi kurumlar asla kişisel e-posta adreslerinden (@gmail, @outlook) acil bildirim göndermez. Gönderici domain'ini (alan adını) kontrol edin."
+            },
+            {
+                question: "Bir yapay zeka tarafından üretilmiş görselin (Deepfake) sahte olduğunu anlamak için nelere odaklanmalısınız?",
+                options: [
+                    "Görseldeki renklerin parlaklığına.",
+                    "Göz, diş, el gibi karmaşık vücut bölgelerinde tutarsızlık olup olmadığına.",
+                    "Görselin dosya boyutuna.",
+                    "Görselin ne kadar popüler olduğuna."
+                ],
+                correctIndex: 1,
+                tip: "Yapay zeka (AI), özellikle el ve diş gibi karmaşık detaylarda hala kusur (erimiş, fazla parmak, asimetri) bırakma eğilimindedir."
+            },
+            {
+                question: "Çevrimiçi itibarınızı korumak için en önemli kural nedir?",
+                options: [
+                    "Sadece fotoğraf paylaşmak.",
+                    "Sosyal medyada paylaştığınız her şeyin kalıcı olduğunu ve size geri dönebileceğini unutmamak.",
+                    "Anonim hesaplar kullanmak.",
+                    "Yorumları tamamen kapatmak."
+                ],
+                correctIndex: 1,
+                tip: "Dijital Ayak İzi, paylaştığınız her şeyin internette kalıcı bir iz bıraktığı anlamına gelir. Paylaşmadan önce iki kez düşünün."
+            },
+            {
+                question: "Siber zorbalığa tanık olduğunuzda nasıl bir davranış sergilemelisiniz?",
+                options: [
+                    "Zorbanın tarafını tutup, zorbalığa dahil olmak.",
+                    "Mağdurla empati kurup, hemen yorumlara yazılı bir tepki vermek.",
+                    "Sessiz kalmak, çünkü beni ilgilendirmez.",
+                    "Kanıt toplayıp (ekran görüntüsü alıp) ilgili platforma veya yetkili kişiye raporlamak."
+                ],
+                correctIndex: 3,
+                tip: "Zorbalık, sessizlikle büyür. En etkili çözüm, kanıtı kaydedip ilgili platformun 'rapor et' özelliğini kullanmaktır."
+            },
+            {
+                question: "Okul ödeviniz için yapay zeka (AI) kullanıyorsunuz. AI'dan aldığınız metni teslim etmeden önce ne yapmalısınız?",
+                options: [
+                    "Direkt kopyalayıp teslim etmek, çünkü AI hatasız yazar.",
+                    "Metni kendi kelimelerinizle yeniden düzenlemek ve doğruluğunu kontrol etmek.",
+                    "Sadece imla hatalarını düzeltmek.",
+                    "Sadece bir kısmını kullanmak."
+                ],
+                correctIndex: 1,
+                tip: "AI, bilgi üretebilir ancak bağlamı ve doğruluğu garanti etmez. Her zaman bilginin çıktısını sorgulayın, kontrol edin ve kişiselleştirin."
+            },
+            {
+                question: "Parola güvenliği için aşağıdakilerden hangisi en zayıf stratejidir?",
+                options: [
+                    "Farklı hesaplar için farklı, karmaşık parolalar kullanmak.",
+                    "Tüm hesaplarda aynı güçlü parolayı kullanmak.",
+                    "Parola yöneticisi kullanmak.",
+                    "İki faktörlü kimlik doğrulamayı etkinleştirmek."
+                ],
+                correctIndex: 1,
+                tip: "Bir hesap ele geçirildiğinde, diğer tüm hesaplarınızın da tehlikeye girmesi, 'aynı parolayı kullanma' stratejisinin en büyük riskidir."
+            },
+            {
+                question: "Çevrimiçi tartışmalarda, birisi size karşı kaba veya kırıcı davrandığında en olgun tepki nedir?",
+                options: [
+                    "Tartışmayı hemen kişisel bir düzeye taşımak.",
+                    "'Troll'ü beslememek'— yani yanıt vermeyip onu engellemek veya görmezden gelmek.",
+                    "Onu kamuoyu önünde utandırmak için kişisel bilgilerini bulup paylaşmak.",
+                    "Tepki vermeden önce 10 dakika beklemek."
+                ],
+                correctIndex: 1,
+                tip: "Çevrimiçi kışkırtmalara (trolling) en iyi tepki, hiç tepki vermemektir. Enerji kesildiğinde 'trol' de vazgeçer."
+            }
+        ];
+
+        let currentChallengeIndex = 0;
+        let score = 0;
+        let totalChallenges = passwordChallenges.length;
+        let selectedOptionIndex = -1;
+
+        const questionText = document.getElementById('question-text');
+        const passwordOptions = document.getElementById('password-options');
+        const notification = document.getElementById('notification');
+        const tipContainer = document.getElementById('tip-container');
+        const continueBtn = document.getElementById('continue-btn');
+        const scoreDisplay = document.getElementById('score');
+        const progressDisplay = document.getElementById('progress');
+
+        function startGame() {
+            shuffle(passwordChallenges);
+            currentChallengeIndex = 0;
+            score = 0;
+            displayChallenge();
+        }
+
+        function displayChallenge() {
+            if (currentChallengeIndex < totalChallenges) {
+                const challenge = passwordChallenges[currentChallengeIndex];
+                
+                questionText.textContent = `Soru ${currentChallengeIndex + 1}/${totalChallenges}: ${challenge.question}`;
+                
+                passwordOptions.innerHTML = '';
+                challenge.options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'password-option';
+                    optionElement.textContent = option;
+                    optionElement.dataset.index = index;
+                    optionElement.addEventListener('click', () => selectOption(index));
+                    passwordOptions.appendChild(optionElement);
+                });
+                
+                scoreDisplay.textContent = `Doğruluk Puanı: ${score}`;
+                progressDisplay.textContent = `İlerleme: ${currentChallengeIndex+1}/${totalChallenges}`;
+                
+                hideNotification();
+                hideTip();
+                continueBtn.classList.add('hidden');
+                selectedOptionIndex = -1;
+            } else {
+                endGame();
+            }
+        }
+
+        function selectOption(index) {
+            if (selectedOptionIndex !== -1) return; // Zaten cevaplanmışsa çık
+            
+            const options = document.querySelectorAll('.password-option');
+            options.forEach(option => option.classList.remove('selected'));
+            options[index].classList.add('selected');
+            selectedOptionIndex = index;
+            
+            checkAnswer();
+        }
+
+        function checkAnswer() {
+            const challenge = passwordChallenges[currentChallengeIndex];
+            const isCorrect = (selectedOptionIndex === challenge.correctIndex);
+            
+            const selectedOptionElement = document.querySelector(`.password-option[data-index="${selectedOptionIndex}"]`);
+            
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = `Doğruluk Puanı: ${score}`;
+                showNotification("Doğru seçim! Dijital dünyada sorumluluğunu biliyorsun. 👍", "success");
+            } else {
+                showNotification("Yanlış seçim. Dikkat etmelisin, bu sana çevrimiçi zarar verebilirdi. 🔒", "error");
+            }
+            
+            // Doğru cevabı göster
+            const correctOptionElement = document.querySelector(`.password-option[data-index="${challenge.correctIndex}"]`);
+            correctOptionElement.classList.add('correct-answer'); // Yeni bir sınıf ekleyelim (CSS'te tanımlı değil ama kullanabiliriz)
+            correctOptionElement.style.borderColor = 'var(--success-color)';
+            correctOptionElement.style.boxShadow = '0 0 10px var(--success-color)';
+
+            // Seçenekleri devre dışı bırak
+            const options = document.querySelectorAll('.password-option');
+            options.forEach(option => {
+                 option.style.pointerEvents = 'none';
+                 // Yanlış cevabı işaretle
+                 if (parseInt(option.dataset.index) === selectedOptionIndex && !isCorrect) {
+                     option.style.borderColor = 'var(--error-color)';
+                     option.style.backgroundColor = 'rgba(255, 87, 87, 0.3)';
+                 }
+            });
+            
+            showTip(challenge.tip);
+            continueBtn.classList.remove('hidden');
+        }
+
+        function showNotification(message, type) {
+            notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${message}`;
+            notification.className = type;
+            notification.classList.remove("hidden");
+        }
+
+        function hideNotification() {
+            notification.classList.add("hidden");
+        }
+
+        function showTip(tip) {
+            tipContainer.innerHTML = `<i class="fas fa-lightbulb"></i> ${tip}`;
+            tipContainer.classList.remove("hidden");
+        }
+
+        function hideTip() {
+            tipContainer.classList.add("hidden");
+        }
+
+        function nextChallenge() {
+            currentChallengeIndex++;
+            displayChallenge();
+        }
+
+        function endGame() {
+            questionText.textContent = "Test Tamamlandı!";
+            passwordOptions.innerHTML = '';
+            continueBtn.classList.add('hidden');
+            
+            let resultMessage = "";
+            let resultClass = "";
+            const correctPercentage = (score / totalChallenges) * 100;
+            
+            if (correctPercentage >= 80) {
+                resultMessage = `Mükemmel! Dijital Okuryazarlıkta %${correctPercentage.toFixed(0)} başarı gösterdin. Siz bir dijital uzmansınız! 🏆`;
+                resultClass = "success";
+            } else if (correctPercentage >= 60) {
+                resultMessage = `İyi! Dijital Okuryazarlıkta %${correctPercentage.toFixed(0)} başarı gösterdin. Temellerin sağlam, biraz daha dikkatli olmalısın. 👍`;
+                resultClass = "success";
+            } else {
+                resultMessage = `Dikkat! Dijital Okuryazarlıkta %${correctPercentage.toFixed(0)} başarı gösterdin. Güvenliğini artırmak için daha fazla öğrenmelisin. 🔒`;
+                resultClass = "error";
+            }
+            
+            showNotification(resultMessage, resultClass);
+            // Ekstra bir "Tekrar Oyna" butonu eklenebilir.
+        }
+
+        function shuffle(array) {
+            let currentIndex = array.length;
+            let randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        continueBtn.addEventListener('click', nextChallenge);
+        startGame();
+    </script>
+</body>
+</html>

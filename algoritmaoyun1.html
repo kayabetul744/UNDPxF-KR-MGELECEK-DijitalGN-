@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squid Game - Labirent Kaçışı</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8A2BE2;
+            --primary-dark: #6A0DAD;
+            --secondary: #FF3CAC;
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF;
+            --accent-dark: #00E5E5;
+            --dark: #0F0524;
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --glow-color: rgba(138, 43, 226, 0.8);
+            --squid-pink: #F7A3B5;
+            --squid-guard: #FF3366;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--text-light);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 100vh;
+            max-height: 600px;
+            background: var(--dark);
+            border: 3px solid var(--primary);
+            border-radius: 20px;
+            box-shadow: 0 0 50px var(--glow-color), inset 0 0 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a0f2e 0%, #0f0a1d 100%);
+        }
+
+        #ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .stat {
+            background: rgba(138, 43, 226, 0.3);
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 0 15px var(--glow-color);
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        #startScreen, #gameOverScreen, #winScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.95) 0%, rgba(106, 13, 173, 0.95) 100%);
+            z-index: 100;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .screen-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px var(--accent), 0 0 40px var(--secondary);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .screen-subtitle {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: var(--text-muted);
+        }
+
+        .squid-logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px var(--squid-pink));
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0 0 30px rgba(255, 60, 172, 0.6);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px rgba(255, 60, 172, 0.9);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .controls {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 2px solid var(--accent);
+        }
+
+        .controls p {
+            margin: 8px 0;
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        .score-display {
+            font-size: 36px;
+            color: var(--success);
+            margin: 20px 0;
+            text-shadow: 0 0 20px var(--success);
+        }
+
+        #gameOverScreen {
+            background: linear-gradient(135deg, rgba(255, 87, 87, 0.95) 0%, rgba(213, 26, 129, 0.95) 100%);
+        }
+
+        #winScreen {
+            background: linear-gradient(135deg, rgba(0, 245, 155, 0.95) 0%, rgba(0, 255, 255, 0.95) 100%);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @media (max-width: 768px) {
+            #gameContainer {
+                max-width: 100%;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+                border: none;
+            }
+
+            .screen-title {
+                font-size: 32px;
+            }
+
+            .squid-logo {
+                font-size: 60px;
+            }
+
+            .screen-subtitle {
+                font-size: 16px;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+
+            .stat {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+
+            .controls p {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .screen-title {
+                font-size: 24px;
+            }
+
+            .squid-logo {
+                font-size: 50px;
+            }
+
+            .btn {
+                padding: 10px 25px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="ui">
+            <div class="stat">⏱️ <span id="timeDisplay">0:00</span></div>
+            <div class="stat">🎯 <span id="scoreDisplay">0</span></div>
+            <div class="stat">❤️ <span id="livesDisplay">3</span></div>
+        </div>
+
+        <div id="startScreen">
+            <div class="squid-logo">🔺⭕🔲</div>
+            <h1 class="screen-title">SQUID GAME</h1>
+            <p class="screen-subtitle">Labirent Kaçışı</p>
+            <div class="controls">
+                <p>🎮 <strong>PC:</strong> Ok Tuşları ile hareket et</p>
+                <p>📱 <strong>Mobil:</strong> Ekrana dokun veya sürükle</p>
+                <p>🎯 <strong>Hedef:</strong> Pembe askerlere yakalanmadan labirenti tamamla!</p>
+            </div>
+            <button class="btn" onclick="startGame()">Oyuna Başla</button>
+        </div>
+
+        <div id="gameOverScreen" style="display: none;">
+            <div class="squid-logo">💀</div>
+            <h1 class="screen-title">ELENDINIZ!</h1>
+            <p class="screen-subtitle">Pembe askerler sizi yakaladı...</p>
+            <div class="score-display">Skor: <span id="finalScore">0</span></div>
+            <button class="btn" onclick="restartGame()">Tekrar Dene</button>
+        </div>
+
+        <div id="winScreen" style="display: none;">
+            <div class="squid-logo">🏆</div>
+            <h1 class="screen-title">TEBRİKLER!</h1>
+            <p class="screen-subtitle">Labirenti başarıyla tamamladınız! 🎉</p>
+            <div class="score-display">Final Skor: <span id="winScore">0</span></div>
+            <button class="btn" onclick="restartGame()">Yeniden Oyna</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let gameState = 'start';
+        let score = 0;
+        let lives = 3;
+        let startTime = 0;
+        let gameTime = 0;
+        let difficulty = 1;
+
+        function resizeCanvas() {
+            const container = document.getElementById('gameContainer');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const player = {
+            x: 0,
+            y: 0,
+            width: 30,
+            height: 30,
+            speed: 5,
+            color: '#00FFFF',
+            vx: 0,
+            vy: 0
+        };
+
+        const walls = [];
+        const enemies = [];
+        let scrollSpeed = 2;
+        let wallGap = 150;
+        let nextWallY = -100;
+
+        const keys = {};
+
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isTouching = false;
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            touchStartX = e.touches[0].clientX - rect.left;
+            touchStartY = e.touches[0].clientY - rect.top;
+            isTouching = true;
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (isTouching && gameState === 'playing') {
+                const rect = canvas.getBoundingClientRect();
+                const touchX = e.touches[0].clientX - rect.left;
+                const touchY = e.touches[0].clientY - rect.top;
+                
+                const dx = touchX - (player.x + player.width / 2);
+                const dy = touchY - (player.y + player.height / 2);
+                
+                player.vx = Math.sign(dx) * Math.min(Math.abs(dx) * 0.3, player.speed);
+                player.vy = Math.sign(dy) * Math.min(Math.abs(dy) * 0.3, player.speed);
+            }
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            isTouching = false;
+            player.vx = 0;
+            player.vy = 0;
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            touchStartX = e.clientX - rect.left;
+            touchStartY = e.clientY - rect.top;
+            isTouching = true;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isTouching && gameState === 'playing') {
+                const rect = canvas.getBoundingClientRect();
+                const touchX = e.clientX - rect.left;
+                const touchY = e.clientY - rect.top;
+                
+                const dx = touchX - (player.x + player.width / 2);
+                const dy = touchY - (player.y + player.height / 2);
+                
+                player.vx = Math.sign(dx) * Math.min(Math.abs(dx) * 0.3, player.speed);
+                player.vy = Math.sign(dy) * Math.min(Math.abs(dy) * 0.3, player.speed);
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isTouching = false;
+            player.vx = 0;
+            player.vy = 0;
+        });
+
+        function createWall() {
+            const gapPosition = Math.random() * (canvas.width - wallGap * 2) + wallGap;
+            const gapSize = wallGap - (difficulty * 3);
+            
+            walls.push({
+                x: 0,
+                y: nextWallY,
+                width: gapPosition - gapSize / 2,
+                height: 20,
+                color: '#FF3366'
+            });
+            
+            walls.push({
+                x: gapPosition + gapSize / 2,
+                y: nextWallY,
+                width: canvas.width - (gapPosition + gapSize / 2),
+                height: 20,
+                color: '#FF3366'
+            });
+            
+            nextWallY -= 200;
+        }
+
+        function createEnemy() {
+            const lane = Math.random() < 0.5 ? 0 : 1;
+            enemies.push({
+                x: lane === 0 ? canvas.width * 0.25 : canvas.width * 0.75,
+                y: Math.random() * -500 - 100,
+                width: 35,
+                height: 35,
+                speed: 1 + difficulty * 0.15,
+                color: '#F7A3B5',
+                targetX: 0,
+                targetY: 0
+            });
+        }
+
+        function drawPlayer() {
+            ctx.save();
+            ctx.fillStyle = player.color;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = player.color;
+            
+            ctx.beginPath();
+            ctx.arc(player.x + player.width / 2, player.y + player.height / 2, player.width / 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `${player.width * 0.8}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🏃', player.x + player.width / 2, player.y + player.height / 2);
+            
+            ctx.restore();
+        }
+
+        function drawWall(wall) {
+            ctx.save();
+            ctx.fillStyle = wall.color;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = wall.color;
+            ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+            
+            const stripeWidth = 20;
+            ctx.fillStyle = '#ffffff';
+            for (let i = 0; i < wall.width; i += stripeWidth * 2) {
+                ctx.fillRect(wall.x + i, wall.y, stripeWidth, wall.height);
+            }
+            
+            ctx.restore();
+        }
+
+        function drawEnemy(enemy) {
+            ctx.save();
+            ctx.fillStyle = enemy.color;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = enemy.color;
+            
+            ctx.beginPath();
+            ctx.arc(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, enemy.width / 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#000000';
+            ctx.font = `${enemy.width * 0.9}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('👮', enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+            
+            ctx.restore();
+        }
+
+        function drawBackground() {
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#1a0f2e');
+            gradient.addColorStop(1, '#0f0a1d');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = 'rgba(138, 43, 226, 0.3)';
+            ctx.lineWidth = 2;
+            const gridSize = 50;
+            const offset = (gameTime * scrollSpeed) % gridSize;
+            
+            for (let y = -gridSize + offset; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+        }
+
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function updatePlayer() {
+            if (!isTouching) {
+                player.vx = 0;
+                player.vy = 0;
+                
+                if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.vx = -player.speed;
+                if (keys['ArrowRight'] || keys['d'] || keys['D']) player.vx = player.speed;
+                if (keys['ArrowUp'] || keys['w'] || keys['W']) player.vy = -player.speed;
+                if (keys['ArrowDown'] || keys['s'] || keys['S']) player.vy = player.speed;
+            }
+            
+            const newX = player.x + player.vx;
+            const newY = player.y + player.vy;
+            
+            if (newX >= 0 && newX + player.width <= canvas.width) {
+                player.x = newX;
+            }
+            if (newY >= 0 && newY + player.height <= canvas.height) {
+                player.y = newY;
+            }
+        }
+
+        function updateWalls() {
+            for (let i = walls.length - 1; i >= 0; i--) {
+                walls[i].y += scrollSpeed;
+                
+                if (walls[i].y > canvas.height) {
+                    walls.splice(i, 1);
+                    score += 10;
+                    
+                    if (score % 150 === 0 && score > 0) {
+                        difficulty++;
+                        scrollSpeed += 0.3;
+                    }
+                } else if (checkCollision(player, walls[i])) {
+                    loseLife();
+                }
+            }
+            
+            if (walls.length === 0 || walls[walls.length - 1].y > -100) {
+                createWall();
+            }
+        }
+
+        function updateEnemies() {
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                const enemy = enemies[i];
+                
+                enemy.y += scrollSpeed;
+                
+                const dx = (player.x + player.width / 2) - (enemy.x + enemy.width / 2);
+                const dy = (player.y + player.height / 2) - (enemy.y + enemy.height / 2);
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist > 0) {
+                    enemy.x += (dx / dist) * enemy.speed;
+                    enemy.y += (dy / dist) * enemy.speed * 0.5;
+                }
+                
+                if (enemy.y > canvas.height + 100) {
+                    enemies.splice(i, 1);
+                } else if (checkCollision(player, enemy)) {
+                    loseLife();
+                    enemies.splice(i, 1);
+                }
+            }
+            
+            if (score >= 50 && Math.random() < 0.003 + difficulty * 0.002) {
+                createEnemy();
+            }
+        }
+
+        function loseLife() {
+            lives--;
+            if (lives <= 0) {
+                gameOver();
+            } else {
+                player.x = canvas.width / 2 - player.width / 2;
+                player.y = canvas.height - player.height - 20;
+            }
+        }
+
+        function updateUI() {
+            const seconds = Math.floor(gameTime / 60);
+            const minutes = Math.floor(seconds / 60);
+            const displaySeconds = seconds % 60;
+            document.getElementById('timeDisplay').textContent = 
+                `${minutes}:${displaySeconds.toString().padStart(2, '0')}`;
+            document.getElementById('scoreDisplay').textContent = score;
+            document.getElementById('livesDisplay').textContent = lives;
+        }
+
+        function gameLoop() {
+            if (gameState !== 'playing') return;
+            
+            gameTime++;
+            
+            drawBackground();
+            updatePlayer();
+            updateWalls();
+            updateEnemies();
+            
+            walls.forEach(drawWall);
+            enemies.forEach(drawEnemy);
+            drawPlayer();
+            
+            updateUI();
+            
+            if (score >= 500) {
+                winGame();
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameOverScreen').style.display = 'none';
+            document.getElementById('winScreen').style.display = 'none';
+            
+            gameState = 'playing';
+            score = 0;
+            lives = 3;
+            gameTime = 0;
+            difficulty = 1;
+            scrollSpeed = 2;
+            wallGap = 150;
+            
+            player.x = canvas.width / 2 - player.width / 2;
+            player.y = canvas.height - player.height - 20;
+            player.vx = 0;
+            player.vy = 0;
+            
+            walls.length = 0;
+            enemies.length = 0;
+            nextWallY = -100;
+            
+            for (let i = 0; i < 3; i++) {
+                createWall();
+            }
+            
+            gameLoop();
+        }
+
+        function gameOver() {
+            gameState = 'gameOver';
+            document.getElementById('gameOverScreen').style.display = 'flex';
+            document.getElementById('finalScore').textContent = score;
+        }
+
+        function winGame() {
+            gameState = 'win';
+            document.getElementById('winScreen').style.display = 'flex';
+            document.getElementById('winScore').textContent = score;
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        resizeCanvas();
+    </script>
+</body>
+</html>

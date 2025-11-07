@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efsanevi Hackerlar</title>
+    
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #8A2BE2; /* BlueViolet */
+            --primary-dark: #6A0DAD; /* Purple */
+            --secondary: #FF3CAC; /* Pink */
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF; /* Cyan */
+            --accent-dark: #00E5E5;
+            --dark: #0F0524; /* Very dark purple */
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --bg-gradient: linear-gradient(135deg, #240047 0%, #410063 100%);
+            --glow-color: rgba(138, 43, 226, 0.8);
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 10px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 10px),
+                radial-gradient(rgba(138, 43, 226, 0.15) 2px, transparent 2px),
+                radial-gradient(rgba(0, 255, 255, 0.1) 2px, transparent 2px);
+            background-size: 20px 20px, 20px 20px, 30px 30px, 45px 45px;
+            background-position: 0 0, 0 0, 0 0, 15px 15px;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Bruno Ace SC', sans-serif;
+            font-weight: 600;
+        }
+        
+        .font-tech {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px var(--highlight), 0 0 10px var(--highlight), 0 0 15px var(--highlight);
+            color: #fff;
+        }
+        
+        .neon-border {
+            box-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .navbar {
+            background-color: rgba(15, 5, 36, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+        }
+        
+        .navbar-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            margin: 0 10px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--highlight) !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--highlight);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .btn-primary-custom {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary-custom:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-secondary-custom {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary-custom:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero-section {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 100px 0 50px;
+            background: linear-gradient(135deg, rgba(15, 5, 36, 0.95) 0%, rgba(65, 0, 99, 0.95) 100%);
+        }
+        
+        .hero-content {
+            z-index: 100;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            animation: textGlow 3s infinite alternate;
+        }
+        
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px rgba(138, 43, 226, 0.3); }
+            100% { text-shadow: 0 0 20px rgba(138, 43, 226, 0.7), 0 0 35px rgba(138, 43, 226, 0.5); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: var(--text-light);
+            font-family: 'Quantico', sans-serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+        
+        .cyber-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(rgba(138, 43, 226, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(138, 43, 226, 0.05) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+            background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px;
+            z-index: 1;
+        }
+        
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+        
+        .section-heading {
+            margin-bottom: 60px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-heading:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--highlight);
+        }
+        
+        .hacker-card {
+            background: rgba(15, 5, 36, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            margin-bottom: 50px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            height: 100%;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hacker-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px var(--glow-color);
+            border-color: var(--primary);
+        }
+        
+        .hacker-image {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+        
+        .hacker-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s;
+            filter: grayscale(50%);
+        }
+        
+        .hacker-card:hover .hacker-image img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+        
+        .hacker-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(15, 5, 36, 1), transparent);
+        }
+        
+        .hacker-info {
+            padding: 30px;
+        }
+        
+        .hacker-name {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            color: var(--highlight);
+        }
+        
+        .hacker-alias {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            font-style: italic;
+        }
+        
+        .hacker-era {
+            display: inline-block;
+            padding: 5px 15px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .hacker-description {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .hacker-achievements {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 25px;
+        }
+        
+        .hacker-achievements li {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+        
+        .hacker-achievements li::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--accent);
+        }
+        
+        .hacker-quote {
+            background: rgba(138, 43, 226, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            font-style: italic;
+            color: var(--text-light);
+        }
+        
+        .quote-author {
+            font-size: 0.9rem;
+            text-align: right;
+            color: var(--accent);
+            margin-top: 10px;
+        }
+        
+        .hacker-legacy {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .hacker-legacy h4 {
+            color: var(--highlight);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .hacker-legacy p {
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+        
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+        
+        .filter-btn {
+            background: rgba(15, 5, 36, 0.7);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            color: var(--text-light);
+            margin: 5px;
+            padding: 8px 20px;
+            border-radius: 30px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(138, 43, 226, 0.2);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .footer {
+            background-color: var(--darker);
+            padding: 50px 0 20px;
+            border-top: 1px solid rgba(138, 43, 226, 0.3);
+        }
+        
+        .footer-title {
+            color: var(--highlight);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--highlight);
+            padding-left: 5px;
+        }
+        
+        .footer-social {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        
+        .footer-social li {
+            margin-right: 15px;
+        }
+        
+        .footer-social a {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .footer-social a:hover {
+            color: var(--highlight);
+            transform: translateY(-5px);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(138, 43, 226, 0.3);
+            margin-top: 40px;
+            padding-top: 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        
+        .small-divider {
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 992px) {
+            .hacker-image {
+                height: 250px;
+            }
+            
+            .hacker-name {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section {
+                padding: 50px 0;
+            }
+            
+            .hacker-info {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .section-heading {
+                font-size: 1.8rem;
+            }
+            
+            .hacker-image {
+                height: 200px;
+            }
+            
+            .hacker-name {
+                font-size: 1.5rem;
+            }
+        }
+
+        
+    </style>
+</head>
+<body>
+   
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="cyber-grid"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center hero-content">
+                    <h1 class="hero-title">Efsanevi Hackerlar</h1>
+                    <p class="hero-subtitle">Dijital dünyanın devrimcileri, sınır tanımayanları ve ilham verici hikayeleri</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="section">
+        <div class="container">
+            <div class="category-filter">
+                <button class="filter-btn active" data-filter="all">Tümü</button>
+                <button class="filter-btn" data-filter="white-hat">White Hat</button>
+                <button class="filter-btn" data-filter="gray-hat">Gray Hat</button>
+                <button class="filter-btn" data-filter="black-hat">Black Hat</button>
+                <button class="filter-btn" data-filter="hacktivist">Hacktivist</button>
+                <button class="filter-btn" data-filter="pioneer">Öncü</button>
+            </div>
+            
+            <div class="row">
+                <!-- Kevin Mitnick -->
+                <div class="col-lg-6 mb-5 hacker-item" data-category="gray-hat black-hat">
+                    <div class="hacker-card">
+                        <div class="hacker-image">
+                            <img src="kevinmitnick.jpeg" alt="Kevin Mitnick">
+                        </div>
+                        <div class="hacker-info">
+                            <span class="hacker-era">1980'ler - 1990'lar</span>
+                            <h3 class="hacker-name">Kevin Mitnick</h3>
+                            <h4 class="hacker-alias">"The Condor" / "The Darkside Hacker"</h4>
+                            <div class="hacker-quote">
+                                "Şirketler, güvenlik duvarları, şifreleme ve güvenli erişim cihazları için milyonlarca dolar harcıyor, ancak bu paralar boşa gidiyor; çünkü bu önlemlerin hiçbiri güvenlik zincirinin en zayıf halkasını hedef almıyor."
+                                <div class="quote-author">- Kevin Mitnick</div>
+                            </div>
+                            <div class="small-divider"></div>
+                            <p class="hacker-description">
+                                Kevin Mitnick, bir zamanlar FBI'ın en çok aranan siber suçlusu olarak ünlendi. Telekomünikasyon şirketlerini ve hükümet sistemlerini hedef alan sosyal mühendislik tekniklerini ustalıkla kullanmasıyla tanınır. 1995 yılında yakalandıktan sonra beş yıl hapis cezasına çarptırıldı. Serbest bırakıldıktan sonra, güvenlik danışmanı olarak kariyerine devam etti ve bilgisayar güvenliği konusunda çeşitli kitaplar yazdı.
+                            </p>
+                            <h4>Önemli Başarılar:</h4>
+                            <ul class="hacker-achievements">
+                                <li>Digital Equipment Corporation (DEC) sistemlerine sızma</li>
+                                <li>Pacific Bell sistemlerine yetkisiz erişim</li>
+                                <li>Sosyal mühendislik tekniklerinin geliştirilmesi</li>
+                                <li>The Art of Deception ve Ghost in the Wires kitaplarını yazması</li>
+                            </ul>
+                            <div class="hacker-legacy">
+                                <h4>Mirası</h4>
+                                <p>
+                                    Mitnick'in yakalanması ve davası, siber suçların ciddiyeti konusunda kamu bilincini artırdı. Günümüzde kendi güvenlik danışmanlık firması Mitnick Security Consulting ile şirketlere güvenlik testleri yapmakta ve eğitimler vermektedir. Sosyal mühendislik konusundaki uzmanlığı ve deneyimleri, bu saldırı türüne karşı savunma yöntemlerinin geliştirilmesine önemli katkılar sağlamıştır.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Linus Torvalds -->
+                <div class="col-lg-6 mb-5 hacker-item" data-category="white-hat pioneer">
+                    <div class="hacker-card">
+                        <div class="hacker-image">
+                            <img src="linustorvalds.jpeg" alt="Linus Torvalds">
+                        </div>
+                        <div class="hacker-info">
+                            <span class="hacker-era">1990'lar - Günümüz</span>
+                            <h3 class="hacker-name">Linus Torvalds</h3>
+                            <h4 class="hacker-alias">"Linux'un Kurucusu"</h4>
+                            <div class="hacker-quote">
+                                "Söz ucuzdur. Kodu göster."
+                                <div class="quote-author">- Linus Torvalds</div>
+                            </div>
+                            <div class="small-divider"></div>
+                            <p class="hacker-description">
+                                Fin yazılım mühendisi Linus Torvalds, açık kaynak dünyasının en etkili figürlerinden biridir. 1991 yılında, henüz 21 yaşındayken Linux işletim sistemi çekirdeğini geliştirmeye başladı. Linux, zamanla dünya çapında milyonlarca cihazda kullanılan açık kaynaklı bir işletim sistemi haline geldi. Torvalds ayrıca Git versiyon kontrol sistemini de geliştirmiştir.
+                            </p>
+                            <h4>Önemli Başarılar:</h4>
+                            <ul class="hacker-achievements">
+                                <li>Linux işletim sistemi çekirdeğinin yaratılması ve geliştirilmesi</li>
+                                <li>Git versiyon kontrol sisteminin geliştirilmesi</li>
+                                <li>Açık kaynak hareketinin öncülerinden biri olması</li>
+                                <li>2012 Millennium Teknoloji Ödülü kazanması</li>
+                            </ul>
+                            <div class="hacker-legacy">
+                                <h4>Mirası</h4>
+                                <p>
+                                    Torvalds'ın Linux projesi, açık kaynak felsefesinin ve işbirlikçi yazılım geliştirmenin küresel sembolü haline gelmiştir. Android'den süper bilgisayarlara, web sunucularından akıllı cihazlara kadar milyarlarca cihaz Linux tabanlı sistemleri kullanmaktadır. Git, modern yazılım geliştirmenin temel aracı haline gelmiştir ve GitHub gibi platformların temelini oluşturmaktadır.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Richard Stallman -->
+                <div class="col-lg-6 mb-5 hacker-item" data-category="white-hat pioneer hacktivist">
+                    <div class="hacker-card">
+                        <div class="hacker-image">
+                            <img src="richardstallman.jpeg" alt="Richard Stallman">
+                        </div>
+                        <div class="hacker-info">
+                            <span class="hacker-era">1980'ler - Günümüz</span>
+                            <h3 class="hacker-name">Richard Stallman</h3>
+                            <h4 class="hacker-alias">"RMS" / "Özgür Yazılım Hareketi Kurucusu"</h4>
+                            <div class="hacker-quote">
+                                "Özgür yazılım, fiyat değil, özgürlük meselesidir.
+                                Bu kavramı anlamak için “özgür” kelimesini ücretsiz bira değil, özgür konuşma anlamında düşünmelisiniz."
+                                <div class="quote-author">- Richard Stallman</div>
+                            </div>
+                            <div class="small-divider"></div>
+                            <p class="hacker-description">
+                                Richard Matthew Stallman, özgür yazılım hareketinin kurucusu ve GNU Projesi'nin başlatıcısıdır. 1983 yılında, yazılımın özgürce paylaşılabilmesi, incelenebilmesi, değiştirilebilmesi ve dağıtılabilmesi gerektiği felsefesini savunarak GNU Projesi'ni başlattı. Stallman, yazılım patentlerine, telif haklarına ve DRM'e karşı aktivizmiyle de tanınır.
+                            </p>
+                            <h4>Önemli Başarılar:</h4>
+                            <ul class="hacker-achievements">
+                                <li>GNU Projesi'ni başlatması</li>
+                                <li>Free Software Foundation'ın (FSF) kurulması</li>
+                                <li>GNU General Public License'ın (GPL) geliştirilmesi</li>
+                                <li>Emacs metin editörünün geliştirilmesi</li>
+                            </ul>
+                            <div class="hacker-legacy">
+                                <h4>Mirası</h4>
+                                <p>
+                                    Stallman'ın özgür yazılım felsefesi, açık kaynak hareketinin temelini oluşturmuştur. GNU/Linux işletim sistemi, onun vizyonu ve çalışmaları sayesinde mümkün olmuştur. GPL lisansı, yazılımın özgürlüğünü korumak için yaygın olarak kullanılan bir araç haline gelmiştir. Stallman'ın dijital haklar ve mahremiyet konusundaki aktivizmi, günümüzde bu alanlardaki tartışmaları şekillendirmeye devam etmektedir.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Adrian Lamo -->
+                <div class="col-lg-6 mb-5 hacker-item" data-category="gray-hat">
+                    <div class="hacker-card">
+                        <div class="hacker-image">
+                            <img src="adrianlamo.jpeg" alt="Adrian Lamo">
+                        </div>
+                        <div class="hacker-info">
+                            <span class="hacker-era">2000'ler</span>
+                            <h3 class="hacker-name">Adrian Lamo</h3>
+                            <h4 class="hacker-alias">"The Homeless Hacker/Evsiz Hacker"</h4>
+                            <div class="hacker-quote">
+                                "Benim her zaman tek gerçek pişmanlığım, hacklediğim insanlara yaşattığım stres ve korkudur."
+                                <div class="quote-author">- Adrian Lamo</div>
+                            </div>
+                            <div class="small-divider"></div>
+                            <p class="hacker-description">
+                                Adrian Lamo, gezgin yaşam tarzı ve büyük şirketlerin ağlarına sızma konusundaki yeteneğiyle "Evsiz Hacker" olarak tanındı. Yahoo!, Microsoft, New York Times ve diğer büyük şirketlere sızdıktan sonra, genellikle hedeflerine güvenlik açıklarını bildirmesiyle bilinen bir gri şapkalı hackerdi. Chelsea Manning'i Wikileaks'e belge sızdırması nedeniyle yetkililere ihbar etmesiyle de tanınmaktadır.
+                            </p>
+                            <h4>Önemli Başarılar:</h4>
+                            <ul class="hacker-achievements">
+                                <li>New York Times veritabanına sızma (2002)</li>
+                                <li>Microsoft ve Yahoo! sistemlerine sızma</li>
+                                <li>Güvenlik açıklarını hedef şirketlere bildirme</li>
+                                <li>Komplike sistemlere basit yöntemlerle sızma tekniklerini geliştirme</li>
+                            </ul>
+                            <div class="hacker-legacy">
+                                <h4>Mirası</h4>
+                                <p>
+                                    Lamo, siber güvenlik topluluğunda tartışmalı bir figür olmuştur. Özellikle Manning'i ihbar etmesi, hacker etiği konusunda büyük tartışmalara yol açmıştır. Ancak, büyük sistemlerdeki basit güvenlik açıklarını bulma konusundaki yeteneği ve "minimalist hacking" yaklaşımı, güvenlik uzmanları tarafından takdir edilmektedir. 2018 yılında 37 yaşında yaşamını yitirmiştir.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Julian Assange -->
+                <div class="col-lg-6 mb-5 hacker-item" data-category="hacktivist">
+                    <div class="hacker-card">
+                        <div class="hacker-image">
+                            <img src="julianassange.jpeg" alt="Julian Assange">
+                        </div>
+                        <div class="hacker-info">
+                            <span class="hacker-era">2000'ler - Günümüz</span>
+                            <h3 class="hacker-name">Julian Assange</h3>
+                            <h4 class="hacker-alias">"Mendax" / "WikiLeaks Kurucusu"</h4>
+                            <div class="hacker-quote">
+                                "Eğer savaşlar yalanlarla başlatılabiliyorsa, barış da gerçeklerle başlatılabilir."
+                                <div class="quote-author">- Julian Assange</div>
+                            </div>
+                            <div class="small-divider"></div>
+                            <p class="hacker-description">
+                                Julian Assange, şeffaflık ve ifşacılık platformu WikiLeaks'in kurucusudur. Gençlik yıllarında "Mendax" kod adıyla hacking faaliyetlerinde bulunmuştur. WikiLeaks ile birlikte, hükümetlerin ve büyük şirketlerin gizli belgelerini ifşa ederek dünya çapında büyük tartışmalara yol açmıştır. ABD diplomatik kablolarının ve Irak Savaşı sırasında işlenen savaş suçlarına dair videoların sızdırılması, en bilinen eylemlerindendir.
+                            </p>
+                            <h4>Önemli Başarılar:</h4>
+                            <ul class="hacker-achievements">
+                                <li>WikiLeaks platformunun kurulması ve yönetilmesi</li>
+                                <li>Gençliğinde Pentagon ve NASA sistemlerine sızma</li>
+                                <li>ABD Diplomatik Kablolarının sızdırılması (Cablegate)</li>
+                                <li>"Collateral Murder" videosunun ifşa edilmesi</li>
+                            </ul>
+                            <div class="hacker-legacy">
+                                <h4>Mirası</h4>
+                                <p>
+                                    Assange'ın WikiLeaks projesi, dünya çapında şeffaflık ve hesap verebilirlik hareketlerine ilham kaynağı olmuştur. Gazetecilikte ve aktivizmde ifşacılığın rolünü yeniden şekillendirmiştir. Karmaşık hukuki durumu ve siyasi tartışmalar, dijital özgürlükler, ifade özgürlüğü ve ulusal güvenlik arasındaki gerilimleri gözler önüne sermiştir.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Aaron Swartz -->
+                <div class="col-lg-6 mb-5 hacker-item" data-category="hacktivist pioneer">
+                    <div class="hacker-card">
+                        <div class="hacker-image">
+                            <img src="aaronswartz.jpeg" alt="Aaron Swartz">
+                        </div>
+                        <div class="hacker-info">
+                            <span class="hacker-era">2000'ler</span>
+                            <h3 class="hacker-name">Aaron Swartz</h3>
+                            <h4 class="hacker-alias">"Açık İnternet Aktivisti"</h4>
+                            <div class="hacker-quote">
+                                "Bilgi güçtür. Ancak her güç gibi, onu sadece kendine saklamak isteyenler vardır."
+                                <div class="quote-author">- Aaron Swartz</div>
+                            </div>
+                            <div class="small-divider"></div>
+                            <p class="hacker-description">
+                                Aaron Swartz, internet aktivisti, programcı ve bilginin özgürce paylaşılması gerektiğine inanan bir düşünürdü. RSS'nin geliştirilmesine katkıda bulundu ve Reddit'in kurucu ortaklarından biriydi. JSTOR veritabanından akademik makaleleri indirdiği için federal yetkililer tarafından soruşturma altına alındı. Yüzleştiği ağır hukuki baskı sonrasında, 26 yaşında intihar etti.
+                            </p>
+                            <h4>Önemli Başarılar:</h4>
+                            <ul class="hacker-achievements">
+                                <li>RSS 1.0 standardının geliştirilmesine katkıda bulunması</li>
+                                <li>Reddit'in kurucu ortaklarından biri olması</li>
+                                <li>Creative Commons ve Internet Archive gibi projelerde yer alması</li>
+                                <li>SOPA ve PIPA gibi internet kısıtlama yasalarına karşı aktivizm</li>
+                            </ul>
+                            <div class="hacker-legacy">
+                                <h4>Mirası</h4>
+                                <p>
+                                    Swartz'ın mirası, açık internet ve bilginin özgürce paylaşılması mücadelelerinde yaşamaya devam etmektedir. Aaron's Law adı verilen yasal reform girişimleri, bilgisayar suçlarıyla ilgili yasaların yeniden değerlendirilmesini amaçlamıştır. Hikayesi, "The Internet's Own Boy: The Story of Aaron Swartz" belgeselinde anlatılmıştır ve dijital aktivizm için bir ilham kaynağı olmaya devam etmektedir.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+
+   
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Kategoriye göre filtreleme
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const hackerItems = document.querySelectorAll('.hacker-item');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterBtns.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    hackerItems.forEach(item => {
+                        if (filterValue === 'all') {
+                            item.style.display = 'block';
+                        } else {
+                            if (item.getAttribute('data-category').includes(filterValue)) {
+                                item.style.display = 'block';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Animation on scroll
+            window.addEventListener('scroll', function() {
+                const hackerCards = document.querySelectorAll('.hacker-card');
+                
+                hackerCards.forEach(card => {
+                    const cardPosition = card.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    
+                    if (cardPosition.top < windowHeight - 100) {
+                        card.style.opacity = 1;
+                        card.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+            
+            // Initialize cards with opacity 0
+            const hackerCards = document.querySelectorAll('.hacker-card');
+            hackerCards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = 'all 0.8s ease';
+            });
+            
+            // Trigger scroll event to check initial viewport
+            window.dispatchEvent(new Event('scroll'));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DijitalGNÇ - Fikrim Gelecek Hackathon Proje Şablonu</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 30px;
+            color: #333;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #6366f1;
+            border-bottom: 4px solid #6366f1;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        h2 {
+            color: #4f46e5;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-left: 5px solid #6366f1;
+            padding-left: 15px;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #4f46e5;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .field-content {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #a5b4fc;
+            margin-bottom: 15px;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #fef3c7 0%, #fef3c7 100%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .note {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fikrim Gelecek Hackathon Proje Şablonu</h1>
+        
+        <div class="note">
+            <strong>Not:</strong> Bu doküman DijitalGNÇ projesi için hazırlanmıştır.
+        </div>
+
+        <div class="field-label">Proje Adı:</div>
+        <div class="field-content">
+            <strong>DijitalGNÇ</strong> - Oyunlaştırılmış Yazılım Eğitim Platformu
+        </div>
+
+        <div class="field-label">Katılımcılar:</div>
+        <div class="field-content">
+            [Katılımcı isimleri ve rolleri buraya eklenecek]
+        </div>
+
+        <h2>Proje Özeti</h2>
+        <div class="field-content">
+            DijitalGNÇ, ortaöğretim öğrencilerinin (13-18 yaş) yazılım öğrenme sürecini oyunlaştırılmış bir deneyime dönüştüren yapay zeka destekli bir eğitim platformudur. Platform, öğrencilerin yazılım öğrenirken karşılaştığı motivasyon eksikliği, önyargılar ve soyut kavramları anlama zorluğu gibi engelleri ortadan kaldırmayı hedefler. 
+            <br><br>
+            Rozet sistemi, lider tablosu, seviye atlama mekanizmaları ve gerçek zamanlı geri bildirim ile klasik eğitim yöntemlerinden farklı bir yaklaşım sunar. Yapay zeka algoritmaları (TensorFlow.js, Pattern Matching, Decision Tree) sayesinde her öğrencinin öğrenme hızına ve tarzına özel kişiselleştirilmiş içerik sunar.
+            <br><br>
+            Proje, tam işlevli bir web platformu ve yapay zeka destekli öğrenme algoritmasından oluşmaktadır.
+        </div>
+
+        <h2>Proje Amacı ve Hedefi</h2>
+        <div class="field-content">
+            <strong>Genel Amaç:</strong>
+            <p>Türkiye'deki ortaöğretim öğrencilerine yazılım eğitimini eğlenceli, erişilebilir ve etkili kılarak teknoloji alanında kariyer yapmak isteyen yeni nesil yetenekleri keşfetmek ve desteklemek. 2030 yılına kadar Türkiye'nin en büyük gençlik odaklı yazılım eğitim platformu olmak.</p>
+            
+            <strong>Ölçülebilir Hedefler:</strong>
+            <ul>
+                <li><span class="highlight">İlk 12 ay içinde 100,000 aktif kullanıcıya ulaşmak</span> (Türkiye genelinde ortaöğretim öğrencileri)</li>
+                <li>Platform üzerinden <span class="highlight">500,000 görevin tamamlanmasını sağlamak</span> (yıllık)</li>
+                <li><span class="highlight">15,000 sertifika</span> kazandırmak (ilk yıl)</li>
+                <li>Kullanıcı elde tutma oranını <span class="highlight">%65'in üzerine çıkarmak</span></li>
+                <li>Öğrenci başarı oranını <span class="highlight">%85 seviyesinde tutmak</span></li>
+                <li>İlk 6 ayda <span class="highlight">10 pilot okul</span> (İstanbul, Ankara, İzmir) ile başlayıp 12 ay içinde <span class="highlight">1000 okula yaygınlaştırmak</span></li>
+                <li>2. yılda <span class="highlight">tüm DİGEM merkezlerinde (500+)</span> aktif kullanım sağlamak</li>
+                <li><span class="highlight">%70'i düşük gelir ailelerinden</span> gelen öğrencilere erişmek (dijital uçurumu kapatmak)</li>
+                <li>5 yıl içinde teknoloji sektöründe <span class="highlight">5000+ iş fırsatı</span> yaratmaya katkı sağlamak</li>
+            </ul>
+        </div>
+
+        <h2>Projenin Toplumsal Faydası</h2>
+        <div class="field-content">
+            <strong>Çözülen Toplumsal Sorunlar:</strong>
+            
+            <p><strong>1. Eğitimde Fırsat Eşitsizliği:</strong><br>
+            Türkiye'de kaliteli yazılım eğitimine erişim büyük şehirler ve yüksek gelirli aileler ile sınırlıdır. DijitalGNÇ, tamamen dijital ve erişilebilir bir platform olarak 81 ilde tüm öğrencilere eşit fırsat sunar. DİGEM merkezleri (500+ nokta) entegrasyonu ile fiziksel altyapısı olmayan bölgelerdeki öğrenciler de platforma erişebilir.</p>
+            
+            <p><strong>2. Gençlerin Teknoloji Alanında Kariyer Fırsatlarının Sınırlı Olması:</strong><br>
+            Türkiye'de yazılım sektörü hızla büyürken nitelikli yazılımcı açığı bulunmaktadır. Platform, ortaöğretim çağında öğrencilere yazılım becerisi kazandırarak gelecekte teknoloji sektöründe istihdam edilebilirliklerini artırır.</p>
+            
+            <p><strong>3. Öğrenme Motivasyonu ve Önyargılar:</strong><br>
+            Geleneksel eğitim yöntemleri öğrencilerin yazılımı "zor" ve "sıkıcı" olarak algılamasına neden olur. Oyunlaştırma yaklaşımı ile öğrenme sürecini eğlenceli hale getirerek bu önyargıları kırıyoruz.</p>
+            
+            <strong>Birleşmiş Milletler Sürdürülebilir Kalkınma Hedeflerine (SKH) Katkı:</strong>
+            <ul>
+                <li><strong>SKH 4 - Nitelikli Eğitim (%85 uyum):</strong> Kapsayıcı, eşitlikçi, nitelikli eğitim sağlama ve yaşam boyu öğrenme fırsatları</li>
+                <li><strong>SKH 10 - Eşitsizliklerin Azaltılması:</strong> Gelir, cinsiyet ve diğer faktörlerden bağımsız teknoloji eğitimine erişim</li>
+                <li><strong>SKH 8 - İnsana Yakışır İş:</strong> Gençlere teknoloji sektöründe kariyer fırsatları yaratma</li>
+            </ul>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number">100K+</div>
+                    <div class="stat-label">Öğrenci (İlk 12 Ay)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">70%</div>
+                    <div class="stat-label">Düşük Gelir Ailelerinden</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">5000+</div>
+                    <div class="stat-label">İş Fırsatı (5 Yıl)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">81</div>
+                    <div class="stat-label">İl Kapsamı</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Projenin Yürütüleceği Kurum/Kurumlar</h2>
+        <div class="field-content">
+            <strong>Birincil Kurumlar:</strong>
+            <ul>
+                <li><strong>Milli Eğitim Bakanlığı (MEB):</strong> Okullarda entegrasyon ve müfredat uyumluluğu için resmi iş birliği</li>
+                <li><strong>DİGEM (Dijital Gelişim Merkezleri):</strong> 500+ DİGEM merkezinde platformun fiziksel erişim noktalarında kullanımı (81 il genelinde)</li>
+            </ul>
+            
+            <strong>İş Birliği Kurumları:</strong>
+            <ul>
+                <li><strong>Kodluyoruz:</strong> İçerik ortaklığı ve eğitim teknolojisi deneyimi paylaşımı</li>
+                <li><strong>BTK Akademi:</strong> İçerik paylaşımı ve sertifika programları</li>
+                <li><strong>Teknoloji Şirketleri:</strong> Staj fırsatları, sponsorluk ve mentorluk programları (kurumsal destek)</li>
+                <li><strong>Üniversiteler:</strong> Bilgisayar Mühendisliği bölümleri ile akademik destek ve araştırma iş birlikleri</li>
+            </ul>
+            
+            <strong>Hedef Kurumsal Müşteriler:</strong>
+            <ul>
+                <li>Özel okullar ve eğitim kurumları (kurumsal lisans modeli)</li>
+                <li>Teknoloji şirketleri (yetenek havuzu ve B2B ortaklıklar)</li>
+            </ul>
+        </div>
+
+        <h2>Yöntem</h2>
+        <div class="field-content">
+            <strong>Teknolojik Altyapı:</strong>
+            
+            <p><strong>Yapay Zeka ve Algoritma Sistemi:</strong></p>
+            <ul>
+                <li><strong>TensorFlow.js:</strong> Tarayıcı tabanlı makine öğrenmesi modelleri ile her öğrencinin öğrenme patternini analiz etme</li>
+                <li><strong>Pattern Matching:</strong> Öğrenci davranışlarını tanıma ve benzer başarılı öğrenme yollarını önerme</li>
+                <li><strong>Decision Tree Algoritması:</strong> Öğrenci performansına göre bir sonraki görev/seviye önerilerini optimize etme</li>
+                <li><strong>Öğrenme Algoritmaları:</strong> Kişiselleştirilmiş içerik sunumu ve zorluk seviyesi ayarlaması</li>
+            </ul>
+            
+            <p><strong>Backend Teknolojileri:</strong></p>
+            <ul>
+                <li><strong>Python:</strong> Yapay zeka model eğitimi ve veri analizi</li>
+                <li><strong>PHP:</strong> Dinamik web sayfaları ve sunucu tarafı işlemler, veritabanı yönetimi</li>
+                <li><strong>C#:</strong> Performans kritik işlemler, kod derleme ve oyun motorları entegrasyonu</li>
+            </ul>
+            
+            <p><strong>Frontend ve UX/UI:</strong></p>
+            <ul>
+                <li>Modern web teknolojileri ile responsive tasarım (mobil, tablet, desktop uyumlu)</li>
+                <li>Oyunlaştırılmış arayüz: Rozet sistemi, XP puanları, lider tablosu, seviye atlama animasyonları</li>
+                <li>Gerçek zamanlı geri bildirim ve ilerleme takibi</li>
+            </ul>
+            
+            <strong>Oyunlaştırma Mekanizmaları:</strong>
+            <ul>
+                <li><strong>Rozet Sistemi:</strong> Her başarı için kazanılan rozetler (İlk Kod, Hata Avcısı, Algoritma Ustası vb.)</li>
+                <li><strong>Lider Tablosu:</strong> Haftalık/aylık sıralamalar ve rekabet ortamı</li>
+                <li><strong>Seviye Sistemi:</strong> XP kazanma ve seviye atlama mekanikleri</li>
+                <li><strong>Sertifikalar:</strong> Tamamlanan modüller için resmi dijital sertifikalar</li>
+                <li><strong>Kişiselleştirilmiş Öğrenme Yolları:</strong> Her öğrencinin hızına ve tarzına göre özel içerik</li>
+            </ul>
+            
+            <strong>İçerik Yapısı:</strong>
+            <p>10 ana kategori: Web Geliştirme, Python, JavaScript, Algoritma ve Mantık, Veri Bilimi Temelleri, Mobil Uygulama, Oyun Geliştirme, Veritabanı Yönetimi, Siber Güvenlik Temelleri, Yapay Zeka ve Makine Öğrenmesi Giriş</p>
+            
+            <strong>Uygulama Adımları:</strong>
+            <ol>
+                <li><strong>Faz 1 (0-6 ay):</strong> Platform geliştirme, AI model eğitimi, içerik üretimi ve 10 pilot okulda test</li>
+                <li><strong>Faz 2 (6-12 ay):</strong> MEB iş birliği ile 1000 okula yaygınlaştırma</li>
+                <li><strong>Faz 3 (12-24 ay):</strong> DİGEM merkezlerinde aktif kullanım, kurumsal lisans satışları</li>
+                <li><strong>Faz 4 (24-60 ay):</strong> Uluslararası pazara açılma ve ölçeklendirme</li>
+            </ol>
+        </div>
+
+        <h2>Prototip / Çıktı</h2>
+        <div class="field-content">
+            <strong>Mevcut Çıktılar:</strong>
+            
+            <p><strong>1. Tam İşlevli Web Platformu:</strong></p>
+            <ul>
+                <li>Responsive web sitesi (desktop, tablet, mobil uyumlu)</li>
+                <li>Demo URL: <a href="https://dijitalgnc.com" target="_blank">dijitalgnc.com</a> (örnek)</li>
+                <li>Kullanıcı paneli, görev sistemi, rozet koleksiyonu arayüzü</li>
+            </ul>
+            
+            <p><strong>2. Ana Bölümler:</strong></p>
+            <ul>
+                <li>Hero/Ana sayfa: Projeyi tanıtım ve vizyon</li>
+                <li>Misyon, Vizyon & Amaç bölümü</li>
+                <li>Problem analizi: Mevcut yazılım eğitimindeki sorunlar</li>
+                <li>Çözüm sunumu: DijitalGNÇ platformu özellikleri</li>
+                <li>Özellikler showcase: Gamification özellikleri detayları</li>
+                <li>AI & Algoritma sistemi açıklaması</li>
+                <li>Teknoloji stack gösterimi</li>
+                <li>Platform demo ekranları (dashboard, görev listesi, profil)</li>
+                <li>Hedef kitle & Paydaşlar analizi (TAM/SAM/SOM)</li>
+                <li>İş modeli & Ticarileşme stratejisi (4 gelir akışı)</li>
+                <li>Detaylı maliyet analizi (ilk yatırım ₺550K, işletme ₺1.5M/yıl)</li>
+                <li>Ölçülebilir metrikler (KPI dashboard)</li>
+                <li>Sürdürülebilir Kalkınma Hedefleri uyumu</li>
+                <li>İstatistikler ve vizyon bölümü</li>
+            </ul>
+            
+            <p><strong>3. Ekran Görüntüleri:</strong></p>
+            <ul>
+                <li>6 adet profesyonel AI-generated görsel (hero arka plan, platform mockup'ları, illüstrasyonlar)</li>
+                <li>Interaktif platform demo ekranları</li>
+                <li>Dashboard, profil ve ilerleme ekranları mockup'ları</li>
+            </ul>
+            
+            <p><strong>4. İş Planı Dokümantasyonu:</strong></p>
+            <ul>
+                <li>Pazar analizi: TAM (2.5M), SAM (750K), SOM (100K ilk yıl)</li>
+                <li>5 yıllık gelir projeksiyonu (₺2.5M → ₺50M)</li>
+                <li>Detaylı maliyet dökümü ve ROI analizi (24 ay başabaş)</li>
+                <li>Paydaş haritası ve iş birliği stratejileri</li>
+            </ul>
+            
+            <p><strong>5. Proje Videosu / Ekran Kaydı:</strong></p>
+            <p>[Platformun canlı kullanım videosu eklenecek - website navigation, özellik gösterimleri, kullanıcı deneyimi akışı]</p>
+            
+            <strong>Demo Erişimi:</strong>
+            <p>Web platformu canlı olarak görüntülenebilir ve tüm bölümler interaktif şekilde test edilebilir.</p>
+        </div>
+
+        <div style="margin-top: 50px; padding-top: 30px; border-top: 3px solid #e5e7eb; text-align: center; color: #6b7280;">
+            <p><strong>DijitalGNÇ</strong> - Türkiye'nin geleceği için kodluyoruz 🚀</p>
+            <p style="font-size: 0.9em;">© 2025 DijitalGNÇ. Tüm hakları saklıdır.</p>
+        </div>
+    </div>
+</body>
+</html>

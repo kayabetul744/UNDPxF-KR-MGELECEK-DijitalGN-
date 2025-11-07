@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kod Dünyası Monopoly - Programlama Oyunu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8A2BE2;
+            --primary-dark: #6A0DAD;
+            --secondary: #FF3CAC;
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF;
+            --accent-dark: #00E5E5;
+            --dark: #0F0524;
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --glow-color: rgba(138, 43, 226, 0.8);
+            --gold: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 15px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.08) 0px, rgba(138, 43, 226, 0.08) 2px, transparent 2px, transparent 15px),
+                radial-gradient(rgba(138, 43, 226, 0.15) 2px, transparent 2px),
+                radial-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(135deg, #0A031A 0%, #240047 25%, #410063 75%, #0F0524 100%);
+            background-size: 25px 25px, 25px 25px, 40px 40px, 60px 60px, 100% 100%;
+            background-position: 0 0, 0 0, 0 0, 20px 20px, 0 0;
+            animation: backgroundShift 20s ease-in-out infinite;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { background-position: 0 0, 0 0, 0 0, 20px 20px, 0 0; }
+            50% { background-position: 25px 25px, -25px -25px, 40px 40px, 0 0, 0 0; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(3px 3px at 100px 150px, rgba(138, 43, 226, 0.6), transparent),
+                radial-gradient(2px 2px at 200px 300px, rgba(0, 255, 255, 0.4), transparent),
+                radial-gradient(4px 4px at 350px 100px, rgba(255, 60, 172, 0.5), transparent),
+                radial-gradient(1px 1px at 450px 250px, rgba(138, 43, 226, 0.7), transparent),
+                radial-gradient(2px 2px at 600px 180px, rgba(0, 255, 255, 0.3), transparent);
+            background-repeat: repeat;
+            background-size: 700px 400px;
+            animation: particleFloat 25s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            background: rgba(15, 5, 36, 0.85);
+            backdrop-filter: blur(20px);
+            border: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary), var(--primary)) 1;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px var(--glow-color), inset 0 0 30px rgba(138, 43, 226, 0.1);
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(138, 43, 226, 0.1), transparent);
+            animation: headerGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes headerGlow {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--accent), var(--secondary), var(--primary));
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 4s ease-in-out infinite;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--glow-color);
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header .subtitle {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-panel {
+            background: rgba(15, 5, 36, 0.75);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 25px rgba(138, 43, 226, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.05);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: linear-gradient(90deg, rgba(138, 43, 226, 0.2), rgba(0, 255, 255, 0.1));
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            font-weight: bold;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .stat-value {
+            color: var(--accent);
+            font-size: 1.3rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            font-weight: 700;
+        }
+
+        .board-container {
+            background: rgba(15, 5, 36, 0.8);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 50px rgba(138, 43, 226, 0.5), inset 0 0 30px rgba(0, 255, 255, 0.05);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .board-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--accent), var(--primary), transparent);
+            animation: borderFlow 4s ease-in-out infinite;
+        }
+
+        @keyframes borderFlow {
+            0%, 100% { transform: translateX(-100%); opacity: 0; }
+            50% { transform: translateX(0%); opacity: 1; }
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 10px;
+            aspect-ratio: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .game-board {
+                gap: 6px;
+            }
+        }
+
+        .square {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(0, 255, 255, 0.15));
+            border: 2px solid rgba(138, 43, 226, 0.6);
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+            backdrop-filter: blur(10px);
+        }
+
+        .square::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .square:hover::before {
+            left: 100%;
+        }
+
+        .square:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.6), 0 0 15px rgba(0, 255, 255, 0.4);
+            border-color: var(--accent);
+        }
+
+        .square.active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.5), rgba(255, 60, 172, 0.4));
+            border-color: var(--gold);
+            animation: pulse 1s infinite;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+            50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(255, 215, 0, 0.8); }
+        }
+
+        .square-icon {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: 5px;
+            color: var(--accent);
+            filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5));
+        }
+
+        .square-name {
+            font-size: clamp(0.6rem, 2vw, 0.8rem);
+            font-weight: bold;
+            text-align: center;
+            color: var(--text-light);
+            text-shadow: 0 0 8px rgba(138, 43, 226, 0.5);
+        }
+
+        .player-piece {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 22px;
+            height: 22px;
+            background: radial-gradient(circle, var(--secondary), var(--secondary-dark));
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 15px rgba(255, 60, 172, 0.8), 0 0 5px rgba(0, 255, 255, 0.5);
+            z-index: 10;
+            animation: bounce 0.5s ease-in-out, playerGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes playerGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 60, 172, 0.8), 0 0 5px rgba(0, 255, 255, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(255, 60, 172, 1), 0 0 10px rgba(0, 255, 255, 0.8); }
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .dice-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            padding: 18px 45px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px var(--glow-color), 0 0 20px rgba(0, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .dice-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .dice-btn:hover::before {
+            left: 100%;
+        }
+
+        .dice-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px var(--glow-color), 0 0 30px rgba(0, 255, 255, 0.5);
+            border-color: var(--accent);
+        }
+
+        .dice-btn:active {
+            transform: translateY(0);
+        }
+
+        .dice-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .dice-result {
+            display: inline-block;
+            margin: 15px;
+            font-size: 3.5rem;
+            animation: diceRoll 0.5s ease-in-out;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.7));
+        }
+
+        @keyframes diceRoll {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(1); }
+            75% { transform: rotate(270deg) scale(1.1); }
+        }
+
+        .modal-content {
+            background: rgba(15, 5, 36, 0.95);
+            backdrop-filter: blur(25px);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(138, 43, 226, 0.6), inset 0 0 30px rgba(0, 255, 255, 0.05);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 18px 18px 0 0;
+            border-bottom: 2px solid var(--accent);
+            padding: 20px;
+        }
+
+        .modal-title {
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+            font-weight: bold;
+        }
+
+        .modal-body {
+            padding: 25px;
+            color: var(--text-light);
+        }
+
+        #questionText {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+        }
+
+        .question-options {
+            display: grid;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 10px;
+            padding: 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            color: var(--text-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option-btn:hover::before {
+            left: 100%;
+        }
+
+        .option-btn:hover {
+            background: rgba(138, 43, 226, 0.4);
+            border-color: var(--accent);
+            transform: translateX(8px);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .option-btn.correct {
+            background: rgba(0, 245, 155, 0.3);
+            border-color: var(--success);
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 245, 155, 0.5);
+        }
+
+        .option-btn.wrong {
+            background: rgba(255, 87, 87, 0.3);
+            border-color: var(--danger);
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 87, 87, 0.5);
+        }
+
+        .corner {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        .top-row {
+            grid-row: 1;
+        }
+
+        .right-col {
+            grid-column: 5;
+        }
+
+        .bottom-row {
+            grid-row: 5;
+        }
+
+        .left-col {
+            grid-column: 1;
+        }
+
+        .start-square {
+            background: linear-gradient(135deg, rgba(0, 245, 155, 0.4), rgba(0, 229, 229, 0.3)) !important;
+            border-color: var(--success) !important;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 245, 155, 0.5) !important;
+        }
+
+        .start-square .square-icon {
+            color: var(--success);
+            filter: drop-shadow(0 0 8px rgba(0, 245, 155, 0.8));
+        }
+
+        .special-square {
+            background: linear-gradient(135deg, rgba(255, 189, 89, 0.4), rgba(255, 60, 172, 0.3)) !important;
+            border-color: var(--warning) !important;
+            box-shadow: 0 0 20px rgba(255, 189, 89, 0.5) !important;
+        }
+
+        .special-square .square-icon {
+            color: var(--warning);
+            filter: drop-shadow(0 0 8px rgba(255, 189, 89, 0.8));
+        }
+
+        .alert {
+            background: rgba(15, 5, 36, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--accent);
+            color: var(--text-light);
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.5);
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1><i class="fas fa-code"></i> KOD DÜNYASI MONOPOLY <i class="fas fa-laptop-code"></i></h1>
+            <p class="subtitle">Programlama Macerasında Eğlenmeye Hazır mısın?</p>
+        </div>
+
+        <div class="stats-panel">
+            <div class="stat-item">
+                <span><i class="fas fa-coins"></i> Kod Puanın:</span>
+                <span class="stat-value" id="money">1000</span>
+            </div>
+            <div class="stat-item">
+                <span><i class="fas fa-map-marker-alt"></i> Bulunduğun Yer:</span>
+                <span class="stat-value" id="position">Başlangıç</span>
+            </div>
+            <div class="stat-item">
+                <span><i class="fas fa-trophy"></i> Doğru Cevap:</span>
+                <span class="stat-value" id="correct">0</span>
+            </div>
+        </div>
+
+        <div class="board-container">
+            <div class="game-board" id="gameBoard"></div>
+        </div>
+
+        <div class="controls">
+            <button class="dice-btn" id="rollDice">
+                <i class="fas fa-dice"></i> ZAR AT
+            </button>
+            <div id="diceDisplay"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="questionModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-question-circle"></i> Programlama Sorusu</h5>
+                </div>
+                <div class="modal-body">
+                    <h6 id="questionText"></h6>
+                    <div class="question-options" id="questionOptions"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const squares = [
+            { name: 'BAŞLA', icon: 'fa-play', type: 'start' },
+            { name: 'Python Caddesi', icon: 'fa-python', type: 'property' },
+            { name: 'JavaScript Mahallesi', icon: 'fa-js', type: 'property' },
+            { name: 'HTML Park', icon: 'fa-html5', type: 'property' },
+            { name: 'CSS Köşesi', icon: 'fa-css3-alt', type: 'property' },
+            { name: 'React Kulesi', icon: 'fa-react', type: 'property' },
+            { name: 'Bug Buldum!', icon: 'fa-bug', type: 'special' },
+            { name: 'Node.js İstasyonu', icon: 'fa-node-js', type: 'property' },
+            { name: 'Git Hub', icon: 'fa-github', type: 'property' },
+            { name: 'Code Review', icon: 'fa-code-branch', type: 'special' },
+            { name: 'SQL Veritabanı', icon: 'fa-database', type: 'property' },
+            { name: 'API Merkezi', icon: 'fa-server', type: 'property' },
+            { name: 'Debug Time', icon: 'fa-wrench', type: 'special' },
+            { name: 'Java Adası', icon: 'fa-java', type: 'property' },
+            { name: 'C++ Kalesi', icon: 'fa-copyright', type: 'property' },
+            { name: 'Bonus Kodu', icon: 'fa-gift', type: 'special' },
+            { name: 'Terminal', icon: 'fa-terminal', type: 'property' },
+            { name: 'Docker Limanı', icon: 'fa-docker', type: 'property' },
+            { name: 'Cloud Bulutu', icon: 'fa-cloud', type: 'property' },
+            { name: 'Final Projesi', icon: 'fa-flag-checkered', type: 'special' }
+        ];
+
+        const questions = [
+            {
+                question: 'Python\'da hangi komut ekrana yazı yazdırır?',
+                options: ['print()', 'write()', 'echo()', 'show()'],
+                correct: 0
+            },
+            {
+                question: 'HTML hangi dilin kısaltmasıdır?',
+                options: ['High Tech Markup Language', 'HyperText Markup Language', 'Home Tool Markup Language', 'Hyperlinks Text Markup Language'],
+                correct: 1
+            },
+            {
+                question: 'JavaScript\'te değişken tanımlamak için hangi kelime kullanılır?',
+                options: ['var', 'let', 'const', 'Hepsi'],
+                correct: 3
+            },
+            {
+                question: 'CSS neyin stilini belirler?',
+                options: ['Veritabanı', 'Web sayfalarının görünümü', 'Sunucu', 'Ağ bağlantısı'],
+                correct: 1
+            },
+            {
+                question: 'Hangisi bir programlama dili DEĞİLDİR?',
+                options: ['Python', 'Java', 'HTML', 'C++'],
+                correct: 2
+            },
+            {
+                question: 'Git nedir?',
+                options: ['Bir oyun', 'Versiyon kontrol sistemi', 'Bir web tarayıcı', 'Bir veritabanı'],
+                correct: 1
+            },
+            {
+                question: 'Hangisi bir döngü (loop) türüdür?',
+                options: ['for', 'while', 'do-while', 'Hepsi'],
+                correct: 3
+            },
+            {
+                question: 'API\'nin açılımı nedir?',
+                options: ['Application Programming Interface', 'Advanced Program Interface', 'Application Process Integration', 'Automated Programming Interface'],
+                correct: 0
+            },
+            {
+                question: 'Hangisi bir veritabanı değildir?',
+                options: ['MySQL', 'MongoDB', 'React', 'PostgreSQL'],
+                correct: 2
+            },
+            {
+                question: 'Bug ne demektir?',
+                options: ['Böcek', 'Programdaki hata', 'Her ikisi de doğru', 'Hiçbiri'],
+                correct: 2
+            },
+            {
+                question: 'Hangisi bir frontend framework\'üdür?',
+                options: ['React', 'Django', 'Flask', 'Express'],
+                correct: 0
+            },
+            {
+                question: 'Sonsuz döngü ne demektir?',
+                options: ['Hiç çalışmayan döngü', 'Sadece 1 kez çalışan döngü', 'Hiç durmayan döngü', 'Çok hızlı döngü'],
+                correct: 2
+            },
+            {
+                question: 'IDE ne demektir?',
+                options: ['Internet Development Engine', 'Integrated Development Environment', 'International Data Exchange', 'Interactive Design Editor'],
+                correct: 1
+            },
+            {
+                question: 'Hangisi bir backend dili değildir?',
+                options: ['Node.js', 'Python', 'CSS', 'Java'],
+                correct: 2
+            },
+            {
+                question: 'Cloud computing ne demektir?',
+                options: ['Bulutlarla ilgili oyun', 'İnternet üzerinden bilişim hizmeti', 'Hava durumu uygulaması', 'Bulut fotoğrafları'],
+                correct: 1
+            }
+        ];
+
+        let playerPosition = 0;
+        let money = 1000;
+        let correctAnswers = 0;
+        let currentQuestion = null;
+        let isMoving = false;
+
+        function createBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+            
+            const positions = [
+                [0, 0], [0, 1], [0, 2], [0, 3], [0, 4],
+                [1, 4], [2, 4], [3, 4], [4, 4],
+                [4, 3], [4, 2], [4, 1], [4, 0],
+                [3, 0], [2, 0], [1, 0],
+                [1, 1], [1, 2], [1, 3],
+                [2, 3], [2, 2], [2, 1], [3, 1], [3, 2]
+            ];
+
+            squares.forEach((square, index) => {
+                const div = document.createElement('div');
+                div.className = 'square';
+                
+                if (square.type === 'start') {
+                    div.classList.add('start-square');
+                } else if (square.type === 'special') {
+                    div.classList.add('special-square');
+                }
+                
+                div.innerHTML = `
+                    <i class="fas ${square.icon} square-icon"></i>
+                    <div class="square-name">${square.name}</div>
+                `;
+                
+                div.style.gridColumn = positions[index][1] + 1;
+                div.style.gridRow = positions[index][0] + 1;
+                
+                if (index === playerPosition) {
+                    div.innerHTML += '<div class="player-piece"></div>';
+                    div.classList.add('active');
+                }
+                
+                board.appendChild(div);
+            });
+        }
+
+        function rollDice() {
+            if (isMoving) return;
+            
+            isMoving = true;
+            const diceBtn = document.getElementById('rollDice');
+            diceBtn.disabled = true;
+            
+            const dice = Math.floor(Math.random() * 6) + 1;
+            const display = document.getElementById('diceDisplay');
+            display.innerHTML = `<div class="dice-result">🎲 ${dice}</div>`;
+            
+            setTimeout(() => {
+                movePlayer(dice);
+            }, 600);
+        }
+
+        function movePlayer(steps) {
+            let moved = 0;
+            const interval = setInterval(() => {
+                if (moved < steps) {
+                    playerPosition = (playerPosition + 1) % squares.length;
+                    createBoard();
+                    moved++;
+                    
+                    if (playerPosition === 0 && moved < steps) {
+                        money += 200;
+                        updateStats();
+                        showNotification('BAŞLANGIÇTAN GEÇTİN! +200 Puan! 🎉');
+                    }
+                } else {
+                    clearInterval(interval);
+                    updateStats();
+                    setTimeout(() => {
+                        showQuestion();
+                    }, 500);
+                }
+            }, 400);
+        }
+
+        function showQuestion() {
+            currentQuestion = questions[Math.floor(Math.random() * questions.length)];
+            document.getElementById('questionText').textContent = currentQuestion.question;
+            
+            const optionsDiv = document.getElementById('questionOptions');
+            optionsDiv.innerHTML = '';
+            
+            currentQuestion.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsDiv.appendChild(btn);
+            });
+            
+            const modal = new bootstrap.Modal(document.getElementById('questionModal'));
+            modal.show();
+        }
+
+        function checkAnswer(selected, btn) {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+            
+            if (selected === currentQuestion.correct) {
+                btn.classList.add('correct');
+                money += 100;
+                correctAnswers++;
+                showNotification('🎉 Doğru cevap! +100 Puan!');
+            } else {
+                btn.classList.add('wrong');
+                allBtns[currentQuestion.correct].classList.add('correct');
+                money -= 50;
+                showNotification('❌ Yanlış cevap! -50 Puan');
+            }
+            
+            updateStats();
+            
+            setTimeout(() => {
+                bootstrap.Modal.getInstance(document.getElementById('questionModal')).hide();
+                isMoving = false;
+                document.getElementById('rollDice').disabled = false;
+            }, 2000);
+        }
+
+        function updateStats() {
+            document.getElementById('money').textContent = money;
+            document.getElementById('position').textContent = squares[playerPosition].name;
+            document.getElementById('correct').textContent = correctAnswers;
+        }
+
+        function showNotification(message) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-info position-fixed top-0 start-50 translate-middle-x mt-3';
+            alert.style.zIndex = '9999';
+            alert.textContent = message;
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 2000);
+        }
+
+        document.getElementById('rollDice').addEventListener('click', rollDice);
+        
+        createBoard();
+        updateStats();
+    </script>
+</body>
+</html>

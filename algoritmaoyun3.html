@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uzay Kod Macerası 🚀</title>
+    <style>
+        :root {
+            --primary: #8A2BE2;
+            --primary-dark: #6A0DAD;
+            --secondary: #FF3CAC;
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF;
+            --accent-dark: #00E5E5;
+            --dark: #0F0524;
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --glow-color: rgba(138, 43, 226, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 10% 20%, white, transparent),
+                radial-gradient(3px 3px at 90% 80%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(2px 2px at 80% 10%, white, transparent),
+                radial-gradient(3px 3px at 20% 90%, white, transparent),
+                radial-gradient(1px 1px at 33% 70%, white, transparent),
+                radial-gradient(2px 2px at 70% 30%, white, transparent),
+                radial-gradient(1px 1px at 15% 60%, white, transparent);
+            background-size: 200% 200%;
+            animation: twinkle 4s ease-in-out infinite;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.15) 0%, rgba(106, 13, 173, 0.25) 100%);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 60px var(--glow-color), inset 0 0 40px rgba(0, 0, 0, 0.5);
+            border: 3px solid var(--primary);
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .space-title {
+            font-size: 60px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px var(--accent));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        h1 {
+            text-align: center;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-size: 2.8em;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            letter-spacing: 3px;
+            animation: glow-text 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-text {
+            0%, 100% { filter: drop-shadow(0 0 10px var(--accent)); }
+            50% { filter: drop-shadow(0 0 25px var(--secondary)); }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .mission-panel {
+            background: linear-gradient(135deg, rgba(10, 3, 26, 0.8) 0%, rgba(15, 5, 36, 0.9) 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--primary);
+            box-shadow: inset 0 0 30px rgba(138, 43, 226, 0.3);
+        }
+
+        .mission-header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+
+        .mission-text {
+            background: rgba(138, 43, 226, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--accent);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .hint-box {
+            background: linear-gradient(135deg, rgba(255, 189, 89, 0.2) 0%, rgba(255, 60, 172, 0.2) 100%);
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px dashed var(--warning);
+            margin-top: 10px;
+            font-size: 0.95em;
+            display: none;
+        }
+
+        .hint-box.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .code-panel {
+            background: linear-gradient(135deg, rgba(10, 3, 26, 0.8) 0%, rgba(15, 5, 36, 0.9) 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--primary);
+            box-shadow: inset 0 0 30px rgba(138, 43, 226, 0.3);
+        }
+
+        .code-blocks-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            min-height: 80px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px dashed var(--accent);
+        }
+
+        .code-block {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s ease;
+            user-select: none;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+            border: 2px solid var(--accent);
+            color: var(--text-light);
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '⚡';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.6;
+        }
+
+        .code-block:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(138, 43, 226, 0.6), 0 0 20px var(--accent);
+        }
+
+        .code-block.used {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .drop-zone {
+            min-height: 100px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 3px dashed var(--accent);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .drop-zone.hover {
+            background: rgba(0, 255, 255, 0.2);
+            border-color: var(--secondary);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .dropped-block {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 2px solid var(--accent);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(255, 60, 172, 0.4);
+        }
+
+        .remove-btn {
+            background: var(--danger);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .canvas-container {
+            background: rgba(0, 0, 0, 0.5);
+            border: 3px solid var(--primary);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 15px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #spaceCanvas {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(180deg, #0a0f2c 0%, #1a1a3e 100%);
+            border-radius: 8px;
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-run {
+            background: linear-gradient(135deg, var(--success) 0%, #00d084 100%);
+            color: white;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px rgba(0, 245, 155, 0.4);
+        }
+
+        .btn-run:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 245, 155, 0.7);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, var(--warning) 0%, #e5a83d 100%);
+            color: white;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px rgba(255, 189, 89, 0.4);
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 189, 89, 0.7);
+        }
+
+        .btn-hint {
+            background: linear-gradient(135deg, var(--info) 0%, #2d9cdb 100%);
+            color: white;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px rgba(61, 180, 242, 0.4);
+        }
+
+        .btn-hint:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(61, 180, 242, 0.7);
+        }
+
+        .progress-area {
+            background: linear-gradient(135deg, rgba(10, 3, 26, 0.8) 0%, rgba(15, 5, 36, 0.9) 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--primary);
+            box-shadow: inset 0 0 30px rgba(138, 43, 226, 0.3);
+        }
+
+        .level-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .level-info {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .stars-collected {
+            font-size: 1.3em;
+            color: var(--warning);
+            text-shadow: 0 0 10px var(--warning);
+        }
+
+        .progress-bar-container {
+            height: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--secondary) 50%, var(--primary) 100%);
+            width: 0;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .level-box {
+            aspect-ratio: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .level-box.active {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(255, 60, 172, 0.6);
+            transform: scale(1.05);
+        }
+
+        .level-box.completed {
+            background: linear-gradient(135deg, var(--success) 0%, #00d084 100%);
+            border-color: var(--accent);
+        }
+
+        .level-box:hover:not(.completed) {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+
+        .level-number {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .level-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(0, 245, 155, 0.3) 0%, rgba(0, 255, 255, 0.3) 100%);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--success);
+            margin-top: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            box-shadow: 0 0 25px rgba(0, 245, 155, 0.5);
+        }
+
+        .success-message.visible {
+            display: block;
+        }
+
+        @media (max-width: 968px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .space-title {
+                font-size: 45px;
+            }
+
+            .level-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .level-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="space-title">🚀🌟🛸</div>
+            <h1>UZAY KOD MACERASI</h1>
+            <p class="subtitle">Kod Yaarak Uzayı Keşfet!</p>
+        </div>
+
+        <div class="game-area">
+            <div class="mission-panel">
+                <div class="mission-header">
+                    <span id="mission-icon">🎯</span> Görev <span id="current-level">1</span>
+                </div>
+                <div class="mission-text" id="mission-text"></div>
+                <div class="hint-box" id="hint-box"></div>
+                <button class="btn btn-hint" onclick="showHint()">💡 İpucu Göster</button>
+
+                <div class="canvas-container">
+                    <canvas id="spaceCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="code-panel">
+                <div class="mission-header">⚡ Kod Blokları</div>
+                <div class="code-blocks-container" id="available-blocks"></div>
+
+                <div class="mission-header" style="margin-top: 20px;">📝 Kodunu Yaz</div>
+                <div class="drop-zone" id="code-drop-zone"></div>
+
+                <div class="button-group">
+                    <button class="btn btn-run" onclick="runCode()">▶️ Çalıştır</button>
+                    <button class="btn btn-reset" onclick="resetCode()">🔄 Sıfırla</button>
+                </div>
+
+                <div class="success-message" id="success-message"></div>
+            </div>
+        </div>
+
+        <div class="progress-area">
+            <div class="level-indicator">
+                <div class="level-info">🚀 Seviye İlerlemeniz</div>
+                <div class="stars-collected">⭐ <span id="stars-count">0</span>/10</div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="level-grid" id="level-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const levels = [
+            {
+                icon: '🤖',
+                mission: 'Robotu 100 birim SAĞA hareket ettir!',
+                hint: 'İpucu: "moveRight(100)" bloğunu kullan.',
+                blocks: ['moveRight(100)', 'moveLeft(50)', 'moveUp(50)'],
+                solution: ['moveRight(100)'],
+                starPosition: { x: 400, y: 150 }
+            },
+            {
+                icon: '⬆️',
+                mission: 'Robotu önce 80 birim SAĞA, sonra 60 birim YUKARI hareket ettir!',
+                hint: 'İpucu: İki blok kullanmalısın. Önce sağa, sonra yukarı.',
+                blocks: ['moveRight(80)', 'moveUp(60)', 'moveDown(40)', 'moveLeft(70)'],
+                solution: ['moveRight(80)', 'moveUp(60)'],
+                starPosition: { x: 330, y: 110 }
+            },
+            {
+                icon: '⭐',
+                mission: 'Robotu yıldıza ulaştır! Sağa 120, yukarı 80 hareket ettir.',
+                hint: 'İpucu: moveRight ve moveUp bloklarını doğru sırayla kullan.',
+                blocks: ['moveRight(120)', 'moveUp(80)', 'moveLeft(60)', 'moveDown(90)'],
+                solution: ['moveRight(120)', 'moveUp(80)'],
+                starPosition: { x: 420, y: 100 }
+            },
+            {
+                icon: '🔁',
+                mission: 'Robotu 3 KERE 50 birim sağa hareket ettir! (Döngü kullan)',
+                hint: 'İpucu: repeat(3) bloğunu kullan, içine moveRight(50) ekle.',
+                blocks: ['repeat(3)', 'moveRight(50)', 'moveUp(40)', 'moveDown(30)'],
+                solution: ['repeat(3)', 'moveRight(50)'],
+                starPosition: { x: 450, y: 150 }
+            },
+            {
+                icon: '🎨',
+                mission: 'Robotu MAVİ renge boyayıp 100 birim sağa hareket ettir!',
+                hint: 'İpucu: Önce setColor("blue"), sonra moveRight(100).',
+                blocks: ['setColor("blue")', 'moveRight(100)', 'setColor("red")', 'moveUp(50)'],
+                solution: ['setColor("blue")', 'moveRight(100)'],
+                starPosition: { x: 400, y: 150 }
+            },
+            {
+                icon: '🌈',
+                mission: 'Robotu KIRMIZI yap, sağa 80 git, sonra YEŞIL yap!',
+                hint: 'İpucu: setColor("red"), moveRight(80), setColor("green") sırasıyla.',
+                blocks: ['setColor("red")', 'moveRight(80)', 'setColor("green")', 'moveLeft(60)'],
+                solution: ['setColor("red")', 'moveRight(80)', 'setColor("green")'],
+                starPosition: { x: 330, y: 150 }
+            },
+            {
+                icon: '🔄',
+                mission: 'Robotu 2 KERE sağa 60, yukarı 40 hareket ettir!',
+                hint: 'İpucu: repeat(2) içine moveRight(60) ve moveUp(40) ekle.',
+                blocks: ['repeat(2)', 'moveRight(60)', 'moveUp(40)', 'moveDown(30)'],
+                solution: ['repeat(2)', 'moveRight(60)', 'moveUp(40)'],
+                starPosition: { x: 370, y: 90 }
+            },
+            {
+                icon: '💫',
+                mission: 'Robotu pembe yap, 3 kere 40 birim sağa git!',
+                hint: 'İpucu: setColor("pink"), repeat(3), moveRight(40) kullan.',
+                blocks: ['setColor("pink")', 'repeat(3)', 'moveRight(40)', 'moveUp(50)'],
+                solution: ['setColor("pink")', 'repeat(3)', 'moveRight(40)'],
+                starPosition: { x: 420, y: 150 }
+            },
+            {
+                icon: '🎯',
+                mission: 'Karmaşık görev! Mor yap, sağa 100, yukarı 60, sarı yap!',
+                hint: 'İpucu: setColor("purple"), moveRight(100), moveUp(60), setColor("yellow").',
+                blocks: ['setColor("purple")', 'moveRight(100)', 'moveUp(60)', 'setColor("yellow")', 'moveDown(40)'],
+                solution: ['setColor("purple")', 'moveRight(100)', 'moveUp(60)', 'setColor("yellow")'],
+                starPosition: { x: 400, y: 110 }
+            },
+            {
+                icon: '🏆',
+                mission: 'FİNAL! Turuncu yap, 2 kere (sağa 50, yukarı 30) git!',
+                hint: 'İpucu: setColor("orange"), repeat(2), moveRight(50), moveUp(30).',
+                blocks: ['setColor("orange")', 'repeat(2)', 'moveRight(50)', 'moveUp(30)', 'moveLeft(40)'],
+                solution: ['setColor("orange")', 'repeat(2)', 'moveRight(50)', 'moveUp(30)'],
+                starPosition: { x: 350, y: 110 }
+            }
+        ];
+
+        let currentLevel = 0;
+        let starsCollected = 0;
+        let userCode = [];
+        let canvas, ctx;
+        let robotX, robotY, robotColor;
+
+        function init() {
+            canvas = document.getElementById('spaceCanvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            createLevelGrid();
+            loadLevel(0);
+        }
+
+        function createLevelGrid() {
+            const grid = document.getElementById('level-grid');
+            grid.innerHTML = '';
+            
+            levels.forEach((level, index) => {
+                const box = document.createElement('div');
+                box.className = 'level-box';
+                if (index === currentLevel) box.classList.add('active');
+                if (index < starsCollected) box.classList.add('completed');
+                
+                box.innerHTML = `
+                    <div class="level-icon">${level.icon}</div>
+                    <div class="level-number">${index + 1}</div>
+                `;
+                
+                box.onclick = () => {
+                    if (index <= starsCollected) {
+                        loadLevel(index);
+                    }
+                };
+                
+                grid.appendChild(box);
+            });
+        }
+
+        function loadLevel(levelIndex) {
+            currentLevel = levelIndex;
+            userCode = [];
+            
+            const level = levels[currentLevel];
+            document.getElementById('current-level').textContent = currentLevel + 1;
+            document.getElementById('mission-icon').textContent = level.icon;
+            document.getElementById('mission-text').textContent = level.mission;
+            document.getElementById('hint-box').textContent = level.hint;
+            document.getElementById('hint-box').classList.remove('visible');
+            document.getElementById('success-message').classList.remove('visible');
+            
+            const blocksContainer = document.getElementById('available-blocks');
+            blocksContainer.innerHTML = '';
+            
+            level.blocks.forEach((block, index) => {
+                const blockEl = document.createElement('div');
+                blockEl.className = 'code-block';
+                blockEl.draggable = true;
+                blockEl.textContent = block;
+                blockEl.dataset.code = block;
+                blockEl.dataset.index = index;
+                
+                blockEl.addEventListener('dragstart', handleDragStart);
+                blockEl.addEventListener('dragend', handleDragEnd);
+                
+                blocksContainer.appendChild(blockEl);
+            });
+            
+            updateDropZone();
+            createLevelGrid();
+            updateProgress();
+            drawCanvas();
+        }
+
+        function handleDragStart(e) {
+            if (e.target.classList.contains('used')) return;
+            e.dataTransfer.setData('text/plain', e.target.dataset.code);
+            e.target.style.opacity = '0.5';
+        }
+
+        function handleDragEnd(e) {
+            e.target.style.opacity = '1';
+        }
+
+        const dropZone = document.getElementById('code-drop-zone');
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('hover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('hover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('hover');
+            
+            const code = e.dataTransfer.getData('text/plain');
+            if (code) {
+                userCode.push(code);
+                updateDropZone();
+            }
+        });
+
+        function updateDropZone() {
+            const dropZone = document.getElementById('code-drop-zone');
+            dropZone.innerHTML = '';
+            
+            if (userCode.length === 0) {
+                dropZone.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Kod bloklarını buraya sürükle 👆</div>';
+            } else {
+                userCode.forEach((code, index) => {
+                    const blockEl = document.createElement('div');
+                    blockEl.className = 'dropped-block';
+                    blockEl.innerHTML = `
+                        <span>${index + 1}. ${code}</span>
+                        <button class="remove-btn" onclick="removeBlock(${index})">❌</button>
+                    `;
+                    dropZone.appendChild(blockEl);
+                });
+            }
+        }
+
+        function removeBlock(index) {
+            userCode.splice(index, 1);
+            updateDropZone();
+        }
+
+        function showHint() {
+            document.getElementById('hint-box').classList.add('visible');
+        }
+
+        function resetCode() {
+            userCode = [];
+            updateDropZone();
+            document.getElementById('success-message').classList.remove('visible');
+            drawCanvas();
+        }
+
+        function runCode() {
+            drawCanvas();
+            
+            setTimeout(() => {
+                const level = levels[currentLevel];
+                const correct = JSON.stringify(userCode) === JSON.stringify(level.solution);
+                
+                if (correct) {
+                    animateSuccess();
+                } else {
+                    alert('🚫 Kodunda hata var! Tekrar dene veya ipucuna bak.');
+                }
+            }, 100);
+        }
+
+        function animateSuccess() {
+            const level = levels[currentLevel];
+            document.getElementById('success-message').textContent = '🎉 Harika! Görevi tamamladın! ⭐';
+            document.getElementById('success-message').classList.add('visible');
+            
+            if (currentLevel === starsCollected) {
+                starsCollected++;
+                document.getElementById('stars-count').textContent = starsCollected;
+                updateProgress();
+            }
+            
+            setTimeout(() => {
+                if (currentLevel < levels.length - 1) {
+                    loadLevel(currentLevel + 1);
+                } else {
+                    alert('🏆 TEBRİKLER! Tüm seviyeleri tamamladın! Artık bir kod ustasısın! 🚀');
+                }
+            }, 2000);
+        }
+
+        function updateProgress() {
+            const progress = (starsCollected / levels.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        function drawCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#0a0f2c');
+            gradient.addColorStop(1, '#1a1a3e');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < 30; i++) {
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            robotX = 50;
+            robotY = canvas.height / 2;
+            robotColor = '#00FFFF';
+            
+            const level = levels[currentLevel];
+            const starX = level.starPosition.x;
+            const starY = level.starPosition.y;
+            
+            ctx.fillStyle = '#FFD700';
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = '#FFD700';
+            ctx.font = '30px Arial';
+            ctx.fillText('⭐', starX, starY);
+            ctx.shadowBlur = 0;
+            
+            executeUserCode();
+            
+            ctx.fillStyle = robotColor;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = robotColor;
+            ctx.font = '35px Arial';
+            ctx.fillText('🤖', robotX, robotY);
+            ctx.shadowBlur = 0;
+        }
+
+        function executeUserCode() {
+            let insideRepeat = false;
+            let repeatCount = 0;
+            let repeatCommands = [];
+            
+            userCode.forEach(code => {
+                if (code.startsWith('repeat(')) {
+                    insideRepeat = true;
+                    repeatCount = parseInt(code.match(/\d+/)[0]);
+                    repeatCommands = [];
+                } else if (insideRepeat) {
+                    repeatCommands.push(code);
+                } else {
+                    executeCommand(code);
+                }
+            });
+            
+            if (insideRepeat && repeatCommands.length > 0) {
+                for (let i = 0; i < repeatCount; i++) {
+                    repeatCommands.forEach(cmd => executeCommand(cmd));
+                }
+            }
+        }
+
+        function executeCommand(code) {
+            const match = code.match(/(\w+)\((.+)\)/);
+            if (!match) return;
+            
+            const command = match[1];
+            const param = match[2].replace(/"/g, '');
+            
+            switch(command) {
+                case 'moveRight':
+                    robotX += parseInt(param);
+                    break;
+                case 'moveLeft':
+                    robotX -= parseInt(param);
+                    break;
+                case 'moveUp':
+                    robotY -= parseInt(param);
+                    break;
+                case 'moveDown':
+                    robotY += parseInt(param);
+                    break;
+                case 'setColor':
+                    robotColor = param;
+                    break;
+            }
+        }
+
+        window.onload = init;
+        window.onresize = () => {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            drawCanvas();
+        };
+    </script>
+</body>
+</html>

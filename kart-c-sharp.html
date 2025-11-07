@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C# Değişkenler ve Veri Tipleri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* YENİ KOYU TEMA DEĞİŞKENLERİ */
+        :root {
+            --primary: #8A2BE2; /* Mor */
+            --secondary: #FF3CAC; /* Pembe */
+            --accent: #00FFFF; /* Camgöbeği (Neon) */
+            --dark: #0F0524; /* Koyu Arka Plan */
+            --darker: #0A031A; /* Çok Koyu Arka Plan */
+            --light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --card-bg: rgba(15, 5, 36, 0.8); /* Glassmorphism Koyu */
+            --card-border: rgba(138, 43, 226, 0.5); /* Mor Kenarlık */
+            --glow-color: rgba(0, 255, 255, 0.6);
+            --code-color: #00f59b; /* Neon Yeşil Kod */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        /* YENİ BODY STİLİ (Mor/Neon Arka Plan) */
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--light);
+            min-height: 100vh;
+            background-color: var(--dark);
+            background-image: 
+                /* Cyber Grid Deseni */
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 15px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.08) 0px, rgba(138, 43, 226, 0.08) 2px, transparent 2px, transparent 15px),
+                /* Mor/Mavi Degradeli Ana Arka Plan */
+                linear-gradient(135deg, var(--darker) 0%, #240047 25%, #410063 75%, var(--dark) 100%);
+            background-size: 25px 25px, 25px 25px, 100% 100%;
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Başlık Stili */
+        .game-title {
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 2.5rem; 
+            background: linear-gradient(to right, var(--primary), var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5); 
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            aspect-ratio: 4/5;
+            perspective: 1000px;
+            cursor: pointer;
+            min-height: 350px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* KART ÖN YÜZÜ (Glassmorphism) */
+        .card-front {
+            background: var(--card-bg); /* Koyu Glassmorphism */
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--card-border);
+            transform: rotateY(180deg);
+            flex-direction: column;
+            gap: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            color: var(--text-muted);
+        }
+
+        /* KART ARKA YÜZÜ (Vurgulu) */
+        .card-back {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 2.5rem; /* Büyütüldü */
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.5);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--accent); /* Neon Vurgu */
+            margin-bottom: 0.75rem;
+            text-shadow: 0 0 5px var(--accent);
+        }
+
+        .card-description {
+            font-size: 1.1rem;
+            color: var(--light);
+            margin-bottom: 1rem;
+        }
+
+        .card-example {
+            background: rgba(0, 0, 0, 0.5); /* Koyu Kod Alanı */
+            border-left: 3px solid var(--primary);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            text-align: left;
+            width: 100%;
+            font-size: 0.95rem;
+            color: var(--code-color); /* Neon Yeşil Kod */
+            white-space: pre;
+            overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+        .progress-bar {
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 9999px;
+            height: 10px;
+            margin: 2rem 0;
+            overflow: hidden;
+            border: 1px solid var(--primary);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            box-shadow: 0 0 10px var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        /* Modal Stili */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(15, 5, 36, 0.9);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid var(--accent);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.8);
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .modal h2 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .modal p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 60, 172, 0.5);
+        }
+
+        .modal-btn:hover {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+        }
+
+
+        /* --- Responsive Styles --- */
+        @media (max-width: 768px) {
+            .container { padding: 0.5rem; }
+            .game-title { font-size: 1.8rem; }
+            .game-board { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+            .card { min-height: 280px; }
+            .card-front { padding: 1rem; }
+            .card-title { font-size: 1.2rem; }
+            .card-example { font-size: 0.8rem; max-height: 120px; }
+            .modal-content { padding: 1.5rem; }
+            .modal h2 { font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="game-title">C# DEĞİŞKENLER VE VERİ TİPLERİ</h1>
+
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+
+        <div class="game-board">
+            </div>
+    </div>
+
+    <div class="modal" id="congratsModal">
+        <div class="modal-content">
+            <h2>Tebrikler! <i class="fas fa-trophy" style="color: var(--accent);"></i></h2>
+            <p>C#'taki tüm veri tiplerini başarıyla öğrendiniz. Artık C# programlamada güçlü bir temele sahipsiniz!</p>
+            <button class="modal-btn" onclick="closeModal()">Tamam</button>
+        </div>
+    </div>
+    <script>
+        const cardData = [
+            {
+                type: 'int',
+                title: 'int',
+                description: '32-bit işaretli tam sayı. Genellikle en çok kullanılan tam sayı tipidir.',
+                example: `int sayi = 42;
+int negatif = -1000;
+int buyuk = 2147483647;`
+            },
+            {
+                type: 'long',
+                title: 'long',
+                description: '64-bit işaretli tam sayı. Çok büyük sayıları saklamak için kullanılır.',
+                example: `long buyuk = 9223372036854775807L;
+long negatif = -9223372036854775808L;`
+            },
+            {
+                type: 'double',
+                title: 'double',
+                description: '64-bit ondalıklı sayı. Çok hassas hesaplamalarda ve bilimsel verilerde yaygındır.',
+                example: `double pi = 3.14159;
+double sicaklik = -5.6;
+double buyuk = 1.7e308;`
+            },
+            {
+                type: 'string',
+                title: 'string',
+                description: 'Metinsel veriler. Çift tırnak ("") içinde tanımlanır.',
+                example: `string isim = "Ahmet";
+string metin = "Merhaba Dünya!";
+string template = $"Merhaba {isim}!";`
+            },
+            {
+                type: 'bool',
+                title: 'bool',
+                description: 'Sadece iki değer alabilen mantıksal tip: true (doğru) veya false (yanlış).',
+                example: `bool dogru = true;
+bool yanlis = false;
+bool sonuc = 5 > 3;`
+            },
+            {
+                type: 'char',
+                title: 'char',
+                description: 'Tek bir 16-bit Unicode karakteri temsil eder. Tek tırnak (\'\') kullanılır.',
+                example: `char harf = 'A';
+char sembol = '€';
+char emoji = '😀';`
+            },
+            {
+                type: 'decimal',
+                title: 'decimal',
+                description: '128-bit hassas ondalıklı sayı. Para ve finansal hesaplamalar için idealdir.',
+                example: `decimal para = 123.45m;
+decimal buyuk = 7.9228e28m;`
+            },
+            {
+                type: 'float',
+                title: 'float',
+                description: '32-bit ondalıklı sayı. Double\'a göre daha az hassas ve daha az yer kaplar.',
+                example: `float pi = 3.14f;
+float sicaklik = -5.6f;
+float buyuk = 3.4e38f;`
+            },
+            {
+                type: 'byte',
+                title: 'byte',
+                description: '8-bit işaretsiz tam sayı (0 ile 255 arası). Küçük pozitif değerler için kullanılır.',
+                example: `byte pozitif = 255;
+byte minByte = byte.MinValue;
+byte sayi = 100;`
+            },
+            {
+                type: 'short',
+                title: 'short',
+                description: '16-bit işaretli tam sayı. Int\'e göre daha az yer kaplar.',
+                example: `short orta = 32767;
+short negatif = -32768;`
+            },
+            {
+                type: 'uint',
+                title: 'uint',
+                description: '32-bit işaretsiz tam sayı. Sadece pozitif değerler için kullanılır.',
+                example: `uint pozitif = 4294967295U;
+uint minUint = uint.MinValue;`
+            },
+            {
+                type: 'ulong',
+                title: 'ulong',
+                description: '64-bit işaretsiz tam sayı. Çok büyük pozitif değerler için kullanılır.',
+                example: `ulong pozitif = 18446744073709551615UL;
+ulong buyuk = 1000000000000UL;`
+            },
+            {
+                type: 'object',
+                title: 'object',
+                description: 'Tüm C# tiplerinin üst sınıfı. Herhangi bir değeri tutabilir.',
+                example: `object herhangi = 42;
+object herhangi2 = "Merhaba";
+object herhangi3 = true;`
+            },
+            {
+                type: 'dynamic',
+                title: 'dynamic',
+                title: 'dynamic',
+                description: 'Dinamik tip. Derleme zamanında tip kontrolü yapılmaz.',
+                example: `dynamic degisken = 42;
+degisken = "Merhaba"; // Hata vermez
+degisken = true;`
+            },
+            {
+                type: 'var',
+                title: 'var',
+                description: 'Tip çıkarımı ile değişken tanımlama. Tip, atama sırasında belirlenir (Dinamik değildir!).',
+                example: `var sayi = 42; // C# bunu int olarak görür
+var metin = "Merhaba"; // C# bunu string olarak görür`
+            },
+            {
+                type: 'Array',
+                title: 'Array',
+                description: 'Aynı tipten sabit sayıda eleman tutan koleksiyon.',
+                example: `int[] sayilar = { 1, 2, 3, 4, 5 };
+string[] isimler = new string[3];
+isimler[0] = "Ali";`
+            },
+            {
+                type: 'List',
+                title: 'List<T>',
+                description: 'Aynı tipten dinamik (esnek) sayıda eleman tutan koleksiyon.',
+                example: `List<int> sayilar = new List<int> { 1, 2, 3 };
+sayilar.Add(6);
+sayilar.Remove(2);`
+            },
+            {
+                type: 'Dictionary',
+                title: 'Dictionary<K, V>',
+                description: 'Anahtar (Key) ve Değer (Value) çiftlerini tutan sözlük.',
+                example: `Dictionary<string, int> notlar = new Dictionary<string, int>
+{
+    { "Ali", 90 },
+    { "Ayşe", 100 }
+};
+var not = notlar["Ali"];`
+            },
+            {
+                type: 'Tuple',
+                title: 'Tuple',
+                description: 'Farklı tiplerdeki verileri hızlıca gruplamak için kullanılır.',
+                example: `var kullanici = (ad: "Ahmet", yas: 25);
+var ilk = kullanici.ad;
+(string isim, int age) = kullanici;`
+            },
+            {
+                type: 'Nullable',
+                title: 'Nullable Types (T?)',
+                description: 'Normalde null olamayan değer tiplerinin (int, bool) null olmasına izin verir.',
+                example: `int? sayi = 42;
+int? bos = null;
+string? isim = "Ahmet";`
+            },
+            {
+                type: 'enum',
+                title: 'Enum',
+                description: 'Sabitler listesi oluşturmak için kullanılan değer tipi.',
+                example: `enum Renk { Kirmizi, Yesil, Mavi }
+Renk seciliRenk = Renk.Kirmizi;`
+            }
+        ];
+
+        let flippedCards = 0;
+
+        function createCards() {
+            const gameBoard = document.querySelector('.game-board');
+            gameBoard.innerHTML = ''; // Önceki kartları temizle
+            
+            cardData.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3 class="card-title">${card.title}</h3>
+                            <p class="card-description">${card.description}</p>
+                            <pre class="card-example">${card.example}</pre>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-code"></i>
+                        </div>
+                    </div>
+                `;
+
+                cardElement.addEventListener('click', () => flipCard(cardElement));
+                gameBoard.appendChild(cardElement);
+            });
+        }
+
+        function flipCard(cardElement) {
+            if (!cardElement.classList.contains('flipped')) {
+                cardElement.classList.add('flipped');
+                flippedCards++;
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const progress = (flippedCards / cardData.length) * 100;
+            document.querySelector('.progress-fill').style.width = `${progress}%`;
+
+            if (flippedCards === cardData.length) {
+                setTimeout(showCongratsModal, 500);
+            }
+        }
+
+        function showCongratsModal() {
+            document.getElementById('congratsModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('congratsModal').style.display = 'none';
+        }
+
+        // Oyunu başlat
+        document.addEventListener('DOMContentLoaded', createCards);
+    </script>
+</body>
+</html>

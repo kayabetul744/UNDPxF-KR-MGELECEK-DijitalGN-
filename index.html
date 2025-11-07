@@ -1,0 +1,2633 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KodFabrik - Kodlamanın Eğlenceli Hali</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #8A2BE2;
+            --primary-dark: #6A0DAD;
+            --secondary: #FF3CAC;
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF;
+            --accent-dark: #00E5E5;
+            --dark: #0F0524;
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --glow-color: rgba(138, 43, 226, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 15px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.08) 0px, rgba(138, 43, 226, 0.08) 2px, transparent 2px, transparent 15px),
+                radial-gradient(rgba(138, 43, 226, 0.15) 2px, transparent 2px),
+                radial-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(135deg, #0A031A 0%, #240047 25%, #410063 75%, #0F0524 100%);
+            background-size: 25px 25px, 25px 25px, 40px 40px, 60px 60px, 100% 100%;
+            background-position: 0 0, 0 0, 0 0, 20px 20px, 0 0;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { background-position: 0 0, 0 0, 0 0, 20px 20px, 0 0; }
+            50% { background-position: 25px 25px, -25px -25px, 40px 40px, 0 0, 0 0; }
+        }
+        
+        /* Glow particles animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(3px 3px at 100px 150px, rgba(138, 43, 226, 0.6), transparent),
+                radial-gradient(2px 2px at 200px 300px, rgba(0, 255, 255, 0.4), transparent),
+                radial-gradient(4px 4px at 350px 100px, rgba(255, 60, 172, 0.5), transparent),
+                radial-gradient(1px 1px at 450px 250px, rgba(138, 43, 226, 0.7), transparent),
+                radial-gradient(2px 2px at 600px 180px, rgba(0, 255, 255, 0.3), transparent);
+            background-repeat: repeat;
+            background-size: 700px 400px;
+            animation: particleFloat 25s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Navigation with glassmorphism effect */
+        .navbar {
+            background: rgba(15, 5, 36, 0.85) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--primary), var(--accent), var(--primary)) 1;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand {
+            font-family: 'Bruno Ace SC', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary) !important;
+            text-decoration: none;
+            text-shadow: 0 0 20px var(--glow-color);
+            position: relative;
+        }
+        
+        .navbar-brand::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(138, 43, 226, 0.1), transparent);
+            animation: brandGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes brandGlow {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .nav-link:hover {
+            color: var(--highlight) !important;
+            text-shadow: 0 0 10px var(--highlight);
+            background-color: rgba(138, 43, 226, 0.2);
+        }
+        
+        /* Section transitions with border animations */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+            border-top: 1px solid transparent;
+            border-image: linear-gradient(90deg, transparent, var(--primary), var(--accent), var(--primary), transparent) 1;
+        }
+        
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--accent), var(--primary), transparent);
+            animation: borderFlow 4s ease-in-out infinite;
+        }
+        
+        @keyframes borderFlow {
+            0%, 100% { transform: translateX(-100%); opacity: 0; }
+            50% { transform: translateX(0%); opacity: 1; }
+        }
+        
+        .section-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            text-align: center;
+            font-family: 'Bruno Ace SC', sans-serif;
+            position: relative;
+            background: linear-gradient(45deg, var(--primary), var(--accent), var(--secondary), var(--primary));
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 4s ease-in-out infinite;
+        }
+        
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+            animation: titleUnderline 2s ease-in-out infinite;
+        }
+        
+        @keyframes titleUnderline {
+            0%, 100% { width: 50px; }
+            50% { width: 150px; }
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+        
+        /* Hero Section with parallax effect */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 120px 0 50px;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            font-family: 'Bruno Ace SC', sans-serif;
+            background: linear-gradient(45deg, var(--primary), var(--accent), var(--secondary), var(--primary));
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: heroGradient 3s ease-in-out infinite;
+            text-shadow: 0 0 40px rgba(138, 43, 226, 0.5);
+            position: relative;
+        }
+        
+        @keyframes heroGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            color: var(--text-muted);
+            font-family: 'Quantico', sans-serif;
+            letter-spacing: 1px;
+            animation: subtitleGlow 4s ease-in-out infinite;
+        }
+        
+        @keyframes subtitleGlow {
+            0%, 100% { text-shadow: none; }
+            50% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+        }
+        
+        .hero-buttons {
+            margin-top: 2rem;
+        }
+        
+        .hero-buttons .btn {
+            margin-right: 15px;
+            margin-bottom: 15px;
+            padding: 15px 35px;
+            border-radius: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--text-light);
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .hero-buttons .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+        
+        .hero-buttons .btn:hover::before {
+            left: 100%;
+        }
+        
+        .hero-buttons .btn:hover {
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--glow-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Cyber grid background for hero */
+        .cyber-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(138, 43, 226, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(138, 43, 226, 0.1) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px, 50px 50px, 20px 20px, 20px 20px;
+            background-position: 0 0, 0 0, 0 0, 0 0;
+            animation: gridMove 10s linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Feature cards with cyber border effect */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: rgba(15, 5, 36, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: all 0.4s ease;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), transparent, var(--accent), transparent, var(--primary));
+            background-size: 400% 400%;
+            border-radius: 15px;
+            z-index: -1;
+            animation: borderRotate 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        @keyframes borderRotate {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 20px 60px rgba(138, 43, 226, 0.4);
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .feature-icon {
+            width: 80px; 
+            height: 80px; 
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: transform 0.6s ease;
+        }
+        
+        .feature-card:hover .feature-icon::before {
+            transform: rotate(45deg) translate(100%, 100%);
+        }
+        
+        .feature-icon i {
+            font-size: 2rem;
+            color: white;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .feature-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        /* Triangle steps with glow effect */
+        .steps-container {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .step-triangle {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .step-triangle:hover {
+            transform: translateY(-20px) scale(1.1);
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .triangle-shape {
+            width: 0;
+            height: 0;
+            border-left: 110px solid transparent;
+            border-right: 110px solid transparent;
+            position: relative;
+            margin: 0 auto;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+            transition: all 0.4s ease;
+        }
+        
+        .step-triangle:nth-child(1) .triangle-shape {
+            border-bottom: 150px solid #ec4899;
+        }
+        
+        .step-triangle:nth-child(2) .triangle-shape {
+            border-bottom: 150px solid #8b5cf6;
+        }
+        
+        .step-triangle:nth-child(3) .triangle-shape {
+            border-bottom: 150px solid #10b981;
+        }
+        
+        .step-triangle:hover .triangle-shape {
+            filter: drop-shadow(0 10px 30px rgba(138, 43, 226, 0.8));
+        }
+        
+        .step-number {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2.8rem;
+            font-weight: 700;
+            font-family: 'Bruno Ace SC', sans-serif;
+            z-index: 10;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+        
+        .step-title {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-light);
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        /* Programming languages balloons - responsive grid */
+        .balloons-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            padding: 2rem 0;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 1200px) {
+            .balloons-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .balloons-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .balloons-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .balloons-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+            }
+        }
+        
+        .balloon-card {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: float 5s ease-in-out infinite;
+            text-align: center;
+            margin: 0 auto;
+            border: 2px solid transparent;
+            overflow: hidden;
+        }
+        
+        .balloon-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: balloonSpin 3s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .balloon-card:hover::before {
+            opacity: 1;
+        }
+        
+        @keyframes balloonSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Unique colors for each balloon */
+        .balloon-card:nth-child(1) { background: linear-gradient(135deg, #3b82f6, #1e40af); animation-delay: 0s; }
+        .balloon-card:nth-child(2) { background: linear-gradient(135deg, #ef4444, #dc2626); animation-delay: 0.3s; }
+        .balloon-card:nth-child(3) { background: linear-gradient(135deg, #10b981, #059669); animation-delay: 0.6s; }
+        .balloon-card:nth-child(4) { background: linear-gradient(135deg, #f59e0b, #d97706); animation-delay: 0.9s; }
+        .balloon-card:nth-child(5) { background: linear-gradient(135deg, #8b5cf6, #7c3aed); animation-delay: 1.2s; }
+        .balloon-card:nth-child(6) { background: linear-gradient(135deg, #ec4899, #db2777); animation-delay: 1.5s; }
+        .balloon-card:nth-child(7) { background: linear-gradient(135deg, #06b6d4, #0891b2); animation-delay: 1.8s; }
+        .balloon-card:nth-child(8) { background: linear-gradient(135deg, #84cc16, #65a30d); animation-delay: 2.1s; }
+        .balloon-card:nth-child(9) { background: linear-gradient(135deg, #f97316, #ea580c); animation-delay: 2.4s; }
+        .balloon-card:nth-child(10) { background: linear-gradient(135deg, #6366f1, #4f46e5); animation-delay: 2.7s; }
+        .balloon-card:nth-child(11) { background: linear-gradient(135deg, #14b8a6, #0d9488); animation-delay: 3s; }
+        .balloon-card:nth-child(12) { background: linear-gradient(135deg, #a855f7, #9333ea); animation-delay: 3.3s; }
+        .balloon-card:nth-child(13) { background: linear-gradient(135deg, #f43f5e, #e11d48); animation-delay: 3.6s; }
+        .balloon-card:nth-child(14) { background: linear-gradient(135deg, #22d3ee, #06b6d4); animation-delay: 3.9s; }
+        .balloon-card:nth-child(15) { background: linear-gradient(135deg, #facc15, #eab308); animation-delay: 4.2s; }
+        
+        .balloon-card:hover {
+            transform: scale(1.2) translateY(-15px);
+            text-decoration: none;
+            color: white;
+            box-shadow: 0 20px 50px rgba(138, 43, 226, 0.5);
+        }
+        
+        .balloon-card i {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .balloon-card span {
+            z-index: 2;
+            position: relative;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-25px); }
+        }
+        
+        /* Career section with glassmorphism */
+        .career-section {
+            padding: 5rem 0;
+        }
+        
+        .career-item {
+            background: rgba(15, 5, 36, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .career-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .career-item:hover::before {
+            left: 100%;
+        }
+        
+        .career-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 25px 70px rgba(138, 43, 226, 0.3);
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .career-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 2.5rem;
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .career-icon::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: transform 0.6s ease;
+        }
+        
+        .career-item:hover .career-icon::before {
+            transform: rotate(45deg) translate(100%, 100%);
+        }
+        
+        .career-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-family: 'Bruno Ace SC', sans-serif;
+        }
+        
+        .career-description {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+        
+        /* Resources section */
+        .resources-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .resource-link {
+            padding: 1.5rem 2rem;
+            background: rgba(15, 5, 36, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            display: block;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .resource-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.4s ease;
+        }
+        
+        .resource-link:hover::before {
+            left: 100%;
+        }
+        
+        .resource-link:hover {
+            background: rgba(138, 43, 226, 0.3);
+            color: white;
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.4);
+            text-decoration: none;
+        }
+        
+        .resource-link i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        
+        
+        /* Footer with cyber styling */
+        .footer {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--text-light);
+            padding: 3rem 0 1rem;
+            border-top: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--primary), var(--accent), var(--primary)) 1;
+            margin-top: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary));
+            animation: footerGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes footerGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .footer-heading {
+            color: var(--accent);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
+            transform: translateX(5px);
+        }
+        
+        .footer-social a {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-social a:hover {
+            color: var(--accent);
+            text-shadow: 0 0 15px var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(138, 43, 226, 0.3);
+            padding-top: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .hero-title { 
+                font-size: 2.8rem; 
+            }
+            
+            .section-title { 
+                font-size: 2.2rem; 
+            }
+            
+            .steps-container { 
+                gap: 2rem; 
+            }
+            
+            .triangle-shape {
+                border-left: 80px solid transparent;
+                border-right: 80px solid transparent;
+            }
+            
+            .step-triangle:nth-child(1) .triangle-shape {
+                border-bottom: 120px solid #ec4899;
+            }
+            
+            .step-triangle:nth-child(2) .triangle-shape {
+                border-bottom: 120px solid #8b5cf6;
+            }
+            
+            .step-triangle:nth-child(3) .triangle-shape {
+                border-bottom: 120px solid #10b981;
+            }
+            
+            .step-number {
+                font-size: 2.2rem;
+            }
+            
+            .video-container { 
+                width: 150px; 
+                height: 90px; 
+                bottom: 20px; 
+                right: 20px; 
+            }
+            
+            .career-item { 
+                padding: 2rem; 
+            }
+            
+            .balloon-card {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .balloon-card i {
+                font-size: 1.8rem;
+            }
+            
+            /* Mobil Cihazda Feature Icon'ı Büyütme */
+             .feature-icon {
+                width: 90% !important; /* Kart genişliğine yakın */
+                height: 150px !important; /* Yüksekliği manuel ayarlayalım */
+                border-radius: 15px !important;
+                margin-bottom: 1.5rem !important;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .balloon-card {
+                width: 110px;
+                height: 110px;
+                font-size: 0.85rem;
+            }
+            
+            .balloon-card i {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ****************************************************** */
+        /* KESİN ÇÖZÜM V2: feature-icon'ı kart genişliğine eşitleme */
+        /* ****************************************************** */
+        .feature-card .feature-icon {
+            /* 100% width, kartın padding'i (2.5rem + 2.5rem = 5rem) nedeniyle kartın kendisiyle eşit olacaktır. */
+            width: 100% !important; 
+            
+            /* Yüksekliği genişliğe uyumlu (kare) veya daha büyük yapalım */
+            /* Kartın içeriği 300px min-width olduğu için 250px mantıklı olabilir */
+            height: 250px !important; 
+            
+            /* Yuvarlak köşeyi kartın köşesiyle aynı yapalım */
+            border-radius: 15px !important;
+            
+            /* Konumlandırmayı merkeze geri alalım */
+            margin: 0 0 1.5rem 0 !important; 
+        }
+
+        /* GIF'in yeni büyük alana tam sığmasını garantileyelim */
+        .feature-icon img {
+             object-fit: contain !important; /* Oran koruyarak sığar */
+             /* object-fit: cover !important; /* Oran koruyarak doldurur */
+        }
+
+        /* Mola Bildirimi Modal Stilleri */
+        .break-notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 3, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .break-notification-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .break-notification-content {
+            background: linear-gradient(135deg, #240047 0%, #410063 100%);
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5),
+                        0 0 100px rgba(138, 43, 226, 0.3);
+            animation: slideUp 0.5s ease, pulse 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .break-notification-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 50px rgba(0, 255, 255, 0.5),
+                            0 0 100px rgba(138, 43, 226, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 80px rgba(0, 255, 255, 0.8),
+                            0 0 150px rgba(138, 43, 226, 0.5);
+            }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .break-notification-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            animation: bounce 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .break-notification-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .break-notification-message {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .break-timer {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            position: relative;
+            z-index: 1;
+        }
+
+        .break-notification-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .break-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .break-btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--text-light);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        .break-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+        }
+
+        .break-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            border: 1px solid var(--accent);
+        }
+
+        .break-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .break-activity-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(15, 5, 36, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            padding: 0.8rem 1.2rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            z-index: 9999;
+            display: none;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .break-activity-indicator.active {
+            display: block;
+        }
+
+        .break-activity-indicator .activity-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+       
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">DİJİTALGNÇ</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#ana-sayfa">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#ne-sunuyoruz">Neler Sunuyoruz</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#adimlar">Adımlar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kod-kartlari">Kod Kartları</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kariyer">Kariyer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kaynaklar">Kaynaklar</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="ana-sayfa" class="hero-section">
+        <div class="cyber-grid"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="hero-content text-center">
+                        <h1 class="hero-title">DijitalGNÇ</h1>
+                        <h2 class="hero-subtitle">Kodlamanın Eğlenceli Hali</h2>
+                        <p class="hero-description mb-4" style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+                            Algoritma düşüncesini geliştirin, kodlama becerilerinizi artırın ve teknoloji dünyasında yerinizi alın!
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#kod-kartlari" class="btn">Öğrenmeye Başla</a>
+                            <a href="nedenvariz.html" class="btn">Neden Varız?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<section id="ne-sunuyoruz" class="section">
+    <div class="container">
+        <h2 class="section-title">Ne Sunuyoruz?</h2>
+        <p class="section-subtitle">
+            dijitalGNÇ ile kodlamanın eğlenceli dünyasını keşfedin. İnteraktif öğrenme deneyimi ve kapsamlı eğitim içerikleri ile programlama yolculuğunuza başlayın.
+        </p>
+        
+        <div class="feature-grid">
+            <div class="feature-card"> 
+                <div class="feature-icon">
+                    <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWk5MGJvZnpscmd3cXBlMXUydzhpOWd5MG01YmNvN2JtZGV5enRpeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9dHM/XyhgF2yFEGWHhPnqIg/giphy.gif" alt="AI İkonu" style="width: 100%; height: 100%; object-fit: contain;"> 
+                </div>
+                <h3 class="feature-title">AI ile Akıllı Planlama</h3>
+                <p class="feature-description">Yapay zeka destekli kişisel öğrenme planları ile kodlama yolculuğunuzu hızlandırın.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTZ0M3p6amFzcXNsMGtvN3cyMjFjb2k4N3lncHlkY2RnZHNiYTA5aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/anxaHKFY9HzWpqIEAG/giphy.gif" alt="Oyun İkonu" style="width: 100%; height: 100%; object-fit: contain;"> 
+                </div>
+                <h3 class="feature-title">İnteraktif Eğitimler</h3>
+                <p class="feature-description">Oyunlaştırılmış kodlama deneyimi ile eğlenerek öğrenin.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjV1NzFiZjQ5NXpkMnR1NXVpcnZicGt6OGVjbDVvdjhvandqcWRvdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/0FMDVgOOLQ0Az5vSK1/giphy.gif" alt="Proje İkonu" style="width: 100%; height: 100%; object-fit: contain;"> 
+                </div>
+                <h3 class="feature-title">Proje Tabanlı Öğrenme</h3>
+                <p class="feature-description">Gerçek projeler üzerinde çalışarak pratik deneyim kazanın.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWJmdGx4ZjFycG5mZTF0eWNiaHhpZzlqeTdmYjE1aHhvYzN1dmIzMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/bQ8CocqID0hgrAi6fa/giphy.gif" alt="Tarih İkonu" style="width: 100%; height: 100%; object-fit: contain;"> 
+                </div>
+                <h3 class="feature-title">Geçmişten Günümüze Yazılım</h3>
+                <p class="feature-description">Yazılım dünyasının evrimini keşfedin ve geleceği öngörün.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3doYnE4NXdmazYzdmIwZDNlcWl3ZW5henM2eGN5cTdkM3oyejBsOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/AxAA6s3JIm3FI49YyG/giphy.gif" alt="Topluluk İkonu" style="width: 100%; height: 100%; object-fit: contain;"> 
+                </div>
+                <h3 class="feature-title">Kodlayıcı Topluluğu</h3>
+                <p class="feature-description">Binlerce kodlayıcı ile birlikte öğrenin ve deneyim paylaşın.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNsMHMyMGZuODBqY2ExcDR5amJ3bHJ1NjR2MnF1Mnk3aXBtN2FmMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/W6RJ491KSeCZ886lqr/giphy.gif" alt="Mentör İkonu" style="width: 100%; height: 100%; object-fit: contain;"> 
+                </div>
+                <h3 class="feature-title">Uzman Mentörlük</h3>
+                <p class="feature-description">Alanında uzman mentörlerden birebir rehberlik alın.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">GEÇMİŞTEN GÜNÜMÜZE YAZILIM</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="gecmistengunumuzeyazilim.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjZ2ajduNXJlZGl1eHRvc3FkMjlmdWdxaHlzdzk4NGo5NWkzZWZ6MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qgQUggAC3Pfv687qPC/giphy.gif" 
+                    alt="Algoritma Test GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* Boyut 400px olarak korundu */
+                        max-width: 400px !important; 
+                        width: 400px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            </div>
+        
+       
+        
+    </div>
+</section>
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">EFSANEVİ YAZILIMCILAR</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="efsaneviyazilimcilar.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmNsbTN0cnl0YTY3ZzZsM3B4Y3VnNzR2N2Nhd2dpMjNhZzduMjVmMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3og0IRsFTJ3hAyKKm4/giphy.gif" 
+                    alt="Algoritma Test GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* Boyut 400px olarak korundu */
+                        max-width: 400px !important; 
+                        width: 400px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            </div>
+        
+       
+        
+    </div>
+</section>
+
+
+
+
+    <section id="adimlar" class="section">
+        <div class="container">
+            <h2 class="section-title">3 Adımda Algorİtmaların Mantığını Öğren</h2>
+            <p class="section-subtitle">
+                Karmaşık algoritma konseptlerini basit adımlarla anlayın ve kodlama becerilerinizi geliştirin.
+            </p>
+            
+            <div class="steps-container">
+                <a href="adim1.html" class="step-triangle">
+                    <div class="triangle-shape">
+                        <div class="step-number">1</div>
+                    </div>
+                    <div class="step-title">Problem Anlama/Planlama</div>
+                </a>
+                
+                <a href="adim2.html" class="step-triangle">
+                    <div class="triangle-shape">
+                        <div class="step-number">2</div>
+                    </div>
+                    <div class="step-title">Mantık Bloklarını Test Etme</div>
+                </a>
+                
+                <a href="adim3.html" class="step-triangle">
+                    <div class="triangle-shape">
+                        <div class="step-number">3</div>
+                    </div>
+                    <div class="step-title">Gerçek Koda Çevirme/Bitirme</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">Algorİtma Oyunu-Bölüm:1</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="algoritmaoyun1.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzdlbThoZWo4N21wNGx0M2h3ejAyMnQ4N2U5bjBsc3YxZTJvd3MzdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pbmSSA4nS8vsGM1wMv/giphy.gif" 
+                    alt="Algoritma Test GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        /* Küçültme boyutu korundu */
+                        max-width: 250px !important; 
+                        width: 250px !important; 
+                        height: auto !important; 
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            </div>
+        
+        <p class="section-subtitle" style="margin-top: 1rem; margin-bottom: 0 !important; padding-bottom: 0 !important;">
+            <strong>Kod Labirenti</strong>
+        </p>
+        
+    </div>
+</section>
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">Algorİtma Oyunu-Bölüm:2</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="algoritmaoyun2.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3c5ZTBrbDFsNXBibWJ4M3M4MnI5a3o4cHdxYzd2eTVvaXd3dGR3ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/17JedU1gYFReg/giphy.gif" 
+                    alt="Algoritma Test GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* Boyut 400px olarak korundu */
+                        max-width: 400px !important; 
+                        width: 400px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            </div>
+        
+        <p class="section-subtitle" style="margin-top: 1rem; margin-bottom: 0 !important; padding-bottom: 0 !important;">
+            <strong>Harry Potter ile Algoritma Avı</strong>
+        </p>
+        
+    </div>
+</section>
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">Algorİtma Oyunu-Bölüm:3</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="algoritmaoyun3.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExemYxMHcyZjV4aWRqbzg1aWN5emg3c3plZ280MXZyaWl0OTJjb2psayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VOgpnDOAddaN0zr9UE/giphy.gif" 
+                    alt="Algoritma Test GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* Boyut 250px olarak eski haline döndürüldü */
+                        max-width: 250px !important; 
+                        width: 250px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            
+        </div>
+        
+        <p class="section-subtitle" style="margin-top: 1rem; margin-bottom: 0 !important; padding-bottom: 0 !important;">
+            <strong>Uzayda Yolculuk</strong>
+        </p>
+        
+    </div>
+</section>
+
+<section id="kod-kartlari" class="section" style="padding-top: 6rem !important; margin-top: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">Kod Kartları İle Öğrenmeye Başla</h2>
+        <p class="section-subtitle">
+            İnteraktif kod kartları ile farklı programlama dillerini öğrenin ve pratik yapın.
+        </p>
+        
+        <div class="balloons-container">
+            <a href="kart-python.html" class="balloon-card">
+                <i class="fab fa-python"></i>
+                <span>Python</span>
+            </a>
+            
+            <a href="kart-javascript.html" class="balloon-card">
+                <i class="fab fa-js-square"></i>
+                <span>JavaScript</span>
+            </a>
+            
+            <a href="kart-java.html" class="balloon-card">
+                <i class="fab fa-java"></i>
+                <span>Java</span>
+            </a>
+            
+            <a href="kart-scala.html" class="balloon-card">
+                <i class="fab fa-html5"></i>
+                <span>Scala</span>
+            </a>
+            
+            <a href="kart-typescript.html" class="balloon-card">
+                <i class="fab fa-react"></i>
+                <span>TypeScript</span>
+            </a>
+
+            <a href="kart-dart.html" class="balloon-card">
+                    <i class="fab fa-node-js"></i>
+                    <span>Dart</span>
+                </a>
+                
+                <a href="kart-c-sharp.html" class="balloon-card">
+                    <i class="fas fa-code"></i>
+                    <span>C#</span>
+                </a>
+                
+                <a href="kart-c++.html" class="balloon-card">
+                    <i class="fas fa-code"></i>
+                    <span>C++</span>
+                </a>
+                
+                <a href="kart-go.html" class="balloon-card">
+                    <i class="fas fa-bolt"></i>
+                    <span>Go</span>
+                </a>
+                
+                <a href="kart-rust.html" class="balloon-card">
+                    <i class="fas fa-cog"></i>
+                    <span>Rust</span>
+                </a>
+                
+                <a href="kart-kotlin.html" class="balloon-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Kotlin</span>
+                </a>
+                
+                <a href="kart-swift.html" class="balloon-card">
+                    <i class="fab fa-swift"></i>
+                    <span>Swift</span>
+                </a>
+                
+                <a href="kart-php.html" class="balloon-card">
+                    <i class="fab fa-php"></i>
+                    <span>PHP</span>
+                </a>
+                
+                <a href="kart-ruby.html" class="balloon-card">
+                    <i class="fas fa-gem"></i>
+                    <span>Ruby</span>
+                </a>
+                
+                <a href="kart-r.html" class="balloon-card">
+                    <i class="fas fa-mobile"></i>
+                    <span>R</span>
+                </a>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">KOD DÜNYASI MONOPOLY OYUNU</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="monopoly.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYThvY3E2eXJzcXZzODA0YmkyYjlhcWNieDMzeHRuaWRsN3R6YnN6MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NYBVJUGdiJdG8/giphy.gif" 
+                    alt="Boşluk Doldurma GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* BOYUT ARTIRILDI: 400 piksel olarak ayarlandı */
+                        max-width: 400px !important; 
+                        width: 400px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            
+        </div>
+        
+        </div>
+</section>
+
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">KENDİ OYUNUNU TASARLA</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="pacman.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbDVsamU1c2l0ZHg4bzJzcHB5aGxsN3VmaWN4bWc3M21zMGJ2cHJqdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d9QiBcfzg64Io/giphy.gif" 
+                    alt="Boşluk Doldurma GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* BOYUT ARTIRILDI: 400 piksel olarak ayarlandı */
+                        max-width: 400px !important; 
+                        width: 400px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            
+        </div>
+        
+        </div>
+</section>
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">BOŞLUK DOLDURMA OYUNU</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="boslukdoldurma.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWlpdnB0N3EzMmw1cHlneWZpa25qNWtsbnNuZ2ZzdmRmbWEzNW53aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/fEhbzvdwefYgNIHjTm/giphy.gif" 
+                    alt="Boşluk Doldurma GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* BOYUT ARTIRILDI: 400 piksel olarak ayarlandı */
+                        max-width: 400px !important; 
+                        width: 400px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            
+        </div>
+        
+        </div>
+</section>
+
+
+
+        
+        <p class="section-subtitle" style="margin-top: 1rem; margin-bottom: 0 !important; padding-bottom: 0 !important;">
+            <strong>Şimdi Yazılım Becerilerini Test Etme Zamanı!</strong>
+        </p>
+        
+    </div>
+</section>
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">HAFIZA OYUNU</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="hafizaoyunu.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExejJnOTl6dG5kamR2bHlxNWZwbnc4Y2xvZmxwZ3ZmeW5mODJnZW9tOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/2B7GrCeWh3dicVERbd/giphy.gif" 
+                    alt="Algoritma Test GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* Boyut 250px olarak eski haline döndürüldü */
+                        max-width: 250px !important; 
+                        width: 250px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            
+        </div>
+        
+        <p class="section-subtitle" style="margin-top: 1rem; margin-bottom: 0 !important; padding-bottom: 0 !important;">
+            <strong>Hafızanı Zorla, Şekilleri Eşleştir!</strong>
+        </p>
+        
+    </div>
+</section>
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">Bİlgİsayarın Tehlİkede Olabİlİr!</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="guvenlik.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHMyYnRmbzNvaGp3a3o5MTRicGVkZTFneGxzMnhqazJwMXFoamUwaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RDZo7znAdn2u7sAcWH/giphy.gif" 
+                    alt="Algoritma Test GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* Boyut 250px olarak eski haline döndürüldü */
+                        max-width: 250px !important; 
+                        width: 250px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            
+        </div>
+        
+        <p class="section-subtitle" style="margin-top: 1rem; margin-bottom: 0 !important; padding-bottom: 0 !important;">
+            <strong>Bilgisayarın güvende mi? Yoksa Tehlikede mi?</strong>
+        </p>
+        
+    </div>
+</section>
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">Dİjİtal Okuryazarlık Becerİnİ Test Et!</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="dijitalokuryazarlik.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2M5cGlvZ3NkNnh1Yjc4Ynk5YXZyOHR0aDE0eXYwOHJkdGVqaWE0YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1R1tvI9svkIWwpVYr/giphy.gif" 
+                    alt="Algoritma Test GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* Boyut 250px olarak eski haline döndürüldü */
+                        max-width: 250px !important; 
+                        width: 250px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            
+        </div>
+        
+        <p class="section-subtitle" style="margin-top: 1rem; margin-bottom: 0 !important; padding-bottom: 0 !important;">
+            <strong>Dijital Okuryazarlıkta Ne Kadar İyisin?</strong>
+        </p>
+        
+    </div>
+</section>
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">YAZILIM IQ TESTİ</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="iqtest.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNml5cTg5Zm1iY2Ewa2ozNm0xYXVidWo0d2Jyemk0NWVlN3Q1dDR0YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ZGIO2lAIEFq0E9T99X/giphy.gif" 
+                    alt="Boşluk Doldurma GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* BOYUT ARTIRILDI: 400 piksel olarak ayarlandı */
+                        max-width: 400px !important; 
+                        width: 400px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            
+        </div>
+        
+        </div>
+</section>
+
+
+
+
+<section id="adimlar" class="section" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <h2 class="section-title">YARIŞA HAZIR MISIN?</h2>
+ 
+        <div class="gif-container" style="text-align: center; margin-bottom: 0 !important; padding: 10px 20px;">
+            
+            <a href="yaris.html" 
+               style="display: inline-block; cursor: pointer; text-decoration: none;"> 
+                <img 
+                    src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHMyYnRmbzNvaGp3a3o5MTRicGVkZTFneGxzMnhqazJwMXFoamUwaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RDZo7znAdn2u7sAcWH/giphy.gif" 
+                    alt="Algoritma Test GIF'i" 
+                    style="
+                        display: block !important;
+                        margin: 0 auto 0 auto !important; 
+                        
+                        /* Boyut 250px olarak eski haline döndürüldü */
+                        max-width: 250px !important; 
+                        width: 250px !important; 
+                        height: auto !important; 
+                        
+                        border-radius: 10px; 
+                        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6); 
+                    "
+                >
+            </a>
+            
+        </div>
+        
+        <p class="section-subtitle" style="margin-top: 1rem; margin-bottom: 0 !important; padding-bottom: 0 !important;">
+            <strong>Kod Hız Testi'ne Katıl, rakiplerinle Mücadele Et!</strong>
+        </p>
+        
+    </div>
+</section>
+
+
+
+    
+
+
+
+
+
+
+
+<section id="kaynaklar" class="section">
+    <div class="container">
+        <h2 class="section-title">Faydalı Kaynaklar</h2>
+        <p class="section-subtitle">
+            Kodlama yolculuğunuzda size yardımcı olacak en iyi kaynakları keşfedin.
+        </p>
+        
+        <div class="resources-links">
+            
+            <a href="https://www.codecademy.com/" target="_blank" class="resource-link">
+                <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmNoenJpbmFucTk0YmFkanA5bGJzY3l5ZTY3Zm55OTVjbzQ5bXdsbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/hyulBeKSkeXvvlLoUk/giphy.gif" 
+                     alt="Codecademy GIF" 
+                     style="width: 90px !important; height: 90px !important; margin-right: 25px !important; border-radius: 5px;">
+                Codecademy
+            </a>
+            
+            <a href="https://www.freecodecamp.org/" target="_blank" class="resource-link">
+                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExajd5a2Rnazd3d2R0ZnFhcGxwcWtmcGl0ZWhwdnBuMzNzcm82a3FhdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/hsDkitC0kWA60R5VEU/giphy.gif" 
+                     alt="FreeCodeCamp GIF" 
+                     style="width: 90px !important; height: 90px !important; margin-right: 25px !important; border-radius: 50%;">
+                FreeCodeCamp
+            </a>
+            
+            <a href="https://www.coursera.org/courses?query=programming" target="_blank" class="resource-link">
+                <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHhjejA3bWJvdHh3Yzl4cXlnanhpaDVleTk0ZXUyZXYwODBpYnp1YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/N5UDrGpk8azXKi4pSo/giphy.gif" 
+                     alt="Coursera GIF" 
+                     style="width: 90px !important; height: 90px !important; margin-right: 25px !important; border-radius: 5px;">
+                Coursera
+            </a>
+            
+            <a href="https://www.udemy.com/topic/programming/" target="_blank" class="resource-link">
+                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbm96eHZxc2w4cmM2ejh0eDg0b2w2OWp1ejYxdGkyZDZ3NTdiNTFrNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/81jrnmRr4ud12pxOhU/giphy.gif" 
+                     alt="Udemy GIF" 
+                     style="width: 90px !important; height: 90px !important; margin-right: 25px !important; border-radius: 5px;">
+                Udemy
+            </a>
+            
+            <a href="https://stackoverflow.com/" target="_blank" class="resource-link">
+                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExczdyM204Y2U0djBkaG0xdnZjMzcyNDl1dHNpdWJqbHF6dW9yb293ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/2vENsSPSSKrfnYFmsf/giphy.gif" 
+                     alt="Stack Overflow GIF" 
+                     style="width: 90px !important; height: 90px !important; margin-right: 25px !important; border-radius: 50%;">
+                Stack Overflow
+            </a>
+            
+            <a href="https://github.com/" target="_blank" class="resource-link">
+                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExczBuZnptcHQyb3Jzd2hwbzd0YjhqbHY4eDQwY2dwM2lsbmtmZ3MxaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/KZ5vbaMeeX67dQn5qU/giphy.gif" 
+                     alt="GitHub GIF" 
+                     style="width: 90px !important; height: 90px !important; margin-right: 25px !important; border-radius: 5px;">
+                GitHub
+            </a>
+            
+            <a href="https://www.w3schools.com/" target="_blank" class="resource-link">
+                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWY5dHNmemV4aGQ2MXVyOGtvemJtdHE4bnhsYW5uNThrOGNka2lpdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9dHM/0Lcmi1LK5FtaBJKWTF/giphy.gif" 
+                     alt="W3Schools GIF" 
+                     style="width: 90px !important; height: 90px !important; margin-right: 25px !important; border-radius: 5px;">
+                W3Schools
+            </a>
+            
+            <a href="https://developer.mozilla.org/" target="_blank" class="resource-link">
+                <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnlqZHd0MmUxajdzY3V4bTUyNG4xdDc0MGtpM3lwb3pta3gxb3NzeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/4pyve7npknh43YiGr7/giphy.gif" 
+                     alt="MDN Web Docs GIF" 
+                     style="width: 90px !important; height: 90px !important; margin-right: 25px !important; border-radius: 5px;">
+                MDN Web Docs
+            </a>
+        </div>
+    </div>
+</section>
+
+    
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-heading">DijitalGNÇ</h4>
+                    <p style="color: var(--text-muted); line-height: 1.6;">
+                        Kodlamanın eğlenceli halini keşfedin. Algoritma düşüncesini geliştirin ve teknoloji dünyasında yerinizi alın.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-heading">Hızlı Bağlantılar</h4>
+                    <ul class="footer-links">
+                        <li><a href="#ana-sayfa">Ana Sayfa</a></li>
+                        <li><a href="#ne-sunuyoruz">Neler Sunuyoruz</a></li>
+                        <li><a href="#adimlar">3 Adım</a></li>
+                        <li><a href="#kod-kartlari">Kod Kartları</a></li>
+                        <li><a href="#kariyer">Kariyer</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-heading">Eğitim Kategorileri</h4>
+                    <ul class="footer-links">
+                        <li><a href="python.html">Python Eğitimi</a></li>
+                        <li><a href="javascript.html">JavaScript Eğitimi</a></li>
+                        <li><a href="java.html">Java Eğitimi</a></li>
+                        <li><a href="ai-ogrenme.html">AI ile Öğrenme</a></li>
+                        <li><a href="iqtest.html">Kodlama IQ Testi</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 DijitalGNÇ. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- TensorFlow.js - Ücretsiz Yapay Zeka Kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+    
+    <script>
+        // Video container functionality (kaldırılan video konteynerini kullanıyorsa hata verebilir, ama kod içinde yoktu)
+        const videoContainer = document.getElementById('videoContainer');
+        const videoPlaceholder = document.getElementById('videoPlaceholder');
+        const videoFrame = document.getElementById('videoFrame');
+        let isExpanded = false;
+
+        if (videoContainer) {
+            videoContainer.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!isExpanded) {
+                    // Expand video
+                    videoContainer.classList.add('expanded');
+                    if (videoPlaceholder) videoPlaceholder.style.display = 'none';
+                    if (videoFrame) videoFrame.classList.add('active');
+                    isExpanded = true;
+                } else {
+                    // Collapse video
+                    videoContainer.classList.remove('expanded');
+                    if (videoPlaceholder) videoPlaceholder.style.display = 'block';
+                    if (videoFrame) videoFrame.classList.remove('active');
+                    isExpanded = false;
+                }
+            });
+        }
+
+        // Close video when clicking outside
+        document.addEventListener('click', function() {
+            if (isExpanded) {
+                if (videoContainer) videoContainer.classList.remove('expanded');
+                if (videoPlaceholder) videoPlaceholder.style.display = 'block';
+                if (videoFrame) videoFrame.classList.remove('active');
+                isExpanded = false;
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(15, 5, 36, 0.98)';
+                navbar.style.backdropFilter = 'blur(25px)';
+            } else {
+                navbar.style.background = 'rgba(15, 5, 36, 0.85)';
+                navbar.style.backdropFilter = 'blur(20px)';
+            }
+        });
+
+        // Parallax effect for cyber grid
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const cyberGrid = document.querySelector('.cyber-grid');
+            if (cyberGrid) {
+                cyberGrid.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Add intersection observer for section animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(50px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            sectionObserver.observe(section);
+        });
+
+        // Hero section is always visible
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) {
+            heroSection.style.opacity = '1';
+            heroSection.style.transform = 'translateY(0)';
+        }
+    </script>
+
+    <!-- Mola Bildirimi Modal -->
+    <div id="breakNotificationModal" class="break-notification-modal">
+        <div class="break-notification-content">
+            <div class="break-notification-icon">
+                <i class="fas fa-coffee"></i>
+            </div>
+            <h2 class="break-notification-title">Mola Zamanı! 🎯</h2>
+            <p class="break-notification-message">
+                50 dakikalık aktif kullanımdan sonra gözlerinizi ve zihninizi dinlendirmek için 10 dakikalık bir mola vermenizi öneriyoruz.
+            </p>
+            <div class="break-timer" id="breakTimer">10:00</div>
+            <div class="break-notification-buttons">
+                <button class="break-btn break-btn-primary" id="startBreakBtn">Molaya Başla</button>
+                <button class="break-btn break-btn-secondary" id="skipBreakBtn">Şimdilik Atla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aktivite Göstergesi -->
+    <div id="breakActivityIndicator" class="break-activity-indicator">
+        <span class="activity-dot"></span>
+        <span id="activityText">Aktif Kullanım: 0 dk</span>
+    </div>
+
+    <!-- Yapay Zeka Tabanlı Mola Bildirimi Sistemi -->
+    <script>
+        (function() {
+            'use strict';
+
+            // TensorFlow.js ile Yapay Zeka Aktivite Takip Sistemi
+            class AIActivityTracker {
+                constructor() {
+                    this.activityEvents = [];
+                    this.lastActivityTime = Date.now();
+                    this.isActive = false;
+                    this.model = null;
+                    this.isModelReady = false;
+                    this.trainingData = [];
+                    
+                    // TensorFlow.js modelini başlat
+                    this.initAIModel();
+                    this.setupEventListeners();
+                }
+
+                async initAIModel() {
+                    try {
+                        // Basit Neural Network Modeli oluştur
+                        // Girdi: [mouse_moves, clicks, scrolls, keypresses, time_since_last, focus_state]
+                        // Çıktı: [is_active_probability]
+                        
+                        this.model = tf.sequential({
+                            layers: [
+                                // Girdi katmanı: 6 özellik
+                                tf.layers.dense({
+                                    inputShape: [6],
+                                    units: 16,
+                                    activation: 'relu',
+                                    name: 'hidden1'
+                                }),
+                                // Gizli katman 1
+                                tf.layers.dense({
+                                    units: 8,
+                                    activation: 'relu',
+                                    name: 'hidden2'
+                                }),
+                                // Gizli katman 2
+                                tf.layers.dense({
+                                    units: 4,
+                                    activation: 'relu',
+                                    name: 'hidden3'
+                                }),
+                                // Çıktı katmanı: 0-1 arası aktivite olasılığı
+                                tf.layers.dense({
+                                    units: 1,
+                                    activation: 'sigmoid',
+                                    name: 'output'
+                                })
+                            ]
+                        });
+
+                        // Modeli derle (optimizer ve loss function)
+                        this.model.compile({
+                            optimizer: 'adam',
+                            loss: 'binaryCrossentropy',
+                            metrics: ['accuracy']
+                        });
+
+                        // Önceden eğitilmiş ağırlıkları yükle veya varsayılan değerlerle başlat
+                        await this.loadOrTrainModel();
+                        this.isModelReady = true;
+                        
+                        console.log('🤖 Yapay Zeka modeli hazır!');
+                    } catch (error) {
+                        console.error('AI Model hatası:', error);
+                        // Hata durumunda basit fallback
+                        this.isModelReady = false;
+                    }
+                }
+
+                async loadOrTrainModel() {
+                    try {
+                        // LocalStorage'dan eğitilmiş model ağırlıklarını yükle
+                        const savedWeights = localStorage.getItem('aiModelWeights');
+                        if (savedWeights) {
+                            const weightData = JSON.parse(savedWeights);
+                            const weightTensors = weightData.map(w => tf.tensor(w));
+                            this.model.setWeights(weightTensors);
+                            console.log('✅ Eğitilmiş model yüklendi');
+                        } else {
+                            // İlk kullanım: Varsayılan ağırlıklarla başlat
+                            // Model zaten rastgele ağırlıklarla başlatıldı
+                            console.log('🆕 Yeni model oluşturuldu');
+                        }
+                    } catch (error) {
+                        console.error('Model yükleme hatası:', error);
+                    }
+                }
+
+                async saveModelWeights() {
+                    try {
+                        const weights = this.model.getWeights();
+                        const weightData = await Promise.all(
+                            weights.map(async w => {
+                                const data = await w.data();
+                                return Array.from(data);
+                            })
+                        );
+                        localStorage.setItem('aiModelWeights', JSON.stringify(weightData));
+                    } catch (error) {
+                        console.error('Model kaydetme hatası:', error);
+                    }
+                }
+
+                setupEventListeners() {
+                    // Mouse hareketleri
+                    let mouseMoveCount = 0;
+                    document.addEventListener('mousemove', () => {
+                        mouseMoveCount++;
+                        if (mouseMoveCount % 10 === 0) { // Her 10 hareketten birini kaydet
+                            this.recordActivity('mousemove');
+                        }
+                    });
+                    
+                    // Tıklamalar
+                    document.addEventListener('click', () => this.recordActivity('click'));
+                    
+                    // Scroll
+                    document.addEventListener('scroll', () => this.recordActivity('scroll'));
+                    
+                    // Klavye
+                    document.addEventListener('keypress', () => this.recordActivity('keypress'));
+                    
+                    // Sayfa odak durumu
+                    window.addEventListener('focus', () => this.recordActivity('focus'));
+                    window.addEventListener('blur', () => {
+                        this.isActive = false;
+                        this.recordActivity('blur');
+                    });
+                    
+                    // Periyodik aktivite kontrolü (AI ile)
+                    setInterval(() => this.analyzeActivityWithAI(), 5000);
+                }
+
+                recordActivity(type) {
+                    const now = Date.now();
+                    this.lastActivityTime = now;
+                    
+                    this.activityEvents.push({
+                        type: type,
+                        time: now
+                    });
+                    
+                    // Eski aktiviteleri temizle (son 5 dakika)
+                    const fiveMinutesAgo = now - 300000;
+                    this.activityEvents = this.activityEvents.filter(e => e.time > fiveMinutesAgo);
+                }
+
+                async analyzeActivityWithAI() {
+                    if (!this.isModelReady || !this.model) {
+                        // Model hazır değilse basit kontrol
+                        const now = Date.now();
+                        const timeSinceLastActivity = now - this.lastActivityTime;
+                        this.isActive = timeSinceLastActivity < 30000;
+                        return this.isActive;
+                    }
+
+                    try {
+                        const now = Date.now();
+                        const timeSinceLastActivity = now - this.lastActivityTime;
+                        
+                        // Son 1 dakikadaki aktiviteleri say
+                        const oneMinuteAgo = now - 60000;
+                        const recentActivities = this.activityEvents.filter(e => e.time > oneMinuteAgo);
+                        
+                        // Özellik vektörü oluştur
+                        const features = [
+                            recentActivities.filter(e => e.type === 'mousemove').length / 100, // normalize
+                            recentActivities.filter(e => e.type === 'click').length / 20,
+                            recentActivities.filter(e => e.type === 'scroll').length / 30,
+                            recentActivities.filter(e => e.type === 'keypress').length / 50,
+                            Math.min(timeSinceLastActivity / 60000, 1), // 0-1 arası (1 dakika = 1)
+                            document.hasFocus() ? 1 : 0 // focus durumu
+                        ];
+
+                        // TensorFlow.js ile tahmin yap
+                        const inputTensor = tf.tensor2d([features]);
+                        const prediction = this.model.predict(inputTensor);
+                        const predictionValue = await prediction.data();
+                        const activityProbability = predictionValue[0];
+                        
+                        // Tensor'ları temizle (memory leak önleme)
+                        inputTensor.dispose();
+                        prediction.dispose();
+
+                        // AI kararı: %50'den fazla olasılık varsa aktif
+                        this.isActive = activityProbability > 0.5;
+
+                        // Online öğrenme: Gerçek aktivite durumunu öğren
+                        this.learnFromActivity(activityProbability);
+
+                        return this.isActive;
+                    } catch (error) {
+                        console.error('AI analiz hatası:', error);
+                        // Hata durumunda basit kontrol
+                        const now = Date.now();
+                        const timeSinceLastActivity = now - this.lastActivityTime;
+                        this.isActive = timeSinceLastActivity < 30000;
+                        return this.isActive;
+                    }
+                }
+
+                async learnFromActivity(predictedProbability) {
+                    try {
+                        // Gerçek aktivite durumunu belirle (basit heuristik)
+                        const now = Date.now();
+                        const timeSinceLastActivity = now - this.lastActivityTime;
+                        const oneMinuteAgo = now - 60000;
+                        const recentActivities = this.activityEvents.filter(e => e.time > oneMinuteAgo);
+                        
+                        // Gerçek etiket: Son 30 saniyede aktivite varsa aktif
+                        const actualLabel = (timeSinceLastActivity < 30000 && recentActivities.length > 0) ? 1 : 0;
+                        
+                        // Özellik vektörü
+                        const features = [
+                            recentActivities.filter(e => e.type === 'mousemove').length / 100,
+                            recentActivities.filter(e => e.type === 'click').length / 20,
+                            recentActivities.filter(e => e.type === 'scroll').length / 30,
+                            recentActivities.filter(e => e.type === 'keypress').length / 50,
+                            Math.min(timeSinceLastActivity / 60000, 1),
+                            document.hasFocus() ? 1 : 0
+                        ];
+
+                        // Eğitim verisine ekle
+                        this.trainingData.push({
+                            features: features,
+                            label: actualLabel
+                        });
+
+                        // Her 20 örnekte bir modeli güncelle (online learning)
+                        if (this.trainingData.length >= 20) {
+                            await this.updateModel();
+                            this.trainingData = []; // Temizle
+                        }
+                    } catch (error) {
+                        console.error('Öğrenme hatası:', error);
+                    }
+                }
+
+                async updateModel() {
+                    try {
+                        if (this.trainingData.length === 0) return;
+
+                        // Eğitim verilerini hazırla
+                        const xs = tf.tensor2d(this.trainingData.map(d => d.features));
+                        const ys = tf.tensor2d(this.trainingData.map(d => [d.label]));
+
+                        // Modeli güncelle (küçük learning rate ile)
+                        await this.model.fit(xs, ys, {
+                            epochs: 1,
+                            batchSize: Math.min(this.trainingData.length, 10),
+                            verbose: 0
+                        });
+
+                        // Ağırlıkları kaydet
+                        await this.saveModelWeights();
+
+                        // Tensor'ları temizle
+                        xs.dispose();
+                        ys.dispose();
+
+                        console.log('🧠 Model güncellendi!');
+                    } catch (error) {
+                        console.error('Model güncelleme hatası:', error);
+                    }
+                }
+
+                getActivityLevel() {
+                    return this.isActive ? 1 : 0;
+                }
+            }
+
+            // Mola Bildirimi Yöneticisi
+            class BreakNotificationManager {
+                constructor() {
+                    this.ACTIVE_USE_TIME = 50 * 60 * 1000; // 50 dakika (milisaniye)
+                    this.BREAK_TIME = 10 * 60 * 1000; // 10 dakika (milisaniye)
+                    this.CHECK_INTERVAL = 60000; // Her 1 dakikada kontrol et
+                    
+                    this.activeUseTime = 0;
+                    this.isOnBreak = false;
+                    this.breakStartTime = null;
+                    this.lastCheckTime = Date.now();
+                    
+                    this.activityTracker = new AIActivityTracker();
+                    this.modal = document.getElementById('breakNotificationModal');
+                    this.timer = document.getElementById('breakTimer');
+                    this.startBreakBtn = document.getElementById('startBreakBtn');
+                    this.skipBreakBtn = document.getElementById('skipBreakBtn');
+                    this.activityIndicator = document.getElementById('breakActivityIndicator');
+                    this.activityText = document.getElementById('activityText');
+                    
+                    this.loadFromStorage();
+                    this.setupEventListeners();
+                    this.startMonitoring();
+                    this.updateActivityIndicator();
+                }
+
+                loadFromStorage() {
+                    try {
+                        const saved = localStorage.getItem('breakNotificationData');
+                        if (saved) {
+                            const data = JSON.parse(saved);
+                            this.activeUseTime = data.activeUseTime || 0;
+                            this.isOnBreak = data.isOnBreak || false;
+                            this.breakStartTime = data.breakStartTime ? new Date(data.breakStartTime) : null;
+                            
+                            // Eğer mola devam ediyorsa kontrol et
+                            if (this.isOnBreak && this.breakStartTime) {
+                                const breakElapsed = Date.now() - this.breakStartTime.getTime();
+                                if (breakElapsed >= this.BREAK_TIME) {
+                                    this.endBreak();
+                                } else {
+                                    this.showBreakModal();
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Storage yükleme hatası:', e);
+                    }
+                }
+
+                saveToStorage() {
+                    try {
+                        const data = {
+                            activeUseTime: this.activeUseTime,
+                            isOnBreak: this.isOnBreak,
+                            breakStartTime: this.breakStartTime ? this.breakStartTime.toISOString() : null
+                        };
+                        localStorage.setItem('breakNotificationData', JSON.stringify(data));
+                    } catch (e) {
+                        console.error('Storage kaydetme hatası:', e);
+                    }
+                }
+
+                setupEventListeners() {
+                    this.startBreakBtn.addEventListener('click', () => this.startBreak());
+                    this.skipBreakBtn.addEventListener('click', () => this.skipBreak());
+                }
+
+                startMonitoring() {
+                    setInterval(() => {
+                        this.checkAndUpdate();
+                    }, this.CHECK_INTERVAL);
+                    
+                    // İlk kontrolü hemen yap
+                    this.checkAndUpdate();
+                }
+
+                async checkAndUpdate() {
+                    if (this.isOnBreak) {
+                        this.updateBreakTimer();
+                        return;
+                    }
+
+                    const now = Date.now();
+                    const timeSinceLastCheck = now - this.lastCheckTime;
+                    
+                    // TensorFlow.js AI ile aktivite kontrolü
+                    const isActive = await this.activityTracker.analyzeActivityWithAI();
+                    
+                    if (isActive) {
+                        // Aktif kullanım süresini artır
+                        this.activeUseTime += timeSinceLastCheck;
+                        
+                        // 50 dakikayı geçtiyse mola bildirimi göster
+                        if (this.activeUseTime >= this.ACTIVE_USE_TIME) {
+                            this.showBreakNotification();
+                        }
+                    }
+                    
+                    this.lastCheckTime = now;
+                    this.saveToStorage();
+                    this.updateActivityIndicator();
+                }
+
+                showBreakNotification() {
+                    if (!this.modal.classList.contains('active')) {
+                        this.modal.classList.add('active');
+                        
+                        // Bildirim izni iste
+                        if ('Notification' in window && Notification.permission === 'default') {
+                            Notification.requestPermission();
+                        }
+                        
+                        // Bildirim gönder
+                        this.sendNotification('Mola Zamanı!', '50 dakikalık aktif kullanımdan sonra 10 dakikalık mola vermenizi öneriyoruz.');
+                    }
+                }
+
+                sendNotification(title, body) {
+                    if ('Notification' in window && Notification.permission === 'granted') {
+                        new Notification(title, {
+                            body: body,
+                            icon: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                            badge: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+                        });
+                    }
+                }
+
+                showBreakModal() {
+                    this.modal.classList.add('active');
+                    this.updateBreakTimer();
+                    
+                    const timerInterval = setInterval(() => {
+                        if (!this.isOnBreak) {
+                            clearInterval(timerInterval);
+                            return;
+                        }
+                        this.updateBreakTimer();
+                    }, 1000);
+                }
+
+                updateBreakTimer() {
+                    if (!this.isOnBreak || !this.breakStartTime) return;
+                    
+                    const now = Date.now();
+                    const breakElapsed = now - this.breakStartTime.getTime();
+                    const remaining = this.BREAK_TIME - breakElapsed;
+                    
+                    if (remaining <= 0) {
+                        this.endBreak();
+                        return;
+                    }
+                    
+                    const minutes = Math.floor(remaining / 60000);
+                    const seconds = Math.floor((remaining % 60000) / 1000);
+                    this.timer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+
+                startBreak() {
+                    this.isOnBreak = true;
+                    this.breakStartTime = new Date();
+                    this.activeUseTime = 0; // Aktif kullanım süresini sıfırla
+                    this.saveToStorage();
+                    this.updateBreakTimer();
+                    
+                    // Mola başladığında modal'ı kapat ama arka planda timer çalışsın
+                    this.modal.classList.remove('active');
+                    
+                    // Mola bitince bildirim göster
+                    setTimeout(() => {
+                        this.endBreak();
+                    }, this.BREAK_TIME);
+                }
+
+                skipBreak() {
+                    this.modal.classList.remove('active');
+                    // Aktif kullanım süresini yarıya indir (kullanıcı mola vermek istemiyorsa)
+                    this.activeUseTime = this.activeUseTime * 0.5;
+                    this.saveToStorage();
+                }
+
+                endBreak() {
+                    this.isOnBreak = false;
+                    this.breakStartTime = null;
+                    this.modal.classList.remove('active');
+                    this.saveToStorage();
+                    
+                    // Mola bitti bildirimi
+                    this.sendNotification('Mola Bitti!', '10 dakikalık molanız tamamlandı. Tekrar çalışmaya hazırsınız!');
+                }
+
+                updateActivityIndicator() {
+                    if (this.isOnBreak) {
+                        this.activityIndicator.classList.remove('active');
+                        return;
+                    }
+                    
+                    const activeMinutes = Math.floor(this.activeUseTime / 60000);
+                    if (activeMinutes > 0) {
+                        this.activityText.textContent = `Aktif Kullanım: ${activeMinutes} dk`;
+                        this.activityIndicator.classList.add('active');
+                    } else {
+                        this.activityIndicator.classList.remove('active');
+                    }
+                }
+            }
+
+            // Sayfa yüklendiğinde başlat
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    new BreakNotificationManager();
+                });
+            } else {
+                new BreakNotificationManager();
+            }
+        })();
+    </script>
+</body>
+</html>

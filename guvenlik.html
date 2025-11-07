@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virüs Avcısı 🦠</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* YENİ KOYU TEMA DEĞİŞKENLERİ */
+        :root {
+            --primary: #8A2BE2; /* Mor (Ana Vurgu) */
+            --primary-hover: #6A0DAD; /* Koyu Mor */
+            --secondary: #FF3CAC; /* Pembe */
+            --accent: #00FFFF; /* Camgöbeği (Neon Glow) */
+            --dark: #0F0524; /* Koyu Arka Plan */
+            --darker: #0A031A; /* Çok Koyu Arka Plan */
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --card-bg: rgba(15, 5, 36, 0.9); /* Glassmorphism Koyu */
+            --success-color: #00FF99; /* Neon Yeşil */
+            --warning-color: #FFFF00; /* Neon Sarı */
+            --error-color: #FF5757; /* Kırmızı Hata */
+            --scan-color: var(--accent); /* Tarama Mavi/Camgöbeği */
+            --neutral-color: var(--text-muted);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* YENİ BODY STİLİ (Mor/Neon Arka Plan) */
+        body {
+            background-color: var(--dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-image: 
+                /* Cyber Grid Deseni */
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 15px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.08) 0px, rgba(138, 43, 226, 0.08) 2px, transparent 2px, transparent 15px),
+                /* Mor/Degradeli Ana Arka Plan */
+                linear-gradient(135deg, var(--darker) 0%, #240047 25%, #410063 75%, var(--dark) 100%);
+            background-size: 25px 25px, 25px 25px, 100% 100%;
+            position: relative;
+            overflow-x: hidden;
+            font-size: 18px;
+        }
+
+        .container {
+            text-align: center;
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(138, 43, 226, 0.5); /* Mor Glow */
+            max-width: 90%;
+            width: 700px;
+            animation: fadeIn 0.5s ease-in-out;
+            border: 2px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px); /* Glassmorphism etkisi */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cyber-pattern {
+            /* Kaldırıldı veya Opasitesi düşürüldü */
+        }
+
+        h1 {
+            color: var(--accent); /* Neon Mavi Başlık */
+            margin-bottom: 1rem;
+            font-size: 2.4rem;
+            text-shadow: 0 0 10px var(--accent);
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        h1::after {
+            content: "🦠";
+            margin-left: 10px;
+            font-size: 1.8rem;
+            animation: bounce 2s infinite;
+            display: inline-block;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        #computer-screen {
+            background-color: rgba(0, 0, 0, 0.5); /* Daha koyu ekran */
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(5px);
+            border: 2px solid var(--accent); /* Neon Çerçeve */
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .screen-header {
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .screen-title {
+            color: var(--secondary); /* Pembe Başlık */
+        }
+
+        .system-status {
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        /* YENİ DURUM RENKLERİ */
+        .status-infected {
+            background-color: var(--error-color);
+            color: white;
+            box-shadow: 0 0 8px var(--error-color);
+        }
+
+        .status-clean {
+            background-color: var(--success-color);
+            color: var(--darker);
+            box-shadow: 0 0 8px var(--success-color);
+        }
+
+        .status-scanning {
+            background-color: var(--scan-color);
+            color: white;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 10px var(--scan-color);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        #scenario-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.35);
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary); /* Pembe Çizgi */
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 1.5rem;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); /* Mor/Pembe Gradient */
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, var(--accent), var(--secondary)); /* Neon Highlight */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 255, 255, 0.4);
+        }
+
+        .action-btn::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+
+        .action-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .game-stats {
+            justify-content: space-between;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--accent); /* Neon Kenarlık */
+        }
+        .game-stats p {
+            color: var(--text-muted);
+        }
+        #score { color: var(--success-color); font-weight: bold; }
+        #progress { color: var(--accent); font-weight: bold; }
+
+        /* Bildirimler */
+        #notification {
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification-success {
+            background-color: rgba(0, 255, 153, 0.15);
+            border-left: 5px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .notification-error {
+            background-color: rgba(255, 87, 87, 0.15);
+            border-left: 5px solid var(--error-color);
+            color: var(--error-color);
+        }
+        
+        .tip {
+            color: var(--accent); /* İpucu Neon Rengi */
+        }
+
+        /* İlerleme Çubuğu */
+        .progress-container {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--primary);
+        }
+
+        .progress-bar {
+            background-color: var(--scan-color);
+        }
+        
+        /* Konsol Çıktısı */
+        .console-output {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            color: var(--success-color); /* Konsol çıktısı Neon Yeşil */
+        }
+        .warning-text { color: var(--warning-color); }
+        .error-text { color: var(--error-color); }
+        .success-text { color: var(--success-color); }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 700px) {
+             /* ... (Responsive ayarlar aynı kalır) ... */
+             .container { padding: 1.5rem; width: 95%; }
+             h1 { font-size: 2rem; }
+             .action-buttons { grid-template-columns: 1fr; }
+             #scenario-text { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cyber-pattern"></div>
+        <h1>Virüs Avcısı</h1>
+        <p class="subtitle">Bilgisayarınızı zararlı yazılımlardan koruyun</p>
+        
+        <div id="game-container">
+            <div id="computer-screen">
+                <div class="screen-header">
+                    <div class="screen-title">Sistem Durumu:</div>
+                    <div class="system-status" id="status-indicator">Tehlikede!</div>
+                </div>
+                
+                <p id="scenario-text"></p>
+                
+                <div class="progress-container hidden" id="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                
+                <div class="console-output" id="console-output">
+                    </div>
+                
+                <div class="action-buttons" id="action-buttons">
+                    </div>
+            </div>
+            
+            <div id="notification" class="hidden"></div>
+            
+            <div class="game-stats">
+                <p id="score">Güvenlik Puanı: 0</p>
+                <p id="progress">İlerleme: 0/10</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Oyun Senaryoları ve Seçenekler (Değişmedi)
+        const scenarios = [
+            {
+                id: 1,
+                text: "Bilgisayarınızda yavaşlama fark ettiniz ve garip pop-up reklamlar görünmeye başladı. Ne yapmalısınız?",
+                options: [
+                    { text: "Antivirüs Taraması Başlat 🛡️", icon: "🛡️", isCorrect: true, feedback: "Doğru! İlk adım olarak antivirüs taraması yapmanız gerekir.", tip: "Bilgisayarınız yavaşladığında ve tanımadığınız reklamlar çıktığında, ilk yapmanız gereken antivirüs taraması başlatmaktır." },
+                    { text: "Bilgisayarı Hemen Kapat 🔌", icon: "🔌", isCorrect: false, feedback: "Bu yeterli bir çözüm değil. Bilgisayarı kapatmak sorunu geçici olarak durdurabilir, ancak yeniden açtığınızda virüs hala orada olacaktır.", tip: "Virüs bulaştığında, sorunu çözmeden bilgisayarı kapatmak yeterli değildir." },
+                    { text: "Reklamlara Tıkla 🖱️", icon: "🖱️", isCorrect: false, feedback: "Asla şüpheli reklamlara tıklamayın! Bu daha fazla zararlı yazılım bulaşmasına neden olabilir.", tip: "Pop-up reklamlara tıklamak genellikle daha fazla zararlı yazılımın bilgisayarınıza bulaşmasına neden olur." },
+                    { text: "İnternet Bankacılığını Kullan 💳", icon: "💳", isCorrect: false, feedback: "Kesinlikle hayır! Bilgisayarınızda virüs olduğunu düşünüyorsanız, internet bankacılığı gibi hassas işlemler yapmayın.", tip: "Virüslü bir bilgisayarda finansal işlem yapmak kimlik hırsızlığına yol açabilir." }
+                ]
+            },
+            {
+                id: 2,
+                text: "Antivirüs taraması sonucunda, \"TrojanSpy.Win32\" adlı bir zararlı yazılım bulundu. Şimdi ne yapmalısınız?",
+                options: [
+                    { text: "Dosyayı Karantinaya Al 🔒", icon: "🔒", isCorrect: true, feedback: "Doğru! Zararlı yazılımı karantinaya almak, güvenli bir şekilde etkisiz hale getirilmesini sağlar.", tip: "Virüs bulunan dosyaları karantinaya almak, onları silmekten daha güvenlidir çünkü yanlış bir sistem dosyasını silme riskini azaltır." },
+                    { text: "Dosyayı Görmezden Gel 👀", icon: "👀", isCorrect: false, feedback: "Yanlış! Tespit edilen zararlı yazılımları asla görmezden gelmeyin.", tip: "Tespit edilen tehlikeleri görmezden gelmek, bilgisayarınızı ve verilerinizi risk altında bırakır." },
+                    { text: "Dosyayı Aç ve İncele 🔍", icon: "🔍", isCorrect: false, feedback: "Asla zararlı yazılım dosyalarını açmayın! Bu, virüsü aktif hale getirebilir.", tip: "Zararlı yazılım dosyalarını açmak, virüsün bilgisayarınıza daha fazla zarar vermesine neden olabilir." },
+                    { text: "Bilgisayarı Formatla 💾", icon: "💾", isCorrect: false, feedback: "Bu çok aşırı bir tepki. Tek bir virüs için tüm sistemi formatlamak genellikle gerekli değildir.", tip: "Formatlama son çare olmalıdır. Çoğu virüs, antivirüs yazılımı ile temizlenebilir." }
+                ]
+            },
+            {
+                id: 3,
+                text: "E-posta kutunuzda, tanımadığınız bir göndericiden \"Acil - Banka Hesabınız\" konulu bir e-posta ve ekli bir dosya var. Ne yaparsınız?",
+                options: [
+                    { text: "E-postayı Sil ve Rapor Et 🚫", icon: "🚫", isCorrect: true, feedback: "Doğru! Şüpheli e-postaları silmeli ve spam olarak raporlamalısınız.", tip: "Tanımadığınız kaynaklardan gelen e-postaları, özellikle ekleri olanları, açmadan silmek en güvenli yaklaşımdır." },
+                    { text: "Eki Açıp Kontrol Et 📎", icon: "📎", isCorrect: false, feedback: "Asla şüpheli e-posta eklerini açmayın! Bu, virüs bulaşmasının en yaygın yollarından biridir.", tip: "E-posta ekleri, zararlı yazılımların yayılması için sıklıkla kullanılan bir yöntemdir." },
+                    { text: "Göndericiye Yanıt Ver ↩️", icon: "↩️", isCorrect: false, feedback: "Şüpheli e-postalara yanıt vermek, e-posta adresinizin aktif olduğunu dolandırıcılara doğrular ve daha fazla istenmeyen e-posta almanıza yol açabilir.", tip: "Şüpheli e-postalara yanıt vermek, daha fazla spam e-posta almanıza neden olabilir." },
+                    { text: "Banka Hesabını Kontrol Et 🏦", icon: "🏦", isCorrect: false, feedback: "E-postadaki bağlantıları kullanarak banka hesabınıza erişmeye çalışmayın. Bu bir kimlik avı (phishing) saldırısı olabilir.", tip: "Bankacılık işlemleri için her zaman tarayıcınıza bankanızın adresini doğrudan yazarak giriş yapın, e-postalardaki bağlantıları kullanmayın." }
+                ]
+            },
+            {
+                id: 4,
+                text: "Windows, güvenlik güncellemelerini yüklemenizi istiyor. Ne yapmalısınız?",
+                options: [
+                    { text: "Güncellemeleri Yükle ⬆️", icon: "⬆️", isCorrect: true, feedback: "Doğru! İşletim sistemi güncellemeleri, bilgisayarınızı güvende tutmak için kritik öneme sahiptir.", tip: "Güvenlik güncellemeleri, keşfedilen güvenlik açıklarını kapatır ve bilgisayarınızı zararlı yazılımlara karşı korur." },
+                    { text: "Güncellemeleri Reddet ❌", icon: "❌", isCorrect: false, feedback: "Güvenlik güncellemelerini reddetmek, sisteminizi bilinen güvenlik açıklarına karşı savunmasız bırakır.", tip: "Güncellemeleri ertelemek veya reddetmek, bilgisayarınızı siber saldırılara karşı savunmasız hale getirir." },
+                    { text: "Daha Sonra Güncelle ⏰", icon: "⏰", isCorrect: false, feedback: "Güncellemeleri ertelemek, sisteminizi geçici olarak savunmasız bırakır. Mümkün olan en kısa sürede güncelleyin.", tip: "Güvenlik güncellemelerini geciktirmek, bilgisayarınızın güvenlik açıklarının daha uzun süre açık kalmasına neden olur." },
+                    { text: "Farklı Bir Güncelleme Kaynağı Ara 🔎", icon: "🔎", isCorrect: false, feedback: "Sadece resmi kanallardan gelen güncellemeleri yükleyin. Alternatif kaynaklar tehlikeli olabilir.", tip: "İşletim sistemi güncellemelerini yalnızca resmi kaynaklardan (Microsoft, Apple vb.) indirin." }
+                ]
+            },
+            {
+                id: 5,
+                text: "İnternet tarayıcınızda bir pencere açıldı ve \"Bilgisayarınızda 10 virüs bulundu! Hemen temizlemek için burayı tıklayın!\" yazıyor. Ne yapmalısınız?",
+                options: [
+                    { text: "Pencereyi Kapat, Tarayıcıyı Yeniden Başlat 🚪", icon: "🚪", isCorrect: true, feedback: "Doğru! Bu tür pop-up'lar genellikle sahte uyarılardır. Kapatın ve gerekirse tarayıcınızı yeniden başlatın.", tip: "Bu tür uyarılar genellikle sizi zararlı yazılım indirmeye ikna etmeye çalışan sahte uyarılardır." },
+                    { text: "Temizle Butonuna Tıkla 🖱️", icon: "🖱️", isCorrect: false, feedback: "Asla bu tür pop-up'lardaki düğmelere tıklamayın! Bu, zararlı yazılım indirmenize neden olabilir.", tip: "Bu tür 'temizle' düğmeleri genellikle virüsleri temizlemek yerine bilgisayarınıza zararlı yazılım yükler." },
+                    { text: "Kredi Kartı Bilgilerini Gir 💳", icon: "💳", isCorrect: false, feedback: "Kesinlikle hayır! Bu açıkça bir dolandırıcılıktır.", tip: "Güvenilir olmayan sitelere asla finansal bilgilerinizi vermeyin." },
+                    { text: "Telefon Numarasını Ara ☎️", icon: "☎️", isCorrect: false, feedback: "Bu tür pop-up'larda verilen numaraları aramayın. Genellikle dolandırıcılık amaçlıdır.", tip: "Bu tür iletişim numaraları genellikle sizi dolandırmaya çalışan kişilere aittir." }
+                ]
+            },
+            {
+                id: 6,
+                text: "Bilgisayarınızda önemli belgeleriniz ve fotoğraflarınız var, ancak uzun süredir yedekleme yapmadınız. Ne yapmalısınız?",
+                options: [
+                    { text: "Düzenli Yedekleme Planı Oluştur 💾", icon: "💾", isCorrect: true, feedback: "Doğru! Düzenli yedekleme yapmak, verilerinizi virüslerden ve donanım arızalarından korur.", tip: "Verilerinizi düzenli olarak yedeklemek, virüs saldırısı veya donanım arızası durumunda bile güvende olmasını sağlar." },
+                    { text: "Hiçbir Şey Yapma 🛑", icon: "🛑", isCorrect: false, feedback: "Yedekleme yapmamak, tüm önemli verilerinizi kaybetme riskiyle karşı karşıya bırakır.", tip: "Yedekleme yapmamak, dijital hayatınız için büyük bir risk oluşturur." },
+                    { text: "Sadece Çevrimiçi Depolama Kullan ☁️", icon: "☁️", isCorrect: false, feedback: "Sadece çevrimiçi depolama yeterli değil. Hem çevrimiçi hem de fiziksel (harici disk gibi) yedekleme yapmalısınız.", tip: "En iyi yedekleme stratejisi, çevrimiçi ve çevrimdışı yöntemleri birlikte kullanmaktır - buna 3-2-1 yedekleme stratejisi denir." },
+                    { text: "Tüm Dosyaları E-posta ile Gönder 📧", icon: "📧", isCorrect: false, feedback: "Bu pratik veya güvenli bir yedekleme yöntemi değildir.", tip: "E-posta, büyük dosyaları yedeklemek için uygun bir araç değildir ve güvenlik riskleri taşır." }
+                ]
+            },
+            {
+                id: 7,
+                text: "Tanımadığınız bir USB bellek buldunuz ve içinde ne olduğunu merak ediyorsunuz. Ne yapmalısınız?",
+                options: [
+                    { text: "USB Belleği Bilgisayarınıza Takmayın 🚫", icon: "🚫", isCorrect: true, feedback: "Doğru! Tanımadığınız USB bellekleri bilgisayarınıza takmak, virüs bulaşmasına neden olabilir.", tip: "Bilinmeyen USB cihazları, zararlı yazılımların en yaygın bulaşma yollarından biridir." },
+                    { text: "USB Belleği Hemen Bilgisayarınıza Takın 🖥️", icon: "🖥️", isCorrect: false, feedback: "Asla tanımadığınız USB cihazlarını bilgisayarınıza takmayın! Bu, virüs bulaşmasının yaygın bir yoludur.", tip: "Bilinmeyen USB cihazları, 'USB drop attack' olarak bilinen bir saldırı yöntemiyle zararlı yazılım içerebilir." },
+                    { text: "USB'yi Bir Arkadaşınızın Bilgisayarında Kontrol Edin 👥", icon: "👥", isCorrect: false, feedback: "Riski başka birine aktarmak doğru bir davranış değildir. Bu, arkadaşınızın bilgisayarına zarar verebilir.", tip: "Bilinmeyen USB'leri başkalarının bilgisayarlarına takmak da aynı derecede tehlikelidir." },
+                    { text: "USB'yi Açıp İçine Bakın 🔧", icon: "🔧", isCorrect: false, feedback: "USB cihazının fiziksel olarak incelenmesi size içindekiler hakkında bilgi vermez ve hâlâ kullandığınızda risk oluşturur.", tip: "Bir USB cihazının dış görünüşü, içindeki verilerin güvenli olduğu anlamına gelmez." }
+                ]
+            },
+            {
+                id: 8,
+                text: "Bilgisayarınızda, dosyalarınız şifrelenerek kilitlenmiş ve ekranda \"Dosyalarınızı kurtarmak için 1000 TL ödeme yapın\" yazıyor. Ne yapmalısınız?",
+                options: [
+                    { text: "Uzman Yardımı Alın 🛡️", icon: "🛡️", isCorrect: true, feedback: "Doğru! Fidye yazılımı (ransomware) saldırısına uğradığınızda, bir bilgisayar güvenliği uzmanından yardım almalısınız.", tip: "Fidye yazılımı vakaları için, güvenilir bir BT uzmanından veya siber güvenlik şirketinden yardım istemek en iyi çözümdür." },
+                    { text: "Ödemeyi Yapın 💰", icon: "💰", isCorrect: false, feedback: "Siber suçlulara ödeme yapmak, dosyalarınızın kilidinin açılacağını garanti etmez ve gelecekteki saldırıları teşvik eder.", tip: "Fidye ödemek, dosyalarınızın geri döneceğini garanti etmez ve suçluları teşvik eder." },
+                    { text: "Bilgisayarı Kapatın ve Yeniden Başlatın 🔄", icon: "🔄", isCorrect: false, feedback: "Bu, fidye yazılımı durumunda işe yaramaz. Dosyalarınız şifrelenmiş kalır.", tip: "Bilgisayarı yeniden başlatmak, dosyaları şifreleyen fidye yazılımı etkisini ortadan kaldırmaz." },
+                    { text: "Bilgisayarı Formatlamayı Deneyin 🖥️", icon: "🖥️", isCorrect: false, feedback: "Formatlama işlemi, şifrelenmiş dosyalarınızı tamamen silecektir. Bu, yedeklemeniz olmadığı sürece veri kaybına yol açar.", tip: "Formatlama, zararlı yazılımı temizlese de şifrelenmiş dosyalarınızı da siler ve kurtarma imkanınızı ortadan kaldırmaz." }
+                ]
+            },
+            {
+                id: 9,
+                text: "Bir web sitesi, bilgisayarınıza daha iyi performans için özel bir \"hızlandırıcı yazılım\" indirmenizi istiyor. Ne yapmalısınız?",
+                options: [
+                    { text: "Teklifi Reddedin ve Web Sitesinden Çıkın 🚪", icon: "🚪", isCorrect: true, feedback: "Doğru! Bu tür teklifler genellikle zararlı yazılımları yaymak için kullanılır.", tip: "İstenmeyen ve tanınmayan yazılım indirme tekliflerini her zaman reddedin. Bunlar genellikle adware, spyware veya diğer zararlı yazılımlardır." },
+                    { text: "Yazılımı İndirin ve Yükleyin 📥", icon: "📥", isCorrect: false, feedback: "Tanımadığınız kaynaklardan yazılım indirmek, bilgisayarınıza virüs bulaşmasına neden olabilir.", tip: "Güvenilir olmayan kaynaklardan yazılım indirmek, bilgisayar güvenliğini tehlikeye atar." },
+                    { text: "Yazılımı İndirip Virüs Taraması Yapın 🔍", icon: "🔍", isCorrect: false, feedback: "Bazı modern zararlı yazılımlar antivirüs yazılımlarını atlayabilir. En iyisi hiç indirmemektir.", tip: "Bazı zararlı yazılımlar antivirüs taramalarından kaçabilir, bu nedenle baştan indirmemek en güvenli yoldur." },
+                    { text: "Arkadaşlarınıza da Bu Yazılımı Önerin 👥", icon: "👥", isCorrect: false, feedback: "Potansiyel zararlı yazılımları başkalarına tavsiye etmek, virüslerin yayılmasına katkıda bulunur.", tip: "Güvenilir olmayan yazılımları başkalarına tavsiye etmek, zararlı yazılımların daha geniş yayılmasına neden olabilir." }
+                ]
+            },
+            {
+                id: 10,
+                text: "Bilgisayarınızda birden fazla antivürüs programı bulundurmak daha güvenli olabilir mi?",
+                options: [
+                    { text: "Hayır, Tek Güvenilir Program Yeterli ✅", icon: "✅", isCorrect: true, feedback: "Doğru! Birden fazla antivirüs programı çakışmalara, yavaşlamalara ve hatta güvenlik sorunlarına neden olabilir.", tip: "Birden fazla antivirüs programı, sistem performansını düşürebilir ve birbiriyle çakışabilir. Güncel ve güvenilir tek bir program yeterlidir." },
+                    { text: "Evet, Ne Kadar Çok O Kadar İyi ⬆️", icon: "⬆️", isCorrect: false, feedback: "Birden fazla antivirüs programı, birbiriyle çakışarak sistem performansını düşürebilir ve güvenlik sorunlarına yol açabilir.", tip: "Antivirüs programları birbirlerini zararlı yazılım olarak tanımlayabilir ve sistem kaynaklarını tüketebilir." },
+                    { text: "Antivirüs Programlarına Gerek Yok 🚫", icon: "🚫", isCorrect: false, feedback: "Tüm bilgisayarlar için güvenilir bir antivirüs yazılımı kritik öneme sahiptir.", tip: "Modern işletim sistemleri bazı koruma sağlasa da, güvenilir bir antivirüs programı hala önemlidir." },
+                    { text: "Ücretsiz Olan Tüm Programları Yükleyin 🆓", icon: "🆓", isCorrect: false, feedback: "Kalite, miktar yerine tercih edilmelidir. Çok sayıda ücretsiz program yerine, tek bir güvenilir çözüm daha iyidir.", tip: "Bazı ücretsiz antivirüs programları yeterli koruma sağlamayabilir veya istenmeyen yazılımlarla gelebilir." }
+                ]
+            }
+        ];
+
+        // Oyun değişkenleri
+        let currentScenarioIndex = 0;
+        let score = 0;
+        let totalQuestions = scenarios.length;
+
+        // HTML elementleri
+        const scenarioText = document.getElementById('scenario-text');
+        const actionButtons = document.getElementById('action-buttons');
+        const notification = document.getElementById('notification');
+        const scoreDisplay = document.getElementById('score');
+        const progressDisplay = document.getElementById('progress');
+        const statusIndicator = document.getElementById('status-indicator');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const consoleOutput = document.getElementById('console-output');
+
+        // Oyunu başlat
+        function startGame() {
+            // Senaryoları karıştır
+            shuffle(scenarios);
+            displayScenario();
+        }
+
+        // Senaryo göster
+        function displayScenario() {
+            if (currentScenarioIndex < totalQuestions) {
+                const currentScenario = scenarios[currentScenarioIndex];
+                scenarioText.textContent = currentScenario.text;
+                progressDisplay.textContent = `İlerleme: ${currentScenarioIndex+1}/${totalQuestions}`;
+                
+                // Durum göstergesini güncelle
+                if (currentScenarioIndex === 0) {
+                    statusIndicator.textContent = "Tehlikede!";
+                    statusIndicator.className = "system-status status-infected";
+                } else if (score / currentScenarioIndex > 0.7) {
+                    statusIndicator.textContent = "İyileşiyor...";
+                    statusIndicator.className = "system-status status-warning";
+                } else {
+                    statusIndicator.textContent = "Hala Tehlikede!";
+                    statusIndicator.className = "system-status status-infected";
+                }
+                
+                // Seçenekleri göster
+                showOptions(currentScenario.options);
+                hideNotification();
+            } else {
+                endGame();
+            }
+        }
+
+        // Seçenekleri göster
+        function showOptions(options) {
+            actionButtons.innerHTML = '';
+            
+            // Seçenekleri karıştır
+            shuffle([...options]).forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'action-btn';
+                
+                button.innerHTML = `
+                    <span class="action-icon">${option.icon}</span>
+                    <span>${option.text}</span>
+                `;
+                
+                button.addEventListener('click', () => checkAnswer(option));
+                actionButtons.appendChild(button);
+            });
+        }
+
+        // Cevabı kontrol et
+        function checkAnswer(selectedOption) {
+            // Butonları devre dışı bırak
+            const buttons = document.querySelectorAll('.action-btn');
+            buttons.forEach(button => button.disabled = true);
+            
+            if (selectedOption.isCorrect) {
+                score++;
+                scoreDisplay.textContent = `Güvenlik Puanı: ${score}`;
+                simulateAction(true, selectedOption.feedback, selectedOption.tip);
+            } else {
+                simulateAction(false, selectedOption.feedback, selectedOption.tip);
+            }
+        }
+
+        // İşlem simülasyonu
+        function simulateAction(isSuccess, feedback, tip) {
+            // Action butonlarını gizle
+            actionButtons.style.display = 'none';
+            
+            // İlerleme çubuğunu göster
+            progressContainer.classList.remove('hidden');
+            
+            // Konsolu göster
+            consoleOutput.style.display = 'block';
+            consoleOutput.innerHTML = '';
+            
+            // Simülasyon metinleri
+            const simulationLines = isSuccess ? 
+                [
+                    "$ Sistem analizi başlatılıyor...",
+                    "$ Tehdit taraması yapılıyor...",
+                    "$ Şüpheli etkinlikler inceleniyor...",
+                    "$ Gerekli önlemler alınıyor...",
+                    `$ <span class="success-text">İşlem başarılı!</span>`
+                ] : 
+                [
+                    "$ Sistem analizi başlatılıyor...",
+                    "$ Tehdit taraması yapılıyor...",
+                    "$ Şüpheli etkinlikler inceleniyor...",
+                    `$ <span class='warning-text'>Uyarı: Yanlış işlem seçildi!</span>`,
+                    `$ <span class='error-text'>Hata: İşlem başarısız!</span>`,
+                    "$ Yeniden deneyiniz..."
+                ];
+            
+            // İlerleme çubuğunu animasyonla doldur
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 2;
+                progressBar.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    
+                    // İşlem tamamlandıktan sonra sonucu göster
+                    setTimeout(() => {
+                        // İlerleme çubuğunu gizle
+                        progressContainer.classList.add('hidden');
+                        
+                        // Bildirimi göster
+                        showNotification(feedback + "<br><span class='tip'>" + tip + "</span>", 
+                            isSuccess ? "notification-success" : "notification-error");
+                        
+                        // Bir sonraki senaryoya geç
+                        setTimeout(() => {
+                            // Konsolu gizle
+                            consoleOutput.style.display = 'none';
+                            
+                            // Action butonlarını göster
+                            actionButtons.style.display = 'grid';
+                            
+                            // İlerleme çubuğunu sıfırla
+                            progressBar.style.width = '0%';
+                            
+                            currentScenarioIndex++;
+                            displayScenario();
+                        }, 3000);
+                    }, 500);
+                }
+            }, 40);
+            
+            // Konsol çıktısı animasyonu
+            let lineIndex = 0;
+            const consoleInterval = setInterval(() => {
+                if (lineIndex < simulationLines.length) {
+                    const line = document.createElement('div');
+                    line.className = 'console-line';
+                    line.innerHTML = simulationLines[lineIndex];
+                    consoleOutput.appendChild(line);
+                    
+                    // Otomatik kaydırma
+                    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                    
+                    lineIndex++;
+                } else {
+                    clearInterval(consoleInterval);
+                }
+            }, 700); // Her satır arasında 700ms gecikme
+        }
+
+        // Bildirimi göster
+        function showNotification(message, className) {
+            notification.innerHTML = message;
+            notification.className = className;
+            notification.classList.remove("hidden");
+        }
+
+        // Bildirimi gizle
+        function hideNotification() {
+            notification.classList.add("hidden");
+        }
+
+        // Oyunu bitir
+        function endGame() {
+            scenarioText.textContent = `Virüs Avcısı tamamlandı!`;
+            actionButtons.innerHTML = '';
+            
+            let finalStatus, finalMessage;
+            
+            if (score >= totalQuestions * 0.8) {
+                statusIndicator.textContent = "Güvenli";
+                statusIndicator.className = "system-status status-clean";
+                finalStatus = "notification-success";
+                finalMessage = `Tebrikler! Bilgisayarınızı başarıyla virüslerden korudunuz. Toplam puanınız: ${score}/${totalQuestions}. Siz gerçek bir siber güvenlik uzmanısınız! 🏆`;
+            } else if (score >= totalQuestions * 0.5) {
+                statusIndicator.textContent = "Dikkat";
+                statusIndicator.className = "system-status status-warning";
+                finalStatus = "notification-warning";
+                finalMessage = `İyi iş çıkardınız! Bilgisayarınız artık daha güvenli, ancak hala bazı risklere açık. Toplam puanınız: ${score}/${totalQuestions}. Biraz daha dikkatli olunuz. 👍`;
+            } else {
+                statusIndicator.textContent = "Tehlikede";
+                statusIndicator.className = "system-status status-infected";
+                finalStatus = "notification-error";
+                finalMessage = `Bilgisayarınız hala risk altında! Toplam puanınız: ${score}/${totalQuestions}. Siber güvenlik konusunda daha dikkatli olmalısınız. Güvenlik ipuçlarını gözden geçirin ve tekrar deneyin. 🛑`;
+            }
+            
+            showNotification(finalMessage, finalStatus);
+        }
+
+        // Diziyi karıştır (Fisher-Yates algoritması)
+        function shuffle(array) {
+            const shuffled = [...array];
+            let currentIndex = shuffled.length;
+            let randomIndex;
+
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+
+                [shuffled[currentIndex], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[currentIndex]];
+            }
+
+            return shuffled;
+        }
+
+        // Oyunu başlat
+        startGame();
+    </script>
+</body>
+</html>
